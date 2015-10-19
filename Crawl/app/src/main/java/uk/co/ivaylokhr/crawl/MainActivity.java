@@ -10,6 +10,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Board b = new Board();
         setContentView(R.layout.activity_main);
     }
 
