@@ -11,5 +11,6 @@ public class PlayerCup extends Cup {
     public PlayerCup(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setEnabled(false);
+        marbles = 0;
     }
 }
