@@ -17,10 +17,10 @@ public class Board {
         for(int i = 0; i < 16; i++){
             Cup c = new Cup(ct,as);
             if(i != 7 || i != 15){
-                c = new PocketCup();
+                c = new PocketCup(ct, as);
             }
             else{
-                c = new PlayerCup();
+                c = new PlayerCup(ct, as);
             }
             cups[i] = c;
         }
