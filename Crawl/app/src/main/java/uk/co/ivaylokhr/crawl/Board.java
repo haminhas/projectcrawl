@@ -2,6 +2,7 @@ package uk.co.ivaylokhr.crawl;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.jar.Attributes;
@@ -25,4 +26,23 @@ public class Board {
         return isFinished;
     }
 
+    public void pressCup(View view) {
+        int id = ((PocketCup)view).getPocketCupId();
+
+        PocketCup cup = (PocketCup)cups[id];
+        int marbleEmptiedCup = cup.emptyCup();
+
+        //at this point please check if the cup in the array still has the marbles
+
+        for(int i=id+1; i<=marbleEmptiedCup+id; i++) {
+            if(i<15) {
+                cups[i].addMarbles(1);
+            }
+            else {
+                //restart
+            }
+        }
+
+
+    }
 }

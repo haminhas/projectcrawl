@@ -22,4 +22,10 @@ public class PocketCup extends Cup {
         marbles = 0;
         return toReturn;
     }
+
+    public int getPocketCupId() {
+        String id = Integer.toString(this.getId());
+        id = id.replace("b","");
+        return Integer.valueOf(id);
+    }
 }
