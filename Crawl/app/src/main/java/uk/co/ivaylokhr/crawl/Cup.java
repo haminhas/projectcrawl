@@ -9,8 +9,18 @@ import android.widget.Button;
  */
 public class Cup extends Button {
 
-    public Cup(Context context, AttributeSet attrs){
+    protected int marbles;
+
+    public Cup(Context context, AttributeSet attrs) {
         super(context, attrs);
+        marbles = 0;
     }
 
+    public int getMarbles(){
+        return marbles;
+    }
+
+    public void addMarbles(int x){
+        marbles += x;
+    }
 }
