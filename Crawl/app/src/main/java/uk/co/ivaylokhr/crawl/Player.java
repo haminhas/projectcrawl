@@ -8,10 +8,15 @@ public class Player {
     PlayerCup playerCup;
     boolean turn ;
 
+    public Player(PlayerCup playerCup){
+        this.playerCup = playerCup;
+        turn = true;
+    }
+
     public Player(String name, PlayerCup playerCup) {
         this.name = name;
         this.playerCup = playerCup;
-        turn = false;
+        turn = true;
     }
 
     public void setTurn(boolean turn) {

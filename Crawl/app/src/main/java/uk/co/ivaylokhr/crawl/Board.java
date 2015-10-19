@@ -10,19 +10,19 @@ import java.util.jar.Attributes;
  * Created by Hassan on 19/10/2015.
  */
 public class Board {
-    Cup[] cups;
+    private Cup[] cups;
+    private Player player1, player2;
+    private boolean isFinished;
 
-    public Board(Context ct, AttributeSet as){
-        cups = new Cup[16];
-        for(int i = 0; i < 16; i++){
-            Cup c = new Cup(ct,as);
-            if(i != 7 || i != 15){
-                c = new PocketCup(ct, as);
-            }
-            else{
-                c = new PlayerCup(ct, as);
-            }
-            cups[i] = c;
-        }
+    public Board(Cup[] cups){
+        this.cups = cups;
+        player1 = new Player((PlayerCup) cups[7]);
+        player2 = new Player((PlayerCup) cups[15]);
+        isFinished = false;
     }
+
+    public boolean isFinished(){
+        return isFinished;
+    }
+
 }
