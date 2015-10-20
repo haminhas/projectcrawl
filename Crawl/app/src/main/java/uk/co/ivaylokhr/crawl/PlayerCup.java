@@ -14,11 +14,4 @@ public class PlayerCup extends Cup {
         this.setEnabled(false);
         marbles = 0;
     }
-
-
-    private void click(View view){
-
-    }
-
-
 }
