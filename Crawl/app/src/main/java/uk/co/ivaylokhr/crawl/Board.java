@@ -119,14 +119,36 @@ public class Board {
 
             nextPocketCup.addMarbles(1);
 
-
-
-
-
             //AT THE END OF THE FOR LOOP USE THE MODULUS 14 MAYBE
         }//END OF FOR LOOP
 
 
+        //if game finished check winner
 
     }
+
+
+
+    public boolean isGameFinished() {
+        //check if game is finished
+        for(int i=0; i<cups.length; i++) {
+            if(i != 7 && i != 15) {
+                PocketCup pocketCup = (PocketCup) cups[i];
+                if (!pocketCup.isEmpty()) {
+                    break;
+                }
+            }
+
+            if(i==14) {
+                return true;
+            }
+        }
+
+        if(player1.getScore() > 49 || player2.getScore() > 49) {
+            return true;
+        }
+
+        return false;
+    }
+    
 }
