@@ -26,21 +26,42 @@ public class Board {
         return isFinished;
     }
 
+
     public void pressCup(View view) {
+        //get id of the pressed cup
         int id = ((PocketCup)view).getPocketCupId();
 
-        PocketCup cup = (PocketCup)cups[id];
-        int marbleEmptiedCup = cup.emptyCup();
-
+        //empty cup
+        PocketCup pressedPocketCup = (PocketCup)cups[id];
+        int marbleEmptiedCup = pressedPocketCup.emptyCup();
         //at this point please check if the cup in the array still has the marbles
 
-        for(int i=id+1; i<=marbleEmptiedCup+id; i++) {
-            if(i<15) {
-                cups[i].addMarbles(1);
+
+        //put marbles in subsequent cups
+        for(int i = id + 1; i <= id + marbleEmptiedCup; i++) {
+            if(i == 7) {
+                if(player1.getTurn()) {
+                    PlayerCup player1Cup = (PlayerCup)cups[i];
+                    player1Cup.addMarbles(1);
+                    continue; //finish current iteration on this point and to go to next iteration
+                }
+                else {
+                    i++; //jumps current cup and goes to next one
+                }
             }
-            else {
-                //restart
+            else if(i == 15) {
+                if(player2.getTurn()) {
+                    PlayerCup player2Cup = (PlayerCup)cups[i];
+                    player2Cup.addMarbles(1);
+                    continue;
+                }
+                else {
+                    i++;
+                }
             }
+
+            PocketCup nextPocketCup = (PocketCup) cups[i];
+            nextPocketCup.addMarbles(1);
         }
 
 
