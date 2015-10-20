@@ -150,5 +150,14 @@ public class Board {
 
         return false;
     }
-    
+
+
+    public String checkWinner() {
+        if(player1.getScore() > player2.getScore()) {
+            return player1.getName();
+        }
+        return player2.getName();
+    }
+
+
 }

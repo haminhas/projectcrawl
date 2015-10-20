@@ -34,4 +34,6 @@ public class Player {
     public int getScore() {
         return playerCup.getMarbles();
     }
+
+    public String getName() { return name; }
 }
