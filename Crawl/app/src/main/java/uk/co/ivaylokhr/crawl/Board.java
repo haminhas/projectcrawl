@@ -23,6 +23,12 @@ public class Board {
 
         for(Cup c :cups){
             c.setText(Integer.toString(c.getMarbles()));
+            c.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pressCup(v);
+                }
+            });
         }
     }
 
@@ -130,6 +136,7 @@ public class Board {
             if(i==14) {
                 return true;
             }
+
         }
 
         if(player1.getScore() > 49 || player2.getScore() > 49) {
