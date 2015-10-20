@@ -14,6 +14,7 @@ public class Cup extends Button {
     public Cup(Context context, AttributeSet attrs) {
         super(context, attrs);
         marbles = 0;
+        //marbles = 7;
     }
 
     public int getMarbles(){
