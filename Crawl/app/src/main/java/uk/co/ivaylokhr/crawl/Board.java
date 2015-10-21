@@ -77,40 +77,7 @@ public class Board {
             //check at the last iteration if cup is empty
             if(i == marblesFromEmptiedCup && nextPocketCup.isEmpty() ) {
                 PocketCup oppositeCup ;
-
-                //get the opposite cup hard-wired way
-                switch (cupNumber) {
-                    case 0: oppositeCup = (PocketCup)cups[14] ;
-                        break;
-                    case 1: oppositeCup = (PocketCup)cups[13] ;
-                        break;
-                    case 2: oppositeCup = (PocketCup)cups[12] ;
-                        break;
-                    case 3: oppositeCup = (PocketCup)cups[11] ;
-                        break;
-                    case 4: oppositeCup = (PocketCup)cups[10] ;
-                        break;
-                    case 5: oppositeCup = (PocketCup)cups[9] ;
-                        break;
-                    case 6: oppositeCup = (PocketCup)cups[8] ;
-                        break;
-                    case 8: oppositeCup = (PocketCup)cups[6] ;
-                        break;
-                    case 9: oppositeCup = (PocketCup)cups[5] ;
-                        break;
-                    case 10: oppositeCup = (PocketCup)cups[4] ;
-                        break;
-                    case 11: oppositeCup = (PocketCup)cups[3] ;
-                        break;
-                    case 12: oppositeCup = (PocketCup)cups[2] ;
-                        break;
-                    case 13: oppositeCup = (PocketCup)cups[1] ;
-                        break;
-                    case 14: oppositeCup = (PocketCup)cups[0] ;
-                        break;
-                    default: oppositeCup = (PocketCup)cups[i];
-                        break;
-                }
+                oppositeCup= (PocketCup) cups[cupNumber+((7-cupNumber)*2)];
 
                 int marblesFromOppositeCup = oppositeCup.emptyCup();
 
