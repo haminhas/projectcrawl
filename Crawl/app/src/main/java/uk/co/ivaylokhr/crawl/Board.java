@@ -77,9 +77,17 @@ public class Board {
             //check at the last iteration if cup is empty
             if(i == marblesFromEmptiedCup && nextPocketCup.isEmpty() ) {
                 PocketCup oppositeCup ;
-                oppositeCup= (PocketCup) cups[cupNumber+((7-cupNumber)*2)];
+                int marblesFromOppositeCup=0; //Had to initialize this :/
+                if(player1.getTurn()) {
+                    oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
+                    //..or [(cupNumber -14)*-1]
+                    marblesFromOppositeCup = oppositeCup.emptyCup();
+                }
+                else if(player2.getTurn()) {
+                    oppositeCup = (PocketCup) cups[(14-cupNumber)];
+                    marblesFromOppositeCup = oppositeCup.emptyCup();
+                }
 
-                int marblesFromOppositeCup = oppositeCup.emptyCup();
 
                 if(player1.getTurn()) {
                     player1.increaseScore(marblesFromOppositeCup);
