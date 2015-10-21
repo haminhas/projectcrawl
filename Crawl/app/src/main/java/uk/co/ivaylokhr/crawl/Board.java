@@ -25,7 +25,7 @@ public class Board {
 
 
     public void pressCup(View view) {
-        //get id of the pressed cup
+        //1. get id of the pressed cup
         int id = ((PocketCup)view).getPocketCupId();
 
         //empty cup
@@ -34,12 +34,12 @@ public class Board {
         //at this point please check if the cup in the array still has the marbles
 
 
-        //put marbles in subsequent cups
-        // everything %15 to stay in the range
-        for(int i = id + 1; i <= id + marbleEmptiedCup; i++) {
+        //2. put marbles in subsequent cups
+        int cupNumber = id + 1;
+        for(int i = 0; i < marbleEmptiedCup; i++) {
 
             //condition for when the cup is the playerCup
-            if(i == 7) {
+            if(cupNumber == 7) {
                 if(player1.getTurn()) {
                     //SHOULD I MODIFY THE player1.playerCup or the cup in the array??
                     player1.increaseScore(1);
@@ -48,10 +48,10 @@ public class Board {
                     continue; //finish current iteration on this point and to go to next iteration
                 }
                 else {
-                    i++; //jumps current cup and goes to next one
+                    cupNumber++; //jumps PlayerCup and goes to next one
                 }
             }
-            else if(i == 15) {
+            else if(cupNumber == 15) {
                 if(player2.getTurn()) {
                     //SHOULD I MODIFY THE player2.playerCup or the cup in the array??
                     player2.increaseScore(1);
@@ -60,18 +60,18 @@ public class Board {
                     continue;
                 }
                 else {
-                    i++;
+                    cupNumber++;
                 }
             }
 
-            PocketCup nextPocketCup = (PocketCup) cups[i];
+            PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
 
-            //check the last one
-            if(i == id+marbleEmptiedCup && nextPocketCup.isEmpty() ) {
+            //check at the last iteration if cup is empty
+            if(i == marbleEmptiedCup && nextPocketCup.isEmpty() ) {
                 PocketCup oppositeCup ;
 
                 //get the opposite cup hard-wired way
-                switch (i) {
+                switch (cupNumber) {
                     case 0: oppositeCup = (PocketCup)cups[14] ;
                             break;
                     case 1: oppositeCup = (PocketCup)cups[13] ;
@@ -85,8 +85,6 @@ public class Board {
                     case 5: oppositeCup = (PocketCup)cups[9] ;
                         break;
                     case 6: oppositeCup = (PocketCup)cups[8] ;
-                        break;
-                    case 7: oppositeCup = (PocketCup)cups[7] ;
                         break;
                     case 8: oppositeCup = (PocketCup)cups[6] ;
                         break;
@@ -119,13 +117,25 @@ public class Board {
 
             nextPocketCup.addMarbles(1);
 
-            //AT THE END OF THE FOR LOOP USE THE MODULUS 14 MAYBE
+            //update id for the next cup, and stay in the range of 15.
+            cupNumber++;
+            if(cupNumber>=15) {
+                cupNumber = 0;
+            }
+
+
         }//END OF FOR LOOP
 
 
-        //if game finished check winner
+
 
     }
+
+
+    public void putMarblesInNextCups(int idCurrentCup, int marbleFromEmptiedCup) {
+
+    }
+
 
 
 
