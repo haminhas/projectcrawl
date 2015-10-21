@@ -16,4 +16,4 @@ Guidelines:
 
 4. Each different branch should be developed on a different branch with an appropriate name.
 
-
+5. DO NOT merge or delete branches without speaking with other team members.
