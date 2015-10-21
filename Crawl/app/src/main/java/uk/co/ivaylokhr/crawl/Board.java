@@ -11,6 +11,7 @@ public class Board {
     private Cup[] cups;
     private Player player1, player2;
     private boolean isFinished;
+    private String winner;
 
     public Board(Cup[] cups){
         this.cups = cups;
@@ -30,13 +31,20 @@ public class Board {
 
         //empty cup
         PocketCup pressedPocketCup = (PocketCup)cups[id];
-        int marbleEmptiedCup = pressedPocketCup.emptyCup();
+        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         //at this point please check if the cup in the array still has the marbles
 
+        putMarblesInNextCups(id, marblesFromEmptiedCup);
 
-        //2. put marbles in subsequent cups
-        int cupNumber = id + 1;
-        for(int i = 0; i < marbleEmptiedCup; i++) {
+        if(isGameFinished()) {
+            winner = checkWinner();
+        }
+    }
+
+    
+    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+        int cupNumber = idCurrentCup + 1;
+        for(int i = 0; i < marblesFromEmptiedCup; i++) {
 
             //condition for when the cup is the playerCup
             if(cupNumber == 7) {
@@ -67,13 +75,13 @@ public class Board {
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
 
             //check at the last iteration if cup is empty
-            if(i == marbleEmptiedCup && nextPocketCup.isEmpty() ) {
+            if(i == marblesFromEmptiedCup && nextPocketCup.isEmpty() ) {
                 PocketCup oppositeCup ;
 
                 //get the opposite cup hard-wired way
                 switch (cupNumber) {
                     case 0: oppositeCup = (PocketCup)cups[14] ;
-                            break;
+                        break;
                     case 1: oppositeCup = (PocketCup)cups[13] ;
                         break;
                     case 2: oppositeCup = (PocketCup)cups[12] ;
@@ -125,18 +133,7 @@ public class Board {
 
 
         }//END OF FOR LOOP
-
-
-
-
     }
-
-
-    public void putMarblesInNextCups(int idCurrentCup, int marbleFromEmptiedCup) {
-
-    }
-
-
 
 
     public boolean isGameFinished() {
