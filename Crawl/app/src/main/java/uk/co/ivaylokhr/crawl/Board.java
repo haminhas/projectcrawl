@@ -89,14 +89,14 @@ public class Board {
 
     //decides which turn is next depending on the id of the final marblees that has been put
     private void decideTurn(int finalButtonID){
-        if(player1.getTurn() && finalButtonID <= 7){
-            switchTurns(player1);
+        if(player1.getTurn() && finalButtonID < 7 && finalButtonID > 0){
+            switchTurns(player2);
         }
         else if(player1.getTurn() && finalButtonID > 7) {
             switchTurns(player2);
         }
-        else if(player2.getTurn() && finalButtonID >= 7){
-            switchTurns(player2);
+        else if(player2.getTurn() && finalButtonID > 7 && finalButtonID < 15){
+            switchTurns(player1);
         }
         else if(player2.getTurn() && finalButtonID < 7){
             switchTurns(player1);
