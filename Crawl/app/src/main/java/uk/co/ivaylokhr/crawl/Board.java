@@ -108,22 +108,14 @@ public class Board {
             if(i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty() ) {
                 PocketCup oppositeCup ;
                 int marblesFromOppositeCup=0; //Had to initialize this :/
-                if(player1.getTurn()) {
+                if(player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
                     //..or [(cupNumber -14)*-1]
-                    marblesFromOppositeCup = oppositeCup.emptyCup();
+                    player1.increaseScore(marblesFromOppositeCup = oppositeCup.emptyCup());
                 }
-                else if(player2.getTurn()) {
+                else if(player2.getTurn() && cupNumber > 7 && cupNumber != 15) {
                     oppositeCup = (PocketCup) cups[(14-cupNumber)];
-                    marblesFromOppositeCup = oppositeCup.emptyCup();
-                }
-
-
-                if(player1.getTurn()) {
-                    player1.increaseScore(marblesFromOppositeCup);
-                }
-                else {
-                    player2.increaseScore(marblesFromOppositeCup);
+                    player2.increaseScore(marblesFromOppositeCup = oppositeCup.emptyCup());
                 }
 
             }
