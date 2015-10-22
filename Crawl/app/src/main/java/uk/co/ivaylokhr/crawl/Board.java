@@ -21,8 +21,9 @@ public class Board {
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
         isFinished = false;
-        player1.setTurn(true);
-        player2.setTurn(false);
+        player1.setTurn(false);
+        player2.setTurn(true);
+        decideTurn();
 
         for(Cup c :cups){
             c.setText(Integer.toString(c.getMarbles()));
@@ -51,13 +52,7 @@ public class Board {
         Log.i("Pressed Cup", "New move");
         putMarblesInNextCups(id, marblesFromEmptiedCup);
 
-        if(player1.getTurn()){
-            player2.setTurn(true);
-            player1.setTurn(false);
-        } else {
-            player2.setTurn(false);
-            player1.setTurn(true);
-        }
+        decideTurn();
 
         if(isGameFinished()) {
             winner = checkWinner();
@@ -69,6 +64,27 @@ public class Board {
     public void updateButtonText(){
         for(Cup c :cups){
             c.setText(Integer.toString(c.getMarbles()));
+        }
+    }
+
+    private void decideTurn(){
+        if(player1.getTurn()){
+            player2.setTurn(true);
+            player1.setTurn(false);
+        } else {
+            player2.setTurn(false);
+            player1.setTurn(true);
+        }
+        for (int i = 0; i < 15; i++){
+            if(i < 7 && player1.getTurn() && cups[i].getMarbles() != 0){
+                cups[i].setEnabled(true);
+            }
+            else if(i > 7 && player2.getTurn() && cups[i].getMarbles() != 0){
+                cups[i].setEnabled(true);
+            }
+            else {
+                cups[i].setEnabled(false);
+            }
         }
     }
 
