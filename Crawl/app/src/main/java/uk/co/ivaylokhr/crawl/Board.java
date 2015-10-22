@@ -106,16 +106,21 @@ public class Board {
 
             //check at the last iteration if cup is empty
             if(i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty() ) {
-                PocketCup oppositeCup ;
-                int marblesFromOppositeCup=0; //Had to initialize this :/
+                PocketCup oppositeCup;
                 if(player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
                     //..or [(cupNumber -14)*-1]
-                    player1.increaseScore(marblesFromOppositeCup = oppositeCup.emptyCup());
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    //have to do it so it adds 1 more to the playerCup, sry :S
+                    nextPocketCup.addMarbles(-1);
+                    player1.increaseScore(oppositeCupNumbers + 1);
                 }
-                else if(player2.getTurn() && cupNumber > 7 && cupNumber != 15) {
+                else if(player2.getTurn() && cupNumber > 7) {
                     oppositeCup = (PocketCup) cups[(14-cupNumber)];
-                    player2.increaseScore(marblesFromOppositeCup = oppositeCup.emptyCup());
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    //have to do it so it adds 1 more to the playerCup, sry :S
+                    nextPocketCup.addMarbles(-1);
+                    player2.increaseScore(oppositeCupNumbers + 1);
                 }
 
             }
@@ -165,4 +170,5 @@ public class Board {
         }
         return player2.getName();
     }
+
 }
