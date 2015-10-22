@@ -2,6 +2,7 @@ package uk.co.ivaylokhr.crawl;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 /**
  * Created by Hassan on 19/10/2015.

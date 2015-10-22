@@ -7,17 +7,29 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.jar.Attributes;
 
+
 public class Board {
     private Cup[] cups;
     private Player player1, player2;
     private boolean isFinished;
     private String winner;
 
+
     public Board(Cup[] cups){
         this.cups = cups;
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
         isFinished = false;
+
+        for(Cup c :cups){
+            c.setText(Integer.toString(c.getMarbles()));
+            c.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pressCup(v);
+                }
+            });
+        }
     }
 
     public boolean isFinished(){
@@ -124,6 +136,7 @@ public class Board {
             if(i==14) {
                 return true;
             }
+
         }
 
         if(player1.getScore() > 49 || player2.getScore() > 49) {
@@ -140,6 +153,4 @@ public class Board {
         }
         return player2.getName();
     }
-
-
 }
