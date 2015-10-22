@@ -101,6 +101,26 @@ public class Board {
         else if(player2.getTurn() && finalButtonID < 7){
             switchTurns(player1);
         }
+        boolean force = true;
+        if(player1.getTurn()){
+            for(int id = 0; id < 7; id++) {
+                PocketCup cup = (PocketCup) cups[id];
+                if (!cup.isEmpty()){
+                    force = false;
+                }
+            }
+
+        }else{
+            for(int id = 8; id < 15; id++) {
+                PocketCup cup = (PocketCup) cups[id];
+                if (!cup.isEmpty()) {
+                    force = false;
+                }
+            }
+        }
+        if(force){
+            forceSwitch();
+        }
     }
 
     private void switchTurns(Player player){
