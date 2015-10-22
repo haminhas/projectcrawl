@@ -2,6 +2,7 @@ package uk.co.ivaylokhr.crawl;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ public class Board {
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
         isFinished = false;
+        player1.setTurn(true);
+        player2.setTurn(false);
 
         for(Cup c :cups){
             c.setText(Integer.toString(c.getMarbles()));
@@ -39,7 +42,7 @@ public class Board {
 
     public void pressCup(View view) {
         //1. get id of the pressed cup
-        int id = ((PocketCup)view).getPocketCupId();
+        int id = ((PocketCup)view).getId();
 
         //empty cup
         PocketCup pressedPocketCup = (PocketCup)cups[id];
@@ -73,29 +76,27 @@ public class Board {
                     player1.increaseScore(1);
                     //PlayerCup player1Cup = (PlayerCup)cups[i];
                     //player1Cup.addMarbles(1);
-                    continue; //finish current iteration on this point and to go to next iteration
-                }
-                else {
                     cupNumber++; //jumps PlayerCup and goes to next one
+
+                    continue; //finish current iteration on this point and to go to next iteration
                 }
             }
             else if(cupNumber == 15) {
                 if(player2.getTurn()) {
                     //SHOULD I MODIFY THE player2.playerCup or the cup in the array??
                     player2.increaseScore(1);
+                    Log.i("player 2 score:", Integer.toString(player2.getScore()));
                     //PlayerCup player2Cup = (PlayerCup)cups[i];
                     //player2Cup.addMarbles(1);
+                    cupNumber =0;
                     continue;
-                }
-                else {
-                    cupNumber++;
                 }
             }
 
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
 
             //check at the last iteration if cup is empty
-            if(i == marblesFromEmptiedCup && nextPocketCup.isEmpty() ) {
+            if(i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty() ) {
                 PocketCup oppositeCup ;
                 int marblesFromOppositeCup=0; //Had to initialize this :/
                 if(player1.getTurn()) {
