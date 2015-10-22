@@ -48,8 +48,16 @@ public class Board {
         PocketCup pressedPocketCup = (PocketCup)cups[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         //at this point please check if the cup in the array still has the marbles
-
+        Log.i("Pressed Cup", "New move");
         putMarblesInNextCups(id, marblesFromEmptiedCup);
+
+        if(player1.getTurn()){
+            player2.setTurn(true);
+            player1.setTurn(false);
+        } else {
+            player2.setTurn(false);
+            player1.setTurn(true);
+        }
 
         if(isGameFinished()) {
             winner = checkWinner();
@@ -68,7 +76,9 @@ public class Board {
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for(int i = 0; i < marblesFromEmptiedCup; i++) {
-
+            Log.i("Cup id:", Integer.toString(cupNumber));
+            Log.i("Player's 1 turn:", Boolean.toString(player1.getTurn()));
+            Log.i("Player's 2 turn:", Boolean.toString(player2.getTurn()));
             //condition for when the cup is the playerCup
             if(cupNumber == 7) {
                 if(player1.getTurn()) {
@@ -77,9 +87,8 @@ public class Board {
                     //PlayerCup player1Cup = (PlayerCup)cups[i];
                     //player1Cup.addMarbles(1);
                     cupNumber++; //jumps PlayerCup and goes to next one
-
-                    continue; //finish current iteration on this point and to go to next iteration
                 }
+                continue; //finish current iteration on this point and to go to next iteration
             }
             else if(cupNumber == 15) {
                 if(player2.getTurn()) {
@@ -89,8 +98,8 @@ public class Board {
                     //PlayerCup player2Cup = (PlayerCup)cups[i];
                     //player2Cup.addMarbles(1);
                     cupNumber =0;
-                    continue;
                 }
+                continue; //finish current iteration on this point and to go to next iteration
             }
 
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
@@ -122,9 +131,11 @@ public class Board {
             nextPocketCup.addMarbles(1);
 
             //update id for the next cup, and stay in the range of 15.
-            cupNumber++;
             if(cupNumber>=15) {
                 cupNumber = 0;
+            }
+            else{
+                cupNumber++;
             }
 
 
