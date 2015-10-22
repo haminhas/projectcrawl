@@ -51,6 +51,14 @@ public class Board {
         if(isGameFinished()) {
             winner = checkWinner();
         }
+
+        updateButtonText();
+    }
+
+    public void updateButtonText(){
+        for(Cup c :cups){
+            c.setText(Integer.toString(c.getMarbles()));
+        }
     }
 
     
