@@ -159,7 +159,6 @@ public class Board {
             //condition for when the cup is the playerCup
             if(cupNumber == 7) {
                 if(player1.getTurn()) {
-                    Log.i("PLAYER 1 TURN", Boolean.toString(player1.getTurn()));
                     //SHOULD I MODIFY THE player1.playerCup or the cup in the array??
                     player1.increaseScore(1);
                     //PlayerCup player1Cup = (PlayerCup)cups[i];
@@ -175,7 +174,6 @@ public class Board {
                 if(player2.getTurn()) {
                     //SHOULD I MODIFY THE player2.playerCup or the cup in the array??
                     player2.increaseScore(1);
-                    Log.i("player 2 score:", Integer.toString(player2.getScore()));
                     //PlayerCup player2Cup = (PlayerCup)cups[i];
                     //player2Cup.addMarbles(1);
                     cupNumber =0;
