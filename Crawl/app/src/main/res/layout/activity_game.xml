@@ -20,10 +20,21 @@
             android:background="@color/blue"
             android:layout_height="match_parent">
 
+            <ImageButton
+                android:background="@color/blue"
+                android:layout_width="wrap_content"
+                android:onClick="settings"
+                android:layout_height="0dp"
+                android:layout_weight="0.06"
+                android:src="@drawable/setting"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:id="@+id/imageButton" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="0.21"
+                android:layout_weight="0.15"
                 android:text=""
                 android:id="@+id/textView5" />
 

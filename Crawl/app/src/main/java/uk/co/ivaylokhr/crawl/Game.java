@@ -1,20 +1,86 @@
 package uk.co.ivaylokhr.crawl;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsoluteLayout;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
 
 public class Game extends AppCompatActivity {
 
     private Cup[] cups;
     private Board b;
+    private ImageButton imgButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         b = new Board(fillTheArray());
-    }
+        imgButton =(ImageButton)findViewById(R.id.imageButton);
+        imgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+                LayoutInflater layoutInflater
+                        = (LayoutInflater) getBaseContext()
+                        .getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = layoutInflater.inflate(R.layout.settings, null);
+                final PopupWindow popupWindow = new PopupWindow(
+                        popupView,
+                        AbsoluteLayout.LayoutParams.WRAP_CONTENT,
+                        AbsoluteLayout.LayoutParams.WRAP_CONTENT);
+
+                String player1 = sp.getString("player1", "");
+                String player2 = sp.getString("player2", "");
+                final EditText text1 = (EditText) popupView.findViewById(R.id.editText);
+                final EditText text2 = (EditText) popupView.findViewById(R.id.editText2);
+                text1.setText(player1);
+                text2.setText(player2);
+                Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
+                Button btnMain = (Button) popupView.findViewById(R.id.main);
+
+                popupWindow.setFocusable(true);
+                popupWindow.update();
+                popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+
+                btnMain.setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        setNames(text1.getText(), text2.getText());
+                        back();
+                    }
+                });
+//
+                btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        setNames(text1.getText(), text2.getText());
+                        popupWindow.dismiss();
+                    }
+                });
+
+                popupWindow.showAsDropDown(imgButton, 50, -30);
+            }
+        });
+            }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,8 +104,31 @@ public class Game extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void back() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
-    private Cup[] fillTheArray(){
+    public void setNames(Editable player1, Editable player2){
+        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        if(!player1.toString().equals("")){
+        editor.putString("player1", player1.toString());
+        editor.commit();}
+        else{
+            editor.putString("player1", "Player 1");
+            editor.commit();
+        }
+        if(!player2.toString().equals("")) {
+            editor.putString("player2", player2.toString());
+            editor.commit();
+        }
+        else{
+            editor.putString("player2", "Player 2");
+            editor.commit();
+        }
+    }
+    public Cup[] fillTheArray(){
         cups = new Cup[16];
         cups[0] = (PocketCup) findViewById(R.id.b0);
         cups[0].setId(0);

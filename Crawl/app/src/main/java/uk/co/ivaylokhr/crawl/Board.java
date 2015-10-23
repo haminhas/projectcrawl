@@ -34,6 +34,7 @@ public class Board {
         return isFinished;
     }
 
+    
 
     public void pressCup(View view) {
         //get id of the pressed cup
