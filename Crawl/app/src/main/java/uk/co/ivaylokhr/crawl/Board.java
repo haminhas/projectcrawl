@@ -7,17 +7,19 @@ import android.view.View;
 public class Board {
     private Cup[] cups;
     private Player player1, player2;
+    private Player firstPlayer;
     private boolean isFinished;
     private String winner;
+    private boolean isFirstTurn;
 
 
     public Board(Cup[] cups){
         this.cups = cups;
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
+        enableAllButtons();
         isFinished = false;
-        player1.setTurn(true);
-        decideTurn(0);
+        isFirstTurn = true;
 
         for(Cup c :cups){
             c.setText(Integer.toString(c.getMarbles()));
@@ -30,12 +32,25 @@ public class Board {
         }
     }
 
+    //this method is called only at the start of the game, when both players can make a move
+    private void enableAllButtons(){
+        for (int i = 0; i < cups.length; i++){
+            //ignore the player cups
+            if(i == 7 || i == 15){
+                continue;
+            }
+            else{
+                cups[i].setEnabled(true);
+            }
+        }
+    }
+
     public boolean isFinished(){
         return isFinished;
     }
 
-
     public void pressCup(View view) {
+
         //get id of the pressed cup
         int id = ((PocketCup)view).getId();
 
@@ -51,13 +66,17 @@ public class Board {
         }
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
-            finalButtonID -= 15;
+                finalButtonID -= 15;
+        }
+        //checks if it is the first turn
+        //if it is, it gives the player who made the turn first to be the first player
+        if(isFirstTurn){
+            doFirstTurn(finalButtonID);
         }
 
-        //first it checks is one of the players
+        //decides which turn is next by the id of the last modified cup
         decideTurn(finalButtonID);
         checkIfPlayerCanPlay();
-
         updateButtonText();
     }
 
@@ -65,6 +84,17 @@ public class Board {
         for(Cup c :cups){
             c.setText(Integer.toString(c.getMarbles()));
         }
+    }
+
+    private void doFirstTurn(int finalButtonID){
+        if(finalButtonID < 7){
+               firstPlayer = player1;
+        }
+        else{
+            firstPlayer = player2;
+        }
+        isFirstTurn = false;
+        firstPlayer.setTurn(true);
     }
 
     //This method loops through the current player's half and determine if you can make a move
@@ -98,7 +128,7 @@ public class Board {
         }
     }
 
-    //This forces the switch of turns. It is only called when you one player doesn't have valid moves
+    //This forces the switch of turns.It is called when one player doesn't have valid moves
     private void forceSwitch(){
         if(player1.getTurn()){
             switchTurns(player2);
@@ -192,21 +222,17 @@ public class Board {
                 if(player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
                     //..or [(cupNumber -14)*-1]
-                    if(!oppositeCup.isEmpty()){
-                        int oppositeCupNumbers = oppositeCup.emptyCup();
-                        //have to do it so it adds 1 more to the playerCup, sry :S
-                        nextPocketCup.addMarbles(-1);
-                        player1.increaseScore(oppositeCupNumbers + 1);
-                    }
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    //have to do it so it adds 1 more to the playerCup, sry :S
+                    nextPocketCup.addMarbles(-1);
+                    player1.increaseScore(oppositeCupNumbers + 1);
                 }
                 else if(player2.getTurn() && cupNumber > 7) {
                     oppositeCup = (PocketCup) cups[(14-cupNumber)];
-                    if(!oppositeCup.isEmpty()){
-                        int oppositeCupNumbers = oppositeCup.emptyCup();
-                        //have to do it so it adds 1 more to the playerCup, sry :S
-                        nextPocketCup.addMarbles(-1);
-                        player2.increaseScore(oppositeCupNumbers + 1);
-                    }
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    //have to do it so it adds 1 more to the playerCup, sry :S
+                    nextPocketCup.addMarbles(-1);
+                    player2.increaseScore(oppositeCupNumbers + 1);
                 }
             }
 
