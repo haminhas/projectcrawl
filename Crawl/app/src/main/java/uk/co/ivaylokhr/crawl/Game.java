@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,16 +21,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 public class Game extends AppCompatActivity {
 
     private Cup[] cups;
     private Board b;
     private ImageButton imgButton;
+    private TextView timer;
+    long startTime;
+    long timeCounter=0;
+    Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        timer= (TextView) findViewById(R.id.Timer);
+        startTime = System.currentTimeMillis();
+        handler.postDelayed(updateTimer,0);
         b = new Board(fillTheArray());
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +91,18 @@ public class Game extends AppCompatActivity {
             }
         });
             }
+
+    public Runnable updateTimer = new Runnable() {
+        public void run() {
+            timeCounter = System.currentTimeMillis()-startTime;
+            long totalTime = timeCounter;
+            long hours = totalTime/3600000;
+            long minutes = (totalTime-hours*3600000)/60000;
+            long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
+            String time = String.format("%02d:%02d",minutes, seconds);
+            timer.setText(time);
+            handler.postDelayed(this, 0);
+        }};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
