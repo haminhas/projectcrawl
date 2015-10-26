@@ -1,17 +1,23 @@
 package uk.co.ivaylokhr.crawl;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
 
-public class Board {
+public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2;
     private boolean isFinished;
     private String winner;
+    Context con;
 
-
-    public Board(Cup[] cups){
+    public Board(Cup[] cups) {
         this.cups = cups;
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
@@ -19,7 +25,7 @@ public class Board {
         player1.setTurn(true);
         decideTurn(0);
 
-        for(Cup c :cups){
+        for (Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
             c.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -30,16 +36,39 @@ public class Board {
         }
     }
 
-    public boolean isFinished(){
+    public boolean isFinished() {
         return isFinished;
     }
+    public void c(Context context){
+        con = context;
+    }
 
-    
+    public void updateScores() {
+        Integer score = checkWinner().playerCup.getMarbles();
+        Integer one = Prefrences.fromPreferences(con, -1, "first", "your_prefs");
+        Integer two = Prefrences.fromPreferences(con, -1, "second", "your_prefs");
+        Integer three = Prefrences.fromPreferences(con, -1, "third", "your_prefs");
+        if (score > one) {
+            three = two;
+            two = one;
+            one = score;
+        } else if (score > two) {
+            three = two;
+            two = score;
+        } else if (score > three) {
+            three = score;
+        }
+        Prefrences.toPreferences(con,one,"first","your_prefs");
+        Prefrences.toPreferences(con,two,"second","your_prefs");
+        Prefrences.toPreferences(con,three,"third","your_prefs");
+    }
+
+
+
 
     public void pressCup(View view) {
         //get id of the pressed cup
         int id = ((PocketCup)view).getId();
-
         //empty cup
         PocketCup pressedPocketCup = (PocketCup)cups[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
@@ -48,7 +77,9 @@ public class Board {
         putMarblesInNextCups(id, marblesFromEmptiedCup);
 
         if(isGameFinished()) {
-            winner = checkWinner();
+            updateScores();
+            winner = checkWinner().getName();
+
         }
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
@@ -242,19 +273,15 @@ public class Board {
 
         }
 
-        if(player1.getScore() > 49 || player2.getScore() > 49) {
-            return true;
-        }
-
         return false;
     }
 
 
-    public String checkWinner() {
+    public Player checkWinner() {
         if(player1.getScore() > player2.getScore()) {
-            return player1.getName();
+            return player1;
         }
-        return player2.getName();
+        return player2;
     }
 
 }
