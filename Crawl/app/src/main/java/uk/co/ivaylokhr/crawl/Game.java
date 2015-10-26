@@ -15,13 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 public class Game extends AppCompatActivity {
 
@@ -32,6 +32,7 @@ public class Game extends AppCompatActivity {
     long startTime;
     long timeCounter=0;
     Handler handler = new Handler();
+    private RelativeLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,15 @@ public class Game extends AppCompatActivity {
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer,0);
         b = new Board(fillTheArray());
+        b.c(getBaseContext());
+        addgame();
+        layout = (RelativeLayout)findViewById(R.id.layout);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +121,16 @@ public class Game extends AppCompatActivity {
         return true;
     }
 
+    public void addgame(){
+        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        Integer games = sp.getInt("games", -1);
+        games++;
+        editor.putInt("games", games);
+        editor.commit();
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -127,8 +147,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void back() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     public void setNames(Editable player1, Editable player2){

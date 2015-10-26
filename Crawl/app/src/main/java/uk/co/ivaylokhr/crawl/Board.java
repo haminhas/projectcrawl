@@ -1,15 +1,22 @@
 package uk.co.ivaylokhr.crawl;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
 
-public class Board {
+public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2;
     private boolean isFinished;
     private String winner;
     private boolean isFirstTurn;
+    Context con;
 
     public Board(Cup[] cups) {
         this.cups = cups;
@@ -33,16 +40,39 @@ public class Board {
     }
 
     //this method is called only at the start of the game, when both players can make a move
-    private void enableAllButtons(){
-        for (int i = 0; i < cups.length; i++){
+    private void enableAllButtons() {
+        for (int i = 0; i < cups.length; i++) {
             //ignore the player cups
-            if(i == 7 || i == 15){
+            if (i == 7 || i == 15) {
                 continue;
-            }
-            else{
+            } else {
                 cups[i].setEnabled(true);
             }
         }
+    }
+
+    public void c(Context context){
+        con = context;
+    }
+
+    public void updateScores() {
+        Integer score = checkWinner().playerCup.getMarbles();
+        Integer one = Prefrences.fromPreferences(con, -1, "first", "your_prefs");
+        Integer two = Prefrences.fromPreferences(con, -1, "second", "your_prefs");
+        Integer three = Prefrences.fromPreferences(con, -1, "third", "your_prefs");
+        if (score > one) {
+            three = two;
+            two = one;
+            one = score;
+        } else if (score > two) {
+            three = two;
+            two = score;
+        } else if (score > three) {
+            three = score;
+        }
+        Prefrences.toPreferences(con,one,"first","your_prefs");
+        Prefrences.toPreferences(con,two,"second","your_prefs");
+        Prefrences.toPreferences(con,three,"third","your_prefs");
     }
 
     public boolean isFinished() {
@@ -52,7 +82,7 @@ public class Board {
     public void pressCup(View view) {
 
         //get id of the pressed cup
-        int id = ((PocketCup) view).getId();
+        int id = ((PocketCup)view).getId();
 
         //empty cup
         PocketCup pressedPocketCup = (PocketCup) cups[id];
@@ -258,17 +288,15 @@ public class Board {
             }
 
         }
-
-        return player1.getScore() > 49 || player2.getScore() > 49;
-
+        return false;
     }
 
 
-    public String checkWinner() {
-        if (player1.getScore() > player2.getScore()) {
-            return player1.getName();
+    public Player checkWinner() {
+        if(player1.getScore() > player2.getScore()) {
+            return player1;
         }
-        return player2.getName();
+        return player2;
     }
 
 }
