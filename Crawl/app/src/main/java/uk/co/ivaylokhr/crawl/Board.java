@@ -14,8 +14,8 @@ public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2;
     private boolean isFinished;
-    private Player winner;
     private boolean isFirstTurn;
+    private String winner;
     Context con;
 
     public Board(Cup[] cups) {
@@ -50,7 +50,6 @@ public class Board extends AppCompatActivity {
             }
         }
     }
-
     public void c(Context context){
         con = context;
     }
@@ -75,15 +74,11 @@ public class Board extends AppCompatActivity {
         Prefrences.toPreferences(con,three,"third","your_prefs");
     }
 
-    public boolean isFinished() {
-        return isFinished;
-    }
 
     public void pressCup(View view) {
 
         //get id of the pressed cup
         int id = ((PocketCup)view).getId();
-
         //empty cup
         PocketCup pressedPocketCup = (PocketCup) cups[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
@@ -91,8 +86,9 @@ public class Board extends AppCompatActivity {
         Log.i("Pressed Cup", "New move");
         putMarblesInNextCups(id, marblesFromEmptiedCup);
 
-        if (isGameFinished()) {
-            winner = checkWinner();
+        if(isGameFinished()) {
+            updateScores();
+            winner = checkWinner().getName();
         }
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
