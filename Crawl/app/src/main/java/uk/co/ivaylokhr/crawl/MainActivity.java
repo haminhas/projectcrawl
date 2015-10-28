@@ -34,12 +34,14 @@ package uk.co.ivaylokhr.crawl;
             getMenuInflater().inflate(R.menu.menu_main, menu);
             return true;
         }
+        //starts a one player game
         public void onePlayer(View view){
             Intent intent = new Intent(this, Game.class);
             players = 1;
             intent.putExtra(EXTRA_MESSAGE, players);
             startActivity(intent);
         }
+        //Initialise the high scores.
         public  void setScores(){
             SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
@@ -52,7 +54,7 @@ package uk.co.ivaylokhr.crawl;
                 editor.commit();
             }
         }
-
+        //starts a two player game
         public void twoPlayer(View view){
             Intent intent = new Intent(this, Game.class);
             players = 2;

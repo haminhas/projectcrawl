@@ -23,6 +23,8 @@ public class HighScores extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_high_scores);
         Log.i("tag", "test");
+
+        //retrieves the list of high scores and shows them on screen
         first = (TextView) findViewById(R.id.textView6);
         second = (TextView) findViewById(R.id.textView10);
         third = (TextView) findViewById(R.id.textView11);
@@ -33,7 +35,7 @@ public class HighScores extends AppCompatActivity {
         third.setText("3rd Place:  " + sp.getInt("third", -1));
         games.setText("Total Games played: " + sp.getInt("games", -1));
     }
-
+    //Closes the window and returns to the start menu
     public void back(View view) {
         finish();
     }

@@ -1,10 +1,6 @@
 package uk.co.ivaylokhr.crawl;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +12,7 @@ public class Board extends AppCompatActivity {
     private boolean isFinished;
     private boolean isFirstTurn;
     private String winner;
-    Context con;
+    Context context;
 
     public Board(Cup[] cups) {
         this.cups = cups;
@@ -50,15 +46,17 @@ public class Board extends AppCompatActivity {
             }
         }
     }
-    public void c(Context context){
-        con = context;
+    //adds Game.java content to the board class
+    public void addContent(Context context){
+        context = this.context;
     }
 
+    //This method edits the highscores after the game
     public void updateScores() {
         Integer score = checkWinner().playerCup.getMarbles();
-        Integer one = Prefrences.fromPreferences(con, -1, "first", "your_prefs");
-        Integer two = Prefrences.fromPreferences(con, -1, "second", "your_prefs");
-        Integer three = Prefrences.fromPreferences(con, -1, "third", "your_prefs");
+        Integer one = Preferences.fromPreferences(context, -1, "first", "your_prefs");
+        Integer two = Preferences.fromPreferences(context, -1, "second", "your_prefs");
+        Integer three = Preferences.fromPreferences(context, -1, "third", "your_prefs");
         if (score > one) {
             three = two;
             two = one;
@@ -69,9 +67,9 @@ public class Board extends AppCompatActivity {
         } else if (score > three) {
             three = score;
         }
-        Prefrences.toPreferences(con,one,"first","your_prefs");
-        Prefrences.toPreferences(con,two,"second","your_prefs");
-        Prefrences.toPreferences(con,three,"third","your_prefs");
+        Preferences.toPreferences(context, one, "first", "your_prefs");
+        Preferences.toPreferences(context, two, "second", "your_prefs");
+        Preferences.toPreferences(context, three, "third", "your_prefs");
     }
 
 
@@ -94,14 +92,15 @@ public class Board extends AppCompatActivity {
         if(finalButtonID > 15){
                 finalButtonID -= 15;
         }
+
+
+        //decides which turn is next by the id of the last modified cup
+        decideTurn(finalButtonID);
         //checks if it is the first turn
         //if it is, it gives the player who made the turn first to be the first player
         if(isFirstTurn){
             doFirstTurn(id);
         }
-
-        //decides which turn is next by the id of the last modified cup
-        decideTurn(finalButtonID);
         checkIfPlayerCanPlay();
         updateButtonText();
     }
@@ -289,6 +288,7 @@ public class Board extends AppCompatActivity {
 
 
     public Player checkWinner() {
+        //checks who won
         if(player1.getScore() > player2.getScore()) {
             return player1;
         }
