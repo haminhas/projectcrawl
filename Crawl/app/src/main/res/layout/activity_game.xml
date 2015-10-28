@@ -1,216 +1,210 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_column="1"
+    android:layout_row="3"
     android:background="@color/blue"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_row="3"
+        android:layout_weight="0.13"
         android:background="@color/blue"
-        android:layout_column="1">
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:adjustViewBounds="true"
+            android:background="@color/blue"
+            android:onClick="settings"
+            android:scaleType="fitCenter"
+            android:src="@drawable/setting" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.11"
+            android:text="" />
+
+        <uk.co.ivaylokhr.crawl.PlayerCup
+            android:id="@+id/b15"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:layout_gravity="right" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.24"
+            android:text="" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.74"
+        android:background="@color/blue"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:text="" />
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
             android:background="@color/blue"
-            android:layout_height="match_parent">
+            android:orientation="horizontal">
 
-            <ImageButton
-                android:background="@color/blue"
-                android:layout_width="wrap_content"
-                android:onClick="settings"
-                android:layout_height="0dp"
-                android:layout_weight="0.06"
-                android:src="@drawable/setting"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:id="@+id/imageButton" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b14"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.15"
-                android:text=""
-                android:id="@+id/textView5" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
-            <uk.co.ivaylokhr.crawl.PlayerCup
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:id="@+id/b15" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b12"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.24"
-                android:text=""
-                android:id="@+id/textView7" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b11"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
+
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
+
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:background="@color/blue"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:text=""
-                android:id="@+id/textView4" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/blue"
-                android:layout_weight="0.3">
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b14"/>
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b13"/>
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b12" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b11" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b10" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b9" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b8" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/blue"
-                android:layout_weight="0.3">
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b0" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b1" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b2" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b3" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b4" />
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b5"/>
-
-                <uk.co.ivaylokhr.crawl.PocketCup
-                    android:layout_width="0dp"
-                    android:layout_weight="0.1"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/b6" />
-            </LinearLayout>
-
-        </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
             android:background="@color/blue"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="match_parent">
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.06"
-                android:id="@+id/Timer"
-                android:text="00:00"
-                android:textSize="40dp"
-                android:textColor="#040000" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.15"
-                android:text=""
-                android:id="@+id/textView8" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
-            <uk.co.ivaylokhr.crawl.PlayerCup
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:id="@+id/b7" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.24"
-                android:text=""
-                android:id="@+id/textView9" />
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
+
+            <uk.co.ivaylokhr.crawl.PocketCup
+                android:id="@+id/b6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
         </LinearLayout>
 
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.13"
+        android:background="@color/blue"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/Timer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:text="00:00"
+            android:textColor="#040000"
+            android:textSize="40dp" />
+
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.11"
+            android:text="" />
+
+        <uk.co.ivaylokhr.crawl.PlayerCup
+            android:id="@+id/b7"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.2" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.24"
+            android:text="" />
+
+    </LinearLayout>
+
+</LinearLayout>
