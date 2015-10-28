@@ -14,7 +14,7 @@ public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2;
     private boolean isFinished;
-    private String winner;
+    private Player winner;
     private boolean isFirstTurn;
     Context con;
 
