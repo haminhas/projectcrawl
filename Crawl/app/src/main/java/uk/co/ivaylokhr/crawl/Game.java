@@ -37,17 +37,11 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         timer= (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
-        handler.postDelayed(updateTimer,0);
+        handler.postDelayed(updateTimer, 0);
         b = new Board(fillTheArray());
-        b.c(getBaseContext());
+        b.addContent(getBaseContext());
         addgame();
-        layout = (LinearLayout)findViewById(R.id.layout);
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
+        //Create the Settings button on click listener
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +55,7 @@ public class Game extends AppCompatActivity {
                         popupView,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
-
+                //Displays Player 1 and Player 2
                 String player1 = sp.getString("player1", "");
                 String player2 = sp.getString("player2", "");
                 final EditText text1 = (EditText) popupView.findViewById(R.id.editText);
@@ -75,7 +69,7 @@ public class Game extends AppCompatActivity {
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-
+                //Creates onClickListener that closes the game and returns to the main menu
                 btnMain.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
@@ -84,7 +78,7 @@ public class Game extends AppCompatActivity {
                         back();
                     }
                 });
-//
+//              //Creates onClickListener that closes the settings menu
                 btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
@@ -98,7 +92,7 @@ public class Game extends AppCompatActivity {
             }
         });
             }
-
+                //Creates timer
     public Runnable updateTimer = new Runnable() {
         public void run() {
             timeCounter = System.currentTimeMillis()-startTime;
