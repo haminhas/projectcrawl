@@ -10,8 +10,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation = "landscape"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +21,12 @@
         <activity
             android:name=".Game"
             android:configChanges="orientation"
-            android:screenOrientation = "landscape"
-            android:label="@string/title_activity_game" >
+            android:label="@string/title_activity_game"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".HighScores"
+            android:label="@string/title_activity_high_scores" >
         </activity>
     </application>
 
