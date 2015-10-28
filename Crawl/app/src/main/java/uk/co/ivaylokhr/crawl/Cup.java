@@ -17,6 +17,8 @@ public class Cup extends Button {
         //marbles = 7;
     }
 
+
+
     public int getMarbles(){
         return marbles;
     }
