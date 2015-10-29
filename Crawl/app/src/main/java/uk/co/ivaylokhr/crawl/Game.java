@@ -29,6 +29,7 @@ public class Game extends AppCompatActivity {
 
     private Cup[] cups;
     private Board b;
+    private AIPlayer ai;
     private ImageButton imgButton;
     private TextView timer;
     long startTime;
