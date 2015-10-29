@@ -61,6 +61,16 @@ public class AIPlayer extends AppCompatActivity {
         return false;
     }
 
+    public Boolean extraTurn(){
+        for(int i = 8; i < 14;i++){
+            if(cups[i].getMarbles() +cups[i].getId() == 15){
+                switchTurns(ai);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void doMove(){
         ArrayList<PocketCup> temp = new ArrayList<>();
@@ -78,8 +88,12 @@ public class AIPlayer extends AppCompatActivity {
             int id = chosenCup.getId();
             int marblesFromEmptiedCup = chosenCup.emptyCup();
             putMarblesInNextCups(id, marblesFromEmptiedCup);
-        } else {
+        } else if (Opposite()) {
             Opposite();
+        }
+
+        if (extraTurn()){
+            extraTurn();
         }
         forceSwitch();
     }
