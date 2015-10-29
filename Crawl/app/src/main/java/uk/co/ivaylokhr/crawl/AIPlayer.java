@@ -107,7 +107,9 @@ public class AIPlayer extends AppCompatActivity {
             }
             decideTurn(finalButtonID);
 
-        }else if (ai.getTurn()) {
+        }
+
+        if (ai.getTurn()) {
             doMove();
         }
 
