@@ -58,11 +58,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/turn"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.1"
-            android:text="" />
+            android:text="turn"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_horizontal" />
         <TextView
             android:id="@+id/player1"
             android:layout_width="wrap_content"

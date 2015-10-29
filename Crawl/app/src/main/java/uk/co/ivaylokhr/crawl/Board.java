@@ -19,6 +19,7 @@ public class Board extends AppCompatActivity {
     private Long timer;
     private TextView playerone;
     private TextView playertwo;
+    private TextView turn;
     private Game activity;
 
     public Board(Game activity) {
@@ -90,7 +91,14 @@ public class Board extends AppCompatActivity {
         //at this point please check if the cup in the array still has the marbles
         Log.i("Pressed Cup", "New move");
         putMarblesInNextCups(id, marblesFromEmptiedCup);
-
+        String turnText = "";
+        if(player1.getTurn()) {
+            turnText = (String) playerone.getText();
+        }else{
+            turnText = (String) playertwo.getText();
+        }
+        turn.setText(turnText+"'s turn");
+        turn.setTextColor(Color.GREEN);
         if(isGameFinished()) {
             updateScores();
             winner = checkWinner().getName();
@@ -151,6 +159,9 @@ public class Board extends AppCompatActivity {
         playertwo = player2;
         this.player1.setName((String) player1.getText());
         this.player2.setName((String) player2.getText());
+        turn = (TextView) activity.findViewById(R.id.turn);
+        turn.setText("Turn 1");
+        turn.setTextColor(Color.GREEN);
     }
 
     private void doFirstTurn(int pressedID){

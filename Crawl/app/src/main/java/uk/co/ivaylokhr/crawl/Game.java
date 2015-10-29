@@ -49,6 +49,12 @@ public class Game extends AppCompatActivity {
         //Displays Player 1 and Player 2
         String player1 = sp.getString("player1", "");
         String player2 = sp.getString("player2", "");
+        if(player1.equals("")){
+            player1 = "Player 1";
+        }
+        if(player2.equals("")){
+            player2 = "Player 2";
+        }
         final TextView text1 = (TextView) findViewById(R.id.player1);
         final TextView text2 = (TextView) findViewById(R.id.player2);
         Log.i("tag", "player1");
