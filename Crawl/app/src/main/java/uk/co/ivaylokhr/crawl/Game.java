@@ -187,10 +187,14 @@ public class Game extends AppCompatActivity {
         return cups;
     }
 
-    public void endGame(Player winner){
+    public void endGame(Player winner, Player loser){
         Intent intent = new Intent(this, End.class);
         intent.putExtra("name", winner.getName());
-        intent.putExtra("score", winner.getScore());
+        Log.i("tag", winner.getName() + "2");
+        Log.i("tag", intent.getStringExtra("name")+ "1");
+        intent.putExtra("score", winner.getScore()+"");
+        intent.putExtra("name2", loser.getName());
+        intent.putExtra("score2", loser.getScore()+"");
         startActivity(intent);
     }
 }

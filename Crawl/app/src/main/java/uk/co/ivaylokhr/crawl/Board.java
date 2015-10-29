@@ -94,7 +94,13 @@ public class Board extends AppCompatActivity {
         if(isGameFinished()) {
             updateScores();
             winner = checkWinner().getName();
-            activity.endGame(checkWinner());
+            if(checkWinner().equals(player1)) {
+                activity.endGame(checkWinner(), player2);
+            }else if(checkWinner().equals(player2)){
+                activity.endGame(checkWinner(), player1);
+            }else{
+                activity.endGame(checkWinner(), player1);
+            }
         }
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
@@ -143,6 +149,8 @@ public class Board extends AppCompatActivity {
     public void addNames(TextView player1, TextView player2){
         playerone = player1;
         playertwo = player2;
+        this.player1.setName((String) player1.getText());
+        this.player2.setName((String) player2.getText());
     }
 
     private void doFirstTurn(int pressedID){

@@ -69,7 +69,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.15"
             android:textSize="40dp"
-            android:text="test"
+            android:text="Player1"
             android:layout_gravity="center_horizontal" />
 
         <LinearLayout
@@ -197,7 +197,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.24"
             android:textSize="40dp"
-            android:text="test"
+            android:text="Player2"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
