@@ -10,7 +10,7 @@ public class PocketCup extends Cup {
 
     public PocketCup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        marbles = 1;
+        marbles = 7;
     }
 
     public boolean isEmpty(){
