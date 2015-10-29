@@ -28,6 +28,10 @@
             android:name=".HighScores"
             android:label="@string/title_activity_high_scores" >
         </activity>
+        <activity
+            android:name=".Bluetooth"
+            android:label="@string/title_activity_bluetooth" >
+        </activity>
     </application>
 
 </manifest>

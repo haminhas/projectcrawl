@@ -54,9 +54,9 @@ public class Board extends AppCompatActivity {
     //This method edits the highscores after the game
     public void updateScores() {
         Integer score = checkWinner().playerCup.getMarbles();
-        Integer one = Preferences.fromPreferences(context, -1, "first", "your_prefs");
-        Integer two = Preferences.fromPreferences(context, -1, "second", "your_prefs");
-        Integer three = Preferences.fromPreferences(context, -1, "third", "your_prefs");
+        Integer one = Prefrences.fromPreferences(context, -1, "first", "your_prefs");
+        Integer two = Prefrences.fromPreferences(context, -1, "second", "your_prefs");
+        Integer three = Prefrences.fromPreferences(context, -1, "third", "your_prefs");
         if (score > one) {
             three = two;
             two = one;
@@ -67,9 +67,9 @@ public class Board extends AppCompatActivity {
         } else if (score > three) {
             three = score;
         }
-        Preferences.toPreferences(context, one, "first", "your_prefs");
-        Preferences.toPreferences(context, two, "second", "your_prefs");
-        Preferences.toPreferences(context, three, "third", "your_prefs");
+        Prefrences.toPreferences(context, one, "first", "your_prefs");
+        Prefrences.toPreferences(context, two, "second", "your_prefs");
+        Prefrences.toPreferences(context, three, "third", "your_prefs");
     }
 
 
@@ -119,6 +119,15 @@ public class Board extends AppCompatActivity {
         else{
             player2.setTurn(true);
             player1.setTurn(false);
+        }
+        for (int i = 0; i < 15; i++) {
+            if (i < 7 && player1.getTurn() && cups[i].getMarbles() != 0) {
+                cups[i].setEnabled(true);
+            } else if (i > 7 && player2.getTurn() && cups[i].getMarbles() != 0) {
+                cups[i].setEnabled(true);
+            } else {
+                cups[i].setEnabled(false);
+            }
         }
         isFirstTurn = false;
     }
