@@ -53,8 +53,7 @@ public class AIPlayer extends AppCompatActivity {
         int id = chosenCup.getId();
         int marblesFromEmptiedCup = chosenCup.emptyCup();
         putMarblesInNextCups(id, marblesFromEmptiedCup);
-        switchTurns(player1);
-
+        forceSwitch();
     }
 
     //adds Game.java content to the board class
@@ -63,6 +62,7 @@ public class AIPlayer extends AppCompatActivity {
     }
 
     public void pressCup(View view) {
+        int finalButtonID =0;
         if (player1.getTurn()) {
             //get id of the pressed cup
             int id = ((PocketCup) view).getId();
@@ -73,27 +73,26 @@ public class AIPlayer extends AppCompatActivity {
             Log.i("Pressed Cup", "New move");
             putMarblesInNextCups(id, marblesFromEmptiedCup);
 
-            int finalButtonID = id + marblesFromEmptiedCup;
+            finalButtonID = id + marblesFromEmptiedCup;
             if (finalButtonID > 15) {
                 finalButtonID -= 15;
-                decideTurn(finalButtonID);
-
-        }else if (ai.getTurn()) {
-                doMove();
-        }
+            }
             decideTurn(finalButtonID);
 
-
-            if (isGameFinished()) {
-                winner = checkWinner().getName();
-            }
-            //decides which turn is next by the id of the last modified cup
-            //checks if it is the first turn
-            //if it is, it gives the player who made the turn first to be the first player
-            checkIfPlayerCanPlay();
-            updateButtonText();
+        }else if (ai.getTurn()) {
+            doMove();
         }
+
+    if (isGameFinished()) {
+        winner = checkWinner().getName();
     }
+    //decides which turn is next by the id of the last modified cup
+    //checks if it is the first turn
+    //if it is, it gives the player who made the turn first to be the first player
+    checkIfPlayerCanPlay();
+    updateButtonText();
+    }
+
 
     private void updateButtonText() {
         for (Cup c : cups) {
@@ -173,7 +172,7 @@ public class AIPlayer extends AppCompatActivity {
                 cups[i].setEnabled(true);
             } else if (i > 7 && ai.getTurn() && cups[i].getMarbles() != 0) {
                 cups[i].setEnabled(false);
-            } else {
+            } else if (cups[i].getMarbles() == 0){
                 cups[i].setEnabled(false);
             }
         }
@@ -182,16 +181,10 @@ public class AIPlayer extends AppCompatActivity {
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
-            Log.i("Cup id:", Integer.toString(cupNumber));
-//            Log.i("Player's 1 turn:", Boolean.toString(player1.getTurn()));
-//            Log.i("Player's 2 turn:", Boolean.toString(player2.getTurn()));
             //condition for when the cup is the playerCup
             if (cupNumber == 7) {
                 if (player1.getTurn()) {
-                    //SHOULD I MODIFY THE player1.playerCup or the cup in the array??
                     player1.increaseScore(1);
-                    //PlayerCup player1Cup = (PlayerCup)cups[i];
-                    //player1Cup.addMarbles(1);
                     cupNumber++; //jumps PlayerCup and goes to next one
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
@@ -199,10 +192,7 @@ public class AIPlayer extends AppCompatActivity {
                 }
             } else if (cupNumber == 15) {
                 if (ai.getTurn()) {
-                    //SHOULD I MODIFY THE player2.playerCup or the cup in the array??
                     ai.increaseScore(1);
-                    //PlayerCup player2Cup = (PlayerCup)cups[i];
-                    //player2Cup.addMarbles(1);
                     cupNumber = 0;
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
@@ -217,16 +207,13 @@ public class AIPlayer extends AppCompatActivity {
                 PocketCup oppositeCup;
                 if (player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
-                    //..or [(cupNumber -14)*-1]
                     int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //have to do it so it adds 1 more to the playerCup, sry :S
                     nextPocketCup.addMarbles(-1);
                     player1.increaseScore(oppositeCupNumbers + 1);
                 }
                 else if(ai.getTurn() && cupNumber > 7) {
                     oppositeCup = (PocketCup) cups[(14-cupNumber)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //have to do it so it adds 1 more to the playerCup, sry :S
                     nextPocketCup.addMarbles(-1);
                     ai.increaseScore(oppositeCupNumbers + 1);
                 }
