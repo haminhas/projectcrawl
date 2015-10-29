@@ -62,7 +62,7 @@ public class Board extends AppCompatActivity {
         Integer one = Prefrences.fromPreferences(activity.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Prefrences.fromPreferences(activity.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Prefrences.fromPreferences(activity.getBaseContext(), -1, "third", "your_prefs");
-        Prefrences.updateTime(activity.getBaseContext(), timer, "time", "your_prefs");
+        activity.setTime();
         if (score > one) {
             three = two;
             two = one;

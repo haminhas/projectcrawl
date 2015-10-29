@@ -35,12 +35,12 @@ public class HighScores extends AppCompatActivity {
         second.setText("2nd Place: "+sp.getInt("second", -1));
         third.setText("3rd Place:  " + sp.getInt("third", -1));
         games.setText("Total Games played: " + sp.getInt("games", -1));
-        long totalTime = sp.getLong("time", 1);
-        long hours = totalTime/3600000;
-        long minutes = (totalTime-hours*3600000)/60000;
-        long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
-        String time = String.format("%02d:%02d",minutes, seconds);
-        fastest.setText("Fastest Game played: " + time);
+        String temp = (String) sp.getString("times", "");
+        Log.i("tag",temp + "d");
+        if(temp.equals("")){
+            temp = "00:00";
+        }
+        fastest.setText("Fastest Game played: " + temp);
     }
     //Closes the window and returns to the start menu
     public void back(View view) {

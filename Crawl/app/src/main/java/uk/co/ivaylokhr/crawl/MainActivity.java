@@ -65,9 +65,9 @@ package uk.co.ivaylokhr.crawl;
             if (games == -1) {
                 editor.putInt("first", 0);
                 editor.putInt("second", 0);
+                editor.putString("times","00:00");
                 editor.putInt("third", 0);
                 editor.putInt("games", 0);
-                editor.putLong("time", 0);
                 editor.commit();
             }
         }
@@ -104,8 +104,10 @@ package uk.co.ivaylokhr.crawl;
         }
 
         public void Settings(View view){
-            if(four.getText().equals("Settings")) {
-
+            if(three.getText().equals("Settings")) {
+                Intent intent = new Intent(this, Set.class);
+                Log.i("tag","test1");
+                startActivity(intent);
             }else{
                 one.setText("1 player");
                 two.setText("2 player");

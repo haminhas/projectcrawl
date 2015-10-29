@@ -60,6 +60,8 @@ public class Game extends AppCompatActivity {
         Log.i("tag", "player1");
         text1.setText(player1);
         text2.setText(player2);
+
+
         b.addNames(text1,text2);
         //Create the Settings button on click listener
         imgButton =(ImageButton)findViewById(R.id.imageButton);
@@ -151,24 +153,33 @@ public class Game extends AppCompatActivity {
         finish();
     }
 
-    public void setNames(Editable player1, Editable player2){
+    public void setTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        if(!player1.toString().equals("")){
-        editor.putString("player1", player1.toString());
-        editor.commit();}
-        else{
-            editor.putString("player1", "Player 1");
+        String temp = (String) sp.getString("times", "");
+        if(temp.equals("")){
+            temp = "00:00";
+        }
+        String time = ""+ timer.getText();
+        int one = temp.charAt(0)*10+temp.charAt(1);
+        int two = temp.charAt(3)*10+temp.charAt(4);
+        int three =time.charAt(0)*10+time.charAt(1);
+        int four = time.charAt(3)*10+time.charAt(4);
+        if(three < one) {
+            editor.putString("times", time);
+            editor.commit();
+        }else if(four < two && one == three){
+            editor.putString("times", time);
+            editor.commit();
+        }else if(temp.equals("00:00")){
+            editor.putString("times", time);
             editor.commit();
         }
-        if(!player2.toString().equals("")) {
-            editor.putString("player2", player2.toString());
-            editor.commit();
-        }
-        else{
-            editor.putString("player2", "Player 2");
-            editor.commit();
-        }
+        editor.commit();
+        Log.i("tag", temp);
+        Log.i("tag",time);
+        Log.i("tag",one + " " + two);
+        Log.i("tag",three + " " + four);
     }
     public Cup[] fillTheArray(){
         cups = new Cup[16];

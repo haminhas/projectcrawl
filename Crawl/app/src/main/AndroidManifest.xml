@@ -36,6 +36,10 @@
             android:name=".End"
             android:label="@string/title_activity_end" >
         </activity>
+        <activity
+            android:name=".Set"
+            android:label="@string/title_activity_set" >
+        </activity>
     </application>
 
 </manifest>

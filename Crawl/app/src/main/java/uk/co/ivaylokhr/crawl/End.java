@@ -35,7 +35,6 @@ public class End extends AppCompatActivity {
             loser1.setText("49 - 49");
             loser2.setText(intent.getStringExtra(""));
         }else {
-            Log.i("tag",intent.getStringExtra("name"));
             winner1.setText(intent.getStringExtra("name"));
             winner2.setText(intent.getStringExtra("score"));
             loser1.setText(intent.getStringExtra("name2"));
