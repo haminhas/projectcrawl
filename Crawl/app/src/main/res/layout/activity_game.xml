@@ -62,13 +62,21 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="0.2"
+            android:layout_weight="0.12"
             android:text="" />
+        <TextView
+            android:id="@+id/player1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.15"
+            android:textSize="40dp"
+            android:text="test"
+            android:layout_gravity="center_horizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.31"
             android:background="@color/blue"
             android:orientation="horizontal">
 
@@ -120,7 +128,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.19"
             android:background="@color/blue"
             android:orientation="horizontal">
 
@@ -166,6 +174,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/player2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.24"
+            android:textSize="40dp"
+            android:text="test"
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 

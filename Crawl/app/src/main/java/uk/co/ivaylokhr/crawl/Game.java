@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,13 +41,23 @@ public class Game extends AppCompatActivity {
         handler.postDelayed(updateTimer, 0);
         b = new Board(fillTheArray());
         b.addContent(getBaseContext());
+        b.addTimer(timeCounter);
         addgame();
+        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+        //Displays Player 1 and Player 2
+        String player1 = sp.getString("player1", "");
+        String player2 = sp.getString("player2", "");
+        final TextView text1 = (TextView) findViewById(R.id.player1);
+        final TextView text2 = (TextView) findViewById(R.id.player2);
+        Log.i("tag", "player1");
+        text1.setText(player1);
+        text2.setText(player2);
+        b.addNames(text1,text2);
         //Create the Settings button on click listener
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
                 LayoutInflater layoutInflater
                         = (LayoutInflater) getBaseContext()
                         .getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -55,13 +66,6 @@ public class Game extends AppCompatActivity {
                         popupView,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
-                //Displays Player 1 and Player 2
-                String player1 = sp.getString("player1", "");
-                String player2 = sp.getString("player2", "");
-                final EditText text1 = (EditText) popupView.findViewById(R.id.editText);
-                final EditText text2 = (EditText) popupView.findViewById(R.id.editText2);
-                text1.setText(player1);
-                text2.setText(player2);
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
 
@@ -74,7 +78,6 @@ public class Game extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        setNames(text1.getText(), text2.getText());
                         back();
                     }
                 });
@@ -83,7 +86,6 @@ public class Game extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        setNames(text1.getText(), text2.getText());
                         popupWindow.dismiss();
                     }
                 });

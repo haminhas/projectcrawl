@@ -1,9 +1,13 @@
 package uk.co.ivaylokhr.crawl;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class Board extends AppCompatActivity {
@@ -12,7 +16,11 @@ public class Board extends AppCompatActivity {
     private boolean isFinished;
     private boolean isFirstTurn;
     private String winner;
+    private Long timer;
+    private TextView playerone;
+    private TextView playertwo;
     Context context;
+    public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
 
     public Board(Cup[] cups) {
         this.cups = cups;
@@ -57,6 +65,7 @@ public class Board extends AppCompatActivity {
         Integer one = Prefrences.fromPreferences(context, -1, "first", "your_prefs");
         Integer two = Prefrences.fromPreferences(context, -1, "second", "your_prefs");
         Integer three = Prefrences.fromPreferences(context, -1, "third", "your_prefs");
+        Prefrences.updateTime(context, timer, "time", "your_prefs");
         if (score > one) {
             three = two;
             two = one;
@@ -72,7 +81,9 @@ public class Board extends AppCompatActivity {
         Prefrences.toPreferences(context, three, "third", "your_prefs");
     }
 
-
+    public void addTimer(long time){
+        timer = time;
+    }
     public void pressCup(View view) {
 
         //get id of the pressed cup
@@ -87,6 +98,9 @@ public class Board extends AppCompatActivity {
         if(isGameFinished()) {
             updateScores();
             winner = checkWinner().getName();
+            Intent intent = new Intent(this, End.class);
+            intent.putExtra(EXTRA_MESSAGE, (Parcelable) checkWinner());
+            startActivity(intent);
         }
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
@@ -103,12 +117,23 @@ public class Board extends AppCompatActivity {
         }
         checkIfPlayerCanPlay();
         updateButtonText();
+        if(player1.getTurn()){
+            playerone.setTextColor(Color.RED);
+            playertwo.setTextColor(Color.GRAY);
+        }else{
+            playertwo.setTextColor(Color.RED);
+            playerone.setTextColor(Color.GRAY);
+        }
     }
 
     private void updateButtonText() {
         for (Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
         }
+    }
+    public void addNames(TextView player1, TextView player2){
+        playerone = player1;
+        playertwo = player2;
     }
 
     private void doFirstTurn(int pressedID){

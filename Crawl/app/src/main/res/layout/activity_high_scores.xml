@@ -35,7 +35,7 @@
             android:id="@+id/textView14" />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.14"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="     HIGH SCORES"
@@ -67,11 +67,19 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_weight="0.1"
+            android:layout_weight="0.06"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Total Games played:"
             android:id="@+id/textView12" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_weight="0.06"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Fastest Game Played:"
+            android:id="@+id/fastgame" />
     </LinearLayout>
 
 </LinearLayout>

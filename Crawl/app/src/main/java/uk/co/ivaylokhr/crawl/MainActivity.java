@@ -67,6 +67,7 @@ package uk.co.ivaylokhr.crawl;
                 editor.putInt("second", 0);
                 editor.putInt("third", 0);
                 editor.putInt("games", 0);
+                editor.putLong("time", 0);
                 editor.commit();
             }
         }

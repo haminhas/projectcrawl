@@ -8,4 +8,6 @@
     <string name="title_activity_high_scores">HighScores</string>
     <string name="title_activity_end_screen">EndScreen</string>
     <string name="title_activity_bluetooth">Bluetooth</string>
+    <string name="title_activity_winner">Winner</string>
+    <string name="title_activity_end">End</string>
 </resources>

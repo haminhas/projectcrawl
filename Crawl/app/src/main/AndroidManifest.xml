@@ -32,6 +32,14 @@
             android:name=".Bluetooth"
             android:label="@string/title_activity_bluetooth" >
         </activity>
+        <activity
+            android:name=".Winner"
+            android:label="@string/title_activity_winner" >
+        </activity>
+        <activity
+            android:name=".End"
+            android:label="@string/title_activity_end" >
+        </activity>
     </application>
 
 </manifest>
