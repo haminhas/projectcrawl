@@ -38,6 +38,30 @@ public class AIPlayer extends AppCompatActivity {
         }
     }
 
+    private boolean Opposite(){
+        for(int i = 8; i < 14;i++){
+            int cupNumber = i;
+            int marblesFromEmptiedCup = cups[i].getMarbles();
+            for (int j = 0; j < marblesFromEmptiedCup; j++) {
+                PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
+
+                //check at the last iteration if cup is empty
+                if (j == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
+                    PocketCup oppositeCup;
+                    if (cupNumber > 7) {
+                        oppositeCup = (PocketCup) cups[(14 - cupNumber)];
+                        int oppositeCupNumbers = oppositeCup.emptyCup();
+                        nextPocketCup.addMarbles(-1);
+                        cups[15].addMarbles(oppositeCupNumbers + 1);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     public void doMove(){
         ArrayList<PocketCup> temp = new ArrayList<>();
         //Assuming ai player is at the top
@@ -46,13 +70,17 @@ public class AIPlayer extends AppCompatActivity {
                 temp.add((PocketCup)cups[i]);
             }
         }
-        Random rand = new Random();
+        if (!Opposite()) {
+            Random rand = new Random();
 
-        int randCup = rand.nextInt(temp.size());
-        PocketCup chosenCup= temp.get(randCup);
-        int id = chosenCup.getId();
-        int marblesFromEmptiedCup = chosenCup.emptyCup();
-        putMarblesInNextCups(id, marblesFromEmptiedCup);
+            int randCup = rand.nextInt(temp.size());
+            PocketCup chosenCup = temp.get(randCup);
+            int id = chosenCup.getId();
+            int marblesFromEmptiedCup = chosenCup.emptyCup();
+            putMarblesInNextCups(id, marblesFromEmptiedCup);
+        } else {
+            Opposite();
+        }
         forceSwitch();
     }
 
@@ -210,12 +238,6 @@ public class AIPlayer extends AppCompatActivity {
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     nextPocketCup.addMarbles(-1);
                     player1.increaseScore(oppositeCupNumbers + 1);
-                }
-                else if(ai.getTurn() && cupNumber > 7) {
-                    oppositeCup = (PocketCup) cups[(14-cupNumber)];
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    nextPocketCup.addMarbles(-1);
-                    ai.increaseScore(oppositeCupNumbers + 1);
                 }
             }
 
