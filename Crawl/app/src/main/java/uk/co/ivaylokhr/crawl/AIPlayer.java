@@ -32,4 +32,25 @@ public class AIPlayer {
 
     }
 
-}
+        private void Opposite(){ 
+            for(int i = 8; i < 14;i++){ 
+                int cupNumber = i; 
+                int marblesFromEmptiedCup = cups[i].getMarbles(); 
+                for (int j = 0; j < marblesFromEmptiedCup; j++) { 
+                    PocketCup nextPocketCup = (PocketCup) cups[cupNumber];  
+                    //check at the last iteration if cup is empty 
+                    if (j == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) { 
+                        PocketCup oppositeCup; 
+                        if (cupNumber > 7) { 
+                            oppositeCup = (PocketCup) cups[(14 - cupNumber)]; 
+                            int oppositeCupNumbers = oppositeCup.emptyCup(); 
+                            nextPocketCup.addMarbles(-1); 
+                            cups[15].addMarbles(oppositeCupNumbers + 1); 
+                        } 
+                    } 
+                } 
+            }  
+        }
+
+
+    }
