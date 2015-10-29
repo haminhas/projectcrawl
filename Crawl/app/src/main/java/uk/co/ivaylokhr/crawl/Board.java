@@ -12,26 +12,26 @@ import android.widget.TextView;
 
 public class Board extends AppCompatActivity {
     private Cup[] cups;
-    private Player player1, player2;
+    private Player player1, player2, player3;
     private boolean isFinished;
     private boolean isFirstTurn;
     private String winner;
     private Long timer;
     private TextView playerone;
     private TextView playertwo;
-    Context context;
-    public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
+    private Game activity;
 
-    public Board(Cup[] cups) {
-        this.cups = cups;
+    public Board(Game activity) {
+        this.activity = activity;
+        cups = activity.getCups();
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
+        player3 = new Player((PlayerCup) cups[15]);
         enableAllButtons();
 //        player1.setTurn(false);
 //        player2.setTurn(false);
         isFinished = false;
         isFirstTurn = true;
-
         for (Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
             c.setOnClickListener(new View.OnClickListener() {
@@ -54,18 +54,14 @@ public class Board extends AppCompatActivity {
             }
         }
     }
-    //adds Game.java content to the board class
-    public void addContent(Context context){
-        context = this.context;
-    }
 
     //This method edits the highscores after the game
     public void updateScores() {
         Integer score = checkWinner().playerCup.getMarbles();
-        Integer one = Prefrences.fromPreferences(context, -1, "first", "your_prefs");
-        Integer two = Prefrences.fromPreferences(context, -1, "second", "your_prefs");
-        Integer three = Prefrences.fromPreferences(context, -1, "third", "your_prefs");
-        Prefrences.updateTime(context, timer, "time", "your_prefs");
+        Integer one = Prefrences.fromPreferences(activity.getBaseContext(), -1, "first", "your_prefs");
+        Integer two = Prefrences.fromPreferences(activity.getBaseContext(), -1, "second", "your_prefs");
+        Integer three = Prefrences.fromPreferences(activity.getBaseContext(), -1, "third", "your_prefs");
+        Prefrences.updateTime(activity.getBaseContext(), timer, "time", "your_prefs");
         if (score > one) {
             three = two;
             two = one;
@@ -76,9 +72,9 @@ public class Board extends AppCompatActivity {
         } else if (score > three) {
             three = score;
         }
-        Prefrences.toPreferences(context, one, "first", "your_prefs");
-        Prefrences.toPreferences(context, two, "second", "your_prefs");
-        Prefrences.toPreferences(context, three, "third", "your_prefs");
+        Prefrences.toPreferences(activity.getBaseContext(), one, "first", "your_prefs");
+        Prefrences.toPreferences(activity.getBaseContext(), two, "second", "your_prefs");
+        Prefrences.toPreferences(activity.getBaseContext(), three, "third", "your_prefs");
     }
 
     public void addTimer(long time){
@@ -98,9 +94,7 @@ public class Board extends AppCompatActivity {
         if(isGameFinished()) {
             updateScores();
             winner = checkWinner().getName();
-            Intent intent = new Intent(this, End.class);
-            intent.putExtra(EXTRA_MESSAGE, (Parcelable) checkWinner());
-            startActivity(intent);
+            activity.endGame(checkWinner());
         }
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
@@ -118,17 +112,32 @@ public class Board extends AppCompatActivity {
         checkIfPlayerCanPlay();
         updateButtonText();
         if(player1.getTurn()){
-            playerone.setTextColor(Color.BLUE);
-            playertwo.setTextColor(Color.GRAY);
+            playerone.setTextColor(Color.BLACK);
+            playertwo.setTextColor(Color.GREEN);
         }else{
-            playertwo.setTextColor(Color.BLUE);
-            playerone.setTextColor(Color.GRAY);
+            playertwo.setTextColor(Color.BLACK);
+            playerone.setTextColor(Color.GREEN);
         }
     }
 
     private void updateButtonText() {
-        for (Cup c : cups) {
-            c.setText(Integer.toString(c.getMarbles()));
+        int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
+            R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
+        for (int i = 0; i < cups.length; i++) {
+            Cup c = cups[i];
+            int marbles = c.getMarbles();
+            c.setText(Integer.toString(marbles));
+            if(i == 7 || i == 15) {
+                continue;
+            }
+            else{
+                if(marbles <= 7) {
+                    c.setBackgroundResource(backgrounds[marbles]);
+                }
+                else{
+                    c.setBackgroundResource(backgrounds[8]);
+                }
+            }
         }
     }
     public void addNames(TextView player1, TextView player2){
@@ -325,8 +334,11 @@ public class Board extends AppCompatActivity {
         //checks who won
         if(player1.getScore() > player2.getScore()) {
             return player1;
+        }else if(player1.getScore() < player2.getScore()) {
+            return player2;
+        } else{
+            return player3;
         }
-        return player2;
     }
 
 }

@@ -1,9 +1,11 @@
 package uk.co.ivaylokhr.crawl;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.util.Log;
@@ -39,8 +41,8 @@ public class Game extends AppCompatActivity {
         timer= (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        b = new Board(fillTheArray());
-        b.addContent(getBaseContext());
+        cups = fillTheArray();
+        b = new Board(this);
         b.addTimer(timeCounter);
         addgame();
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
@@ -180,5 +182,15 @@ public class Game extends AppCompatActivity {
         }
 
         return cups;
+    }
+    public Cup[] getCups(){
+        return cups;
+    }
+
+    public void endGame(Player winner){
+        Intent intent = new Intent(this, End.class);
+        intent.putExtra("name", winner.getName());
+        intent.putExtra("score", winner.getScore());
+        startActivity(intent);
     }
 }
