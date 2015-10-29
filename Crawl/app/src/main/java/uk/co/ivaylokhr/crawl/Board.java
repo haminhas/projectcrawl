@@ -118,10 +118,10 @@ public class Board extends AppCompatActivity {
         checkIfPlayerCanPlay();
         updateButtonText();
         if(player1.getTurn()){
-            playerone.setTextColor(Color.RED);
+            playerone.setTextColor(Color.BLUE);
             playertwo.setTextColor(Color.GRAY);
         }else{
-            playertwo.setTextColor(Color.RED);
+            playertwo.setTextColor(Color.BLUE);
             playerone.setTextColor(Color.GRAY);
         }
     }
