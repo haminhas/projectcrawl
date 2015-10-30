@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import java.util.prefs.Preferences;
+
 
 public class Board extends AppCompatActivity {
     private Cup[] cups;
