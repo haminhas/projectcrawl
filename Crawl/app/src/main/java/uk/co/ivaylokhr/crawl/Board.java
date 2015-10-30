@@ -342,7 +342,7 @@ public class Board extends AppCompatActivity {
                     player1.increaseScore(1);
                     //PlayerCup player1Cup = (PlayerCup)cups[i];
                     //player1Cup.addMarbles(1);
-                    playZoomAnimation(cups[cupNumber], 200*i);
+                    playZoomAnimation(cups[cupNumber], i);
                     cupNumber++; //jumps PlayerCup and goes to next one
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
