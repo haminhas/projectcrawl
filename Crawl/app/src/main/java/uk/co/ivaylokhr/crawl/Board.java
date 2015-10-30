@@ -1,10 +1,7 @@
 package uk.co.ivaylokhr.crawl;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +20,10 @@ public class Board extends AppCompatActivity {
     private TextView playertwo;
     private TextView turn;
     private Game activity;
-    private Animation zoomAnimation;
+    //first turn stuff
+    private Player firstPlayer;
+    private int firstID, secondID;
+    private boolean firstHasPlayed, secondHasPlayed;
 
     public Board(Game activity) {
         this.activity = activity;
@@ -32,12 +32,23 @@ public class Board extends AppCompatActivity {
         player2 = new Player((PlayerCup) cups[15]);
         player3 = new Player((PlayerCup) cups[15]);
         enableAllButtons();
-//        player1.setTurn(false);
-//        player2.setTurn(false);
-        zoomAnimation = AnimationUtils.loadAnimation(activity, R.anim.zoomanim);
+        initializeFirstTurn();
+        initializeButtons();
+    }
+
+    //a separate method for initializing values of the variables neeeded for first Turn
+    private void initializeFirstTurn(){
+        player1.setTurn(false);
+        player2.setTurn(false);
+        firstPlayer = null;
+        firstID = -1; secondID = -1;
+        firstHasPlayed = false; secondHasPlayed = false;
         isFirstTurn = true;
+    }
+
+    //Initialize onClickListener and update the view of all the buttons on board
+    private void initializeButtons(){
         for (Cup c : cups) {
-            c.setText(Integer.toString(c.getMarbles()));
             c.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -45,6 +56,7 @@ public class Board extends AppCompatActivity {
                 }
             });
         }
+        updateButtonText();
     }
 
     //this method is called only at the start of the game, when both players can make a move
@@ -84,24 +96,21 @@ public class Board extends AppCompatActivity {
     public void addTimer(long time){
         timer = time;
     }
+
     public void pressCup(View view) {
         playClickSound();
         //get id of the pressed cup
         int id = ((PocketCup)view).getId();
         //empty cup
+        if(isFirstTurn){
+            firstTurn(id);
+            return;
+        }
         PocketCup pressedPocketCup = (PocketCup) cups[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         //at this point please check if the cup in the array still has the marbles
         Log.i("Pressed Cup", "New move");
         putMarblesInNextCups(id, marblesFromEmptiedCup);
-        String turnText = "";
-        if(player1.getTurn()) {
-            turnText = (String) playerone.getText();
-        }else{
-            turnText = (String) playertwo.getText();
-        }
-        turn.setText(turnText+"'s turn");
-        turn.setTextColor(Color.GREEN);
         if(isGameFinished()) {
             updateScores();
             winner = checkWinner().getName();
@@ -123,18 +132,56 @@ public class Board extends AppCompatActivity {
         decideTurn(finalButtonID);
         //checks if it is the first turn
         //if it is, it gives the player who made the turn first to be the first player
-        if(isFirstTurn){
-            doFirstTurn(id);
-        }
         checkIfPlayerCanPlay();
-        updateButtonText();
-        if(player1.getTurn()){
-            playerone.setTextColor(Color.BLACK);
-            playertwo.setTextColor(Color.GREEN);
-        }else{
-            playertwo.setTextColor(Color.BLACK);
-            playerone.setTextColor(Color.GREEN);
+        updateBoardView();
+    }
+
+    //the logic behind the first turn, where the players do the turn together
+    //after both players make their moves, the one that clicked first is first to go
+    private void firstTurn(int id){
+        if(id < 7){
+            if(!secondHasPlayed){
+                firstPlayer = player1;
+            }
+            firstID = id;
+            firstHasPlayed = true;
+            for (int i = 0; i < 7; i++){
+                cups[i].setEnabled(false);
+            }
         }
+        else{
+            if(!firstHasPlayed){
+                firstPlayer = player2;
+            }
+            secondID = id;
+            secondHasPlayed = true;
+            for(int i = 8; i < cups.length; i++){
+                cups[i].setEnabled(false);
+            }
+        }
+        if(firstHasPlayed && secondHasPlayed){
+            isFirstTurn = false;
+            switchTurns(firstPlayer);
+            applyFirstTurnChanges(firstID, secondID);
+        }
+    }
+
+    //This is called only in the first turn to update the board after both players made their moves
+    private void applyFirstTurnChanges(int firstID, int secondID){
+        ((PocketCup)cups[firstID]).emptyCup();
+        ((PocketCup)cups[secondID]).emptyCup();
+        for (int i = 1; i < 8; i++){
+            int nextCupID = i + firstID;
+            cups[nextCupID].addMarbles(1);
+        }
+        for(int i = 1; i < 8; i++){
+            int nextCupID = i + secondID;
+            if(nextCupID > 15){
+                nextCupID -= 16;
+            }
+            cups[nextCupID].addMarbles(1);
+        }
+        updateBoardView();
     }
 
     private void playClickSound(){
@@ -142,6 +189,37 @@ public class Board extends AppCompatActivity {
         media.start();
     }
 
+    //updates the information on the board
+    private void updateBoardView(){
+        updateTurnText();
+        updatePlayerTurnIndicators();
+        updateButtonText();
+    }
+
+    //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
+    private void updateTurnText(){
+        String turnText = "";
+        if(player1.getTurn()) {
+            turnText = (String) playerone.getText();
+        }else{
+            turnText = (String) playertwo.getText();
+        }
+        turn.setText(turnText + "'s turn");
+        turn.setTextColor(Color.GREEN);
+    }
+
+    //update the turn indicators Sola made
+    private void updatePlayerTurnIndicators(){
+        if(player1.getTurn()){
+            playerone.setTextColor(Color.GREEN);
+            playertwo.setTextColor(Color.BLACK);
+        }else{
+            playertwo.setTextColor(Color.GREEN);
+            playerone.setTextColor(Color.BLACK);
+        }
+    }
+
+    //update all the buttons (background and text)
     private void updateButtonText() {
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
             R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
@@ -162,6 +240,7 @@ public class Board extends AppCompatActivity {
             }
         }
     }
+
     public void addNames(TextView player1, TextView player2){
         playerone = player1;
         playertwo = player2;
@@ -170,27 +249,6 @@ public class Board extends AppCompatActivity {
         turn = (TextView) activity.findViewById(R.id.turn);
         turn.setText("Turn 1");
         turn.setTextColor(Color.GREEN);
-    }
-
-    private void doFirstTurn(int pressedID){
-        if(pressedID < 7){
-            player1.setTurn(true);
-            player2.setTurn(false);
-        }
-        else{
-            player2.setTurn(true);
-            player1.setTurn(false);
-        }
-        for (int i = 0; i < 15; i++) {
-            if (i < 7 && player1.getTurn() && cups[i].getMarbles() != 0) {
-                cups[i].setEnabled(true);
-            } else if (i > 7 && player2.getTurn() && cups[i].getMarbles() != 0) {
-                cups[i].setEnabled(true);
-            } else {
-                cups[i].setEnabled(false);
-            }
-        }
-        isFirstTurn = false;
     }
 
     //This method loops through the current player's half and determine if you can make a move
@@ -347,12 +405,13 @@ public class Board extends AppCompatActivity {
         }//END OF FOR LOOP
     }
 
+    //view is the object the animation needs to be aplied to
+    //index is the index in the queue if there needs to be chained with other animations
     private void playZoomAnimation(View view, int index){
         Animation animation = AnimationUtils.loadAnimation(activity, R.anim.zoomanim);
         animation.setStartOffset(200*index);
         view.startAnimation(animation);
     }
-
 
     public boolean isGameFinished() {
         //check if game is finished
@@ -371,7 +430,6 @@ public class Board extends AppCompatActivity {
         }
         return false;
     }
-
 
     public Player checkWinner() {
         //checks who won

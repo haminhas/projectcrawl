@@ -66,12 +66,12 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_gravity="center_horizontal" />
         <TextView
-            android:id="@+id/player1"
+            android:id="@+id/player2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.15"
             android:textSize="40dp"
-            android:text="Player1"
+            android:text="Player2"
             android:layout_gravity="center_horizontal" />
 
         <LinearLayout
@@ -194,12 +194,12 @@
                 android:background="@drawable/pocketbackground"/>
         </LinearLayout>
         <TextView
-            android:id="@+id/player2"
+            android:id="@+id/player1"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.24"
             android:textSize="40dp"
-            android:text="Player2"
+            android:text="Player1"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
