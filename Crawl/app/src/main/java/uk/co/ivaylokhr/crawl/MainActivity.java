@@ -129,4 +129,9 @@ package uk.co.ivaylokhr.crawl;
 
             return super.onOptionsItemSelected(item);
         }
+
+        @Override
+        public void onBackPressed(){
+            finish();
+        }
     }

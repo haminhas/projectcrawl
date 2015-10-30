@@ -1,6 +1,8 @@
 package uk.co.ivaylokhr.crawl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -124,6 +126,26 @@ public class Game extends AppCompatActivity {
         return true;
     }
 
+    //warn the player that going back will end his game
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
+
+        Intent mainMenu = new Intent(this, MainActivity.class);
+
+        optionpane.setTitle("Go back?");
+        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
+                "the progress of this game will be lost!").setCancelable(true).setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
+                .setNegativeButton("Continue with the game", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        AlertDialog alertDialog = optionpane.create();
+        alertDialog.show();
+    }
+
     public void addgame(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -213,5 +235,20 @@ public class Game extends AppCompatActivity {
         intent.putExtra("name2", loser.getName());
         intent.putExtra("score2", loser.getScore()+"");
         startActivity(intent);
+    }
+
+    //This is for the dialog. It goes to the main menu if you say you want to
+    public class GoToMainMenu implements DialogInterface.OnClickListener{
+
+        private Intent mainMenu;
+
+        public GoToMainMenu(Intent intent){
+            mainMenu = intent;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            startActivity(mainMenu);
+        }
     }
 }

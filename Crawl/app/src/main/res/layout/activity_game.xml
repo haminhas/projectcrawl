@@ -24,7 +24,7 @@
             android:onClick="settings"
             android:scaleType="fitCenter"
             android:background="@null"
-            android:src="@drawable/settings" />
+            android:src="@drawable/setting" />
 
         <TextView
             android:id="@+id/textView5"
@@ -216,7 +216,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:text="00:00"
-            android:textColor="#040000"
+            android:textColor="#ffffff"
             android:textSize="30dp" />
 
 

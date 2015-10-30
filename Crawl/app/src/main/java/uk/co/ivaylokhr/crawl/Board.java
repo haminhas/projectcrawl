@@ -3,17 +3,19 @@ package uk.co.ivaylokhr.crawl;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 
 public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2, player3;
-    private boolean isFinished;
     private boolean isFirstTurn;
     private String winner;
     private Long timer;
@@ -21,6 +23,7 @@ public class Board extends AppCompatActivity {
     private TextView playertwo;
     private TextView turn;
     private Game activity;
+    private Animation zoomAnimation;
 
     public Board(Game activity) {
         this.activity = activity;
@@ -31,7 +34,7 @@ public class Board extends AppCompatActivity {
         enableAllButtons();
 //        player1.setTurn(false);
 //        player2.setTurn(false);
-        isFinished = false;
+        zoomAnimation = AnimationUtils.loadAnimation(activity, R.anim.zoomanim);
         isFirstTurn = true;
         for (Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
@@ -82,7 +85,7 @@ public class Board extends AppCompatActivity {
         timer = time;
     }
     public void pressCup(View view) {
-
+        playClickSound();
         //get id of the pressed cup
         int id = ((PocketCup)view).getId();
         //empty cup
@@ -132,6 +135,11 @@ public class Board extends AppCompatActivity {
             playertwo.setTextColor(Color.BLACK);
             playerone.setTextColor(Color.GREEN);
         }
+    }
+
+    private void playClickSound(){
+        MediaPlayer media = MediaPlayer.create(activity, R.raw.click);
+        media.start();
     }
 
     private void updateButtonText() {
@@ -276,6 +284,7 @@ public class Board extends AppCompatActivity {
                     player1.increaseScore(1);
                     //PlayerCup player1Cup = (PlayerCup)cups[i];
                     //player1Cup.addMarbles(1);
+                    playZoomAnimation(cups[cupNumber], 200*i);
                     cupNumber++; //jumps PlayerCup and goes to next one
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
@@ -287,6 +296,7 @@ public class Board extends AppCompatActivity {
                     player2.increaseScore(1);
                     //PlayerCup player2Cup = (PlayerCup)cups[i];
                     //player2Cup.addMarbles(1);
+                    playZoomAnimation(cups[cupNumber], i);
                     cupNumber = 0;
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
@@ -295,6 +305,8 @@ public class Board extends AppCompatActivity {
             }
 
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
+
+            playZoomAnimation(nextPocketCup, i);
 
             //check at the last iteration if cup is empty
             if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
@@ -306,6 +318,9 @@ public class Board extends AppCompatActivity {
                     //have to do it so it adds 1 more to the playerCup, sry :S
                     nextPocketCup.addMarbles(-1);
                     player1.increaseScore(oppositeCupNumbers + 1);
+                    //animation
+                    playZoomAnimation(oppositeCup, i+1);
+                    playZoomAnimation(player1.playerCup, i+1);
                 }
                 else if(player2.getTurn() && cupNumber > 7) {
                     oppositeCup = (PocketCup) cups[(14-cupNumber)];
@@ -313,6 +328,9 @@ public class Board extends AppCompatActivity {
                     //have to do it so it adds 1 more to the playerCup, sry :S
                     nextPocketCup.addMarbles(-1);
                     player2.increaseScore(oppositeCupNumbers + 1);
+                    //animation
+                    playZoomAnimation(oppositeCup, i+1);
+                    playZoomAnimation(player2.playerCup, i+1);
                 }
             }
 
@@ -327,6 +345,12 @@ public class Board extends AppCompatActivity {
 
 
         }//END OF FOR LOOP
+    }
+
+    private void playZoomAnimation(View view, int index){
+        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.zoomanim);
+        animation.setStartOffset(200*index);
+        view.startAnimation(animation);
     }
 
 
