@@ -44,16 +44,8 @@ public class AIPlayer extends AppCompatActivity {
             int marblesFromEmptiedCup = cups[i].getMarbles();
             for (int j = 0; j < marblesFromEmptiedCup; j++) {
                 PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
-
                 //check at the last iteration if cup is empty
-                if (j == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
-                    PocketCup oppositeCup;
-                    if (cupNumber > 7) {
-                        oppositeCup = (PocketCup) cups[(14 - cupNumber)];
-                        int oppositeCupNumbers = oppositeCup.emptyCup();
-                        nextPocketCup.addMarbles(-1);
-                        cups[15].addMarbles(oppositeCupNumbers + 1);
-                    }
+                if (j == marblesFromEmptiedCup && nextPocketCup.isEmpty()) {
                     return true;
                 }
             }
@@ -62,9 +54,8 @@ public class AIPlayer extends AppCompatActivity {
     }
 
     public Boolean extraTurn(){
-        for(int i = 8; i < 14;i++){
+        for(int i = 8; i < 15;i++){
             if(cups[i].getMarbles() +cups[i].getId() == 15){
-                switchTurns(ai);
                 return true;
             }
         }
@@ -80,22 +71,51 @@ public class AIPlayer extends AppCompatActivity {
                 temp.add((PocketCup)cups[i]);
             }
         }
+
+        if (extraTurn()){
+            for(int i = 8; i < 15;i++)
+                if (cups[i].getMarbles() + cups[i].getId() == 15) {
+                    Log.i("Cup", Integer.toString(cups[i].getId()));
+                    Log.i("marbles", Integer.toString(cups[i].getMarbles()));
+                    putMarblesInNextCups(cups[i].getId(), ((PocketCup)cups[i]).emptyCup());
+
+                }
+            switchTurns(player1);
+        }
+
         if (!Opposite()) {
             Random rand = new Random();
-
             int randCup = rand.nextInt(temp.size());
             PocketCup chosenCup = temp.get(randCup);
             int id = chosenCup.getId();
             int marblesFromEmptiedCup = chosenCup.emptyCup();
             putMarblesInNextCups(id, marblesFromEmptiedCup);
         } else if (Opposite()) {
-            Opposite();
+            for(int i = 8; i < 14;i++){
+                int cupNumber = i;
+                int marblesFromEmptiedCup = cups[i].getMarbles();
+                for (int j = 0; j < marblesFromEmptiedCup; j++) {
+                    PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
+
+                    //check at the last iteration if cup is empty
+                    if (j == marblesFromEmptiedCup && nextPocketCup.isEmpty()) {
+                        PocketCup oppositeCup;
+                        if (cupNumber > 7) {
+                            oppositeCup = (PocketCup) cups[(14 - cupNumber)];
+                            int oppositeCupNumbers = oppositeCup.emptyCup();
+                            nextPocketCup.addMarbles(-1);
+                            cups[15].addMarbles(oppositeCupNumbers + 1);
+                        }
+                    }
+                }
+            }
         }
 
-        if (extraTurn()){
-            extraTurn();
-        }
         forceSwitch();
+        if (ai.getTurn()) {
+            doMove();
+        }
+
     }
 
     //adds Game.java content to the board class
@@ -112,7 +132,6 @@ public class AIPlayer extends AppCompatActivity {
             PocketCup pressedPocketCup = (PocketCup) cups[id];
             int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
             //at this point please check if the cup in the array still has the marbles
-            Log.i("Pressed Cup", "New move");
             putMarblesInNextCups(id, marblesFromEmptiedCup);
 
             finalButtonID = id + marblesFromEmptiedCup;
@@ -122,6 +141,7 @@ public class AIPlayer extends AppCompatActivity {
             decideTurn(finalButtonID);
 
         }
+        updateButtonText();
 
         if (ai.getTurn()) {
             doMove();
