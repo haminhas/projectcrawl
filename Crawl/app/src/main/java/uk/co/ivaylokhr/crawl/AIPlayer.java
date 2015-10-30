@@ -78,9 +78,11 @@ public class AIPlayer extends AppCompatActivity {
                     Log.i("Cup", Integer.toString(cups[i].getId()));
                     Log.i("marbles", Integer.toString(cups[i].getMarbles()));
                     putMarblesInNextCups(cups[i].getId(), ((PocketCup)cups[i]).emptyCup());
+                    i = 8;
 
                 }
-            switchTurns(player1);
+            doMove();
+            switchTurns(ai);
         }
 
         if (!Opposite()) {
@@ -112,9 +114,6 @@ public class AIPlayer extends AppCompatActivity {
         }
 
         forceSwitch();
-        if (ai.getTurn()) {
-            doMove();
-        }
 
     }
 
