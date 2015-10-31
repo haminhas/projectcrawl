@@ -71,20 +71,23 @@ public class AIPlayer extends AppCompatActivity {
                 temp.add((PocketCup)cups[i]);
             }
         }
-
+        //If the AI has all empty moves then skip the turn
+        if(temp.isEmpty()){
+            return;
+        }
         if (extraTurn()){
-            for(int i = 8; i < 15;i++)
+            for(int i = 8; i < 15;i++) {
                 if (cups[i].getMarbles() + cups[i].getId() == 15) {
                     Log.i("Cup", Integer.toString(cups[i].getId()));
                     Log.i("marbles", Integer.toString(cups[i].getMarbles()));
-                    putMarblesInNextCups(cups[i].getId(), ((PocketCup)cups[i]).emptyCup());
+                    putMarblesInNextCups(cups[i].getId(), ((PocketCup) cups[i]).emptyCup());
                     i = 8;
-
                 }
+            }
             doMove();
-            switchTurns(ai);
+            //Return statement to prevent the rest of the method and giving AI another turn
+            return;
         }
-
         if (!Opposite()) {
             Random rand = new Random();
             int randCup = rand.nextInt(temp.size());
