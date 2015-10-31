@@ -1,11 +1,16 @@
 package uk.co.ivaylokhr.crawl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,15 +43,33 @@ public class Game extends AppCompatActivity {
         timer= (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        b = new Board(fillTheArray());
-        b.addContent(getBaseContext());
+        cups = fillTheArray();
+        b = new Board(this);
+        b.addTimer(timeCounter);
         addgame();
+        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+        //Displays Player 1 and Player 2
+        String player1 = sp.getString("player1", "");
+        String player2 = sp.getString("player2", "");
+        if(player1.equals("")){
+            player1 = "Player 1";
+        }
+        if(player2.equals("")){
+            player2 = "Player 2";
+        }
+        final TextView text1 = (TextView) findViewById(R.id.player1);
+        final TextView text2 = (TextView) findViewById(R.id.player2);
+        Log.i("tag", "player1");
+        text1.setText(player1);
+        text2.setText(player2);
+
+
+        b.addNames(text1,text2);
         //Create the Settings button on click listener
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
                 LayoutInflater layoutInflater
                         = (LayoutInflater) getBaseContext()
                         .getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -55,13 +78,6 @@ public class Game extends AppCompatActivity {
                         popupView,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
-                //Displays Player 1 and Player 2
-                String player1 = sp.getString("player1", "");
-                String player2 = sp.getString("player2", "");
-                final EditText text1 = (EditText) popupView.findViewById(R.id.editText);
-                final EditText text2 = (EditText) popupView.findViewById(R.id.editText2);
-                text1.setText(player1);
-                text2.setText(player2);
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
 
@@ -74,7 +90,6 @@ public class Game extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        setNames(text1.getText(), text2.getText());
                         back();
                     }
                 });
@@ -83,7 +98,6 @@ public class Game extends AppCompatActivity {
 
                     @Override
                     public void onClick(View v) {
-                        setNames(text1.getText(), text2.getText());
                         popupWindow.dismiss();
                     }
                 });
@@ -110,6 +124,26 @@ public class Game extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    //warn the player that going back will end his game
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
+
+        Intent mainMenu = new Intent(this, MainActivity.class);
+
+        optionpane.setTitle("Go back?");
+        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
+                "the progress of this game will be lost!").setCancelable(true).setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
+                .setNegativeButton("Continue with the game", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        AlertDialog alertDialog = optionpane.create();
+        alertDialog.show();
     }
 
     public void addgame(){
@@ -141,24 +175,33 @@ public class Game extends AppCompatActivity {
         finish();
     }
 
-    public void setNames(Editable player1, Editable player2){
+    public void setTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        if(!player1.toString().equals("")){
-        editor.putString("player1", player1.toString());
-        editor.commit();}
-        else{
-            editor.putString("player1", "Player 1");
+        String temp = (String) sp.getString("times", "");
+        if(temp.equals("")){
+            temp = "00:00";
+        }
+        String time = ""+ timer.getText();
+        int one = temp.charAt(0)*10+temp.charAt(1);
+        int two = temp.charAt(3)*10+temp.charAt(4);
+        int three =time.charAt(0)*10+time.charAt(1);
+        int four = time.charAt(3)*10+time.charAt(4);
+        if(three < one) {
+            editor.putString("times", time);
+            editor.commit();
+        }else if(four < two && one == three){
+            editor.putString("times", time);
+            editor.commit();
+        }else if(temp.equals("00:00")){
+            editor.putString("times", time);
             editor.commit();
         }
-        if(!player2.toString().equals("")) {
-            editor.putString("player2", player2.toString());
-            editor.commit();
-        }
-        else{
-            editor.putString("player2", "Player 2");
-            editor.commit();
-        }
+        editor.commit();
+        Log.i("tag", temp);
+        Log.i("tag",time);
+        Log.i("tag",one + " " + two);
+        Log.i("tag",three + " " + four);
     }
     public Cup[] fillTheArray(){
         cups = new Cup[16];
@@ -178,5 +221,34 @@ public class Game extends AppCompatActivity {
         }
 
         return cups;
+    }
+    public Cup[] getCups(){
+        return cups;
+    }
+
+    public void endGame(Player winner, Player loser){
+        Intent intent = new Intent(this, End.class);
+        intent.putExtra("name", winner.getName());
+        Log.i("tag", winner.getName() + "2");
+        Log.i("tag", intent.getStringExtra("name")+ "1");
+        intent.putExtra("score", winner.getScore()+"");
+        intent.putExtra("name2", loser.getName());
+        intent.putExtra("score2", loser.getScore()+"");
+        startActivity(intent);
+    }
+
+    //This is for the dialog. It goes to the main menu if you say you want to
+    public class GoToMainMenu implements DialogInterface.OnClickListener{
+
+        private Intent mainMenu;
+
+        public GoToMainMenu(Intent intent){
+            mainMenu = intent;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            startActivity(mainMenu);
+        }
     }
 }

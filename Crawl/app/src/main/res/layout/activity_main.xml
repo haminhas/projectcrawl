@@ -25,9 +25,9 @@
         android:text="1 player"
         android:id="@+id/button"
         android:onClick="onePlayer"
-        android:layout_above="@+id/button2"
         android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView" />
+        android:layout_toStartOf="@+id/textView"
+        android:layout_above="@+id/button2" />
 
     <Button
         android:layout_width="200dp"
@@ -43,6 +43,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Settings"
+        android:onClick="Settings"
         android:id="@+id/button3"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

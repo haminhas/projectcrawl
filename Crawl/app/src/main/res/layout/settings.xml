@@ -4,66 +4,24 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="@android:color/background_light">
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="1dp"
-        android:background="@android:color/darker_gray">
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal"
+        android:layout_margin="1dp"><![CDATA[
         >
+
+
+        ]]>
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
+                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
+                android:background="@android:color/darker_gray"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Player 1" />
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_weight="1.27"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:text=""
-                    android:ems="10"
-                    android:id="@+id/editText" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.25"
-                    android:layout_height="wrap_content"
-                    android:text="Player 2" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:text=""
-                    android:ems="10"
-                    android:id="@+id/editText2" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.25"
-                android:orientation="horizontal">
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="  Continue  " />
             </LinearLayout>
-        </LinearLayout>
+
     </LinearLayout>
+
 </LinearLayout>
