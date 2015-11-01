@@ -14,7 +14,6 @@ public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2, player3;
     private boolean isFirstTurn;
-    private Long timer;
     private TextView playerone;
     private TextView playertwo;
     private TextView turn;
@@ -92,10 +91,6 @@ public class Board extends AppCompatActivity {
         Preferences.toPreferences(activity.getBaseContext(), one, "first", "your_prefs");
         Preferences.toPreferences(activity.getBaseContext(), two, "second", "your_prefs");
         Preferences.toPreferences(activity.getBaseContext(), three, "third", "your_prefs");
-    }
-
-    public void addTimer(long time){
-        timer = time;
     }
 
     public void pressCup(View view) {
