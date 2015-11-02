@@ -1,6 +1,7 @@
 package uk.co.ivaylokhr.crawl;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -40,7 +41,6 @@ public class AIPlayer extends AppCompatActivity {
     }
 
     public void opposite(int cup, int marbles) {
-        updateButtonText();
         PocketCup nextPocketCup;
         int temp = cup;
         for (int j = 0; j < marbles; j++) {
@@ -110,12 +110,15 @@ public class AIPlayer extends AppCompatActivity {
             //Return statement to prevent the rest of the method and giving AI another turn
             return;
         }
-        if (opp) {
-            for(int i = 8; i < 14;i++){
-                opposite(i,cups[i].getMarbles());
-            }
 
-        } else {
+        for(int i = 8; i < 14;i++){
+            opposite(i, cups[i].getMarbles());
+            if(opp){
+                continue;
+            }
+        }
+
+        if (!opp) {
             Random rand = new Random();
             int randCup = rand.nextInt(temp.size());
             PocketCup chosenCup = temp.get(randCup);
@@ -162,7 +165,16 @@ public class AIPlayer extends AppCompatActivity {
         updateButtonText();
 
         if (ai.getTurn()) {
-            doMove();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 5s = 5000ms
+                    updateButtonText();
+                    doMove();
+                    updateButtonText();
+                }
+            }, 2000);
         }
 
     if (isGameFinished()) {
@@ -177,7 +189,7 @@ public class AIPlayer extends AppCompatActivity {
 
 
     private void updateButtonText() {
-        for (Cup c : cups) {
+        for ( Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
         }
     }
