@@ -18,20 +18,6 @@ public class Preferences {
         editor.commit();
     }
 
-    public static void updateTime(Context context, Long value, String key, String pKey) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(pKey, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Log.i("tag",value + "a");
-        Long temp = sharedPreferences.getLong(key, 10);
-        Log.i("tag",temp + "b");
-        if (value > temp){
-            temp = value;
-        }
-        Log.i("tag",temp + "c");
-        editor.putLong(key, temp);
-        editor.commit();
-    }
-
     //retrieves an integer "value" with a key "key" from pKey
     public static Integer fromPreferences(Context context,Integer defaultValue, String key, String pKey) {
         Log.i("tag","2");
