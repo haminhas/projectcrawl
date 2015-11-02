@@ -1,5 +1,6 @@
 package uk.co.ivaylokhr.crawl;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class Board extends AppCompatActivity {
     //first turn stuff
     private Player firstPlayer;
     private int firstID, secondID;
+    Context context;
     private boolean firstHasPlayed, secondHasPlayed;
 
     public Board(Game activity) {
@@ -70,13 +72,10 @@ public class Board extends AppCompatActivity {
             }
         }
     }
-<<<<<<< HEAD
-=======
-    //adds AIGame.java content to the board class
+    //adds Game.java content to the board class
     public void addContent(Context context){
         context = this.context;
     }
->>>>>>> renamed game class
 
     //This method edits the highscores after the game
     public void updateScores() {
@@ -425,5 +424,4 @@ public class Board extends AppCompatActivity {
             return player3;
         }
     }
-
 }

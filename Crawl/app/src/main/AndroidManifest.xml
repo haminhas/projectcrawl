@@ -25,6 +25,12 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
+            android:name=".Game"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_game"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name=".HighScores"
             android:label="@string/title_activity_high_scores" >
         </activity>

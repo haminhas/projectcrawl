@@ -38,15 +38,19 @@ public class Game extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("tag", "check");
         setContentView(R.layout.activity_game);
+        Log.i("tag", "check4");
         timer= (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
+        Log.i("tag", "check3");
         handler.postDelayed(updateTimer, 0);
         cups = fillTheArray();
         b = new Board(this);
         addgame();
         setTextFields();
         settings();
+        Log.i("tag", "check2");
     }
 
     @Override

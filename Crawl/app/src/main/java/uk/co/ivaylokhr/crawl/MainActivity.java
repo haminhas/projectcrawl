@@ -45,7 +45,7 @@ package uk.co.ivaylokhr.crawl;
         //starts a one player game
         public void onePlayer(View view){
             if (one.getText().equals("1 player")) {
-                Intent intent = new Intent(this, Game.class);
+                Intent intent = new Intent(this, AIGame.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
                 startActivity(intent);
@@ -94,10 +94,8 @@ package uk.co.ivaylokhr.crawl;
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
             }else{
-                Intent intent = new Intent(this, Game.class);
-                players = 2;
-                intent.putExtra(EXTRA_MESSAGE, players);
-                startActivity(intent);
+                    Intent intent = new Intent(this, Game.class);
+                    startActivity(intent);
             }
         }
 
