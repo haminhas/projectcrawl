@@ -14,7 +14,6 @@ public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2, player3;
     private boolean isFirstTurn;
-    private String winner;
     private Long timer;
     private TextView playerone;
     private TextView playertwo;
@@ -30,16 +29,18 @@ public class Board extends AppCompatActivity {
         cups = activity.getCups();
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
+        //player 3 is for draw
         player3 = new Player((PlayerCup) cups[15]);
-        enableAllButtons();
         initializeFirstTurn();
         initializeButtons();
     }
 
     //a separate method for initializing values of the variables neeeded for first Turn
     private void initializeFirstTurn(){
+        enableAllButtons();
         player1.setTurn(false);
         player2.setTurn(false);
+        //The player who will have the first play
         firstPlayer = null;
         firstID = -1; secondID = -1;
         firstHasPlayed = false; secondHasPlayed = false;
@@ -74,9 +75,9 @@ public class Board extends AppCompatActivity {
     //This method edits the highscores after the game
     public void updateScores() {
         Integer score = checkWinner().playerCup.getMarbles();
-        Integer one = Prefrences.fromPreferences(activity.getBaseContext(), -1, "first", "your_prefs");
-        Integer two = Prefrences.fromPreferences(activity.getBaseContext(), -1, "second", "your_prefs");
-        Integer three = Prefrences.fromPreferences(activity.getBaseContext(), -1, "third", "your_prefs");
+        Integer one = Preferences.fromPreferences(activity.getBaseContext(), -1, "first", "your_prefs");
+        Integer two = Preferences.fromPreferences(activity.getBaseContext(), -1, "second", "your_prefs");
+        Integer three = Preferences.fromPreferences(activity.getBaseContext(), -1, "third", "your_prefs");
         activity.setTime();
         if (score > one) {
             three = two;
@@ -88,9 +89,9 @@ public class Board extends AppCompatActivity {
         } else if (score > three) {
             three = score;
         }
-        Prefrences.toPreferences(activity.getBaseContext(), one, "first", "your_prefs");
-        Prefrences.toPreferences(activity.getBaseContext(), two, "second", "your_prefs");
-        Prefrences.toPreferences(activity.getBaseContext(), three, "third", "your_prefs");
+        Preferences.toPreferences(activity.getBaseContext(), one, "first", "your_prefs");
+        Preferences.toPreferences(activity.getBaseContext(), two, "second", "your_prefs");
+        Preferences.toPreferences(activity.getBaseContext(), three, "third", "your_prefs");
     }
 
     public void addTimer(long time){
@@ -113,7 +114,6 @@ public class Board extends AppCompatActivity {
         putMarblesInNextCups(id, marblesFromEmptiedCup);
         if(isGameFinished()) {
             updateScores();
-            winner = checkWinner().getName();
             if(checkWinner().equals(player1)) {
                 activity.endGame(checkWinner(), player2);
             }else if(checkWinner().equals(player2)){
@@ -126,13 +126,8 @@ public class Board extends AppCompatActivity {
         if(finalButtonID > 15){
                 finalButtonID -= 15;
         }
-
-
         //decides which turn is next by the id of the last modified cup
         decideTurn(finalButtonID);
-        //checks if it is the first turn
-        //if it is, it gives the player who made the turn first to be the first player
-        checkIfPlayerCanPlay();
         updateBoardView();
     }
 
@@ -259,11 +254,7 @@ public class Board extends AppCompatActivity {
             for (int i = 0; i < 7; i++) {
                 // break if there is a valid move
                 if (!((PocketCup) cups[i]).isEmpty()) {
-                    break;
-                }
-                // at the end of the loop force the switch
-                if (i == 6) {
-                    forceSwitch();
+                    return;
                 }
             }
         } else if (player2.getTurn()) {
@@ -271,14 +262,12 @@ public class Board extends AppCompatActivity {
             for (int i = 8; i < 15; i++) {
                 //break if there is a valid move
                 if (!((PocketCup) cups[i]).isEmpty()) {
-                    break;
-                }
-                // at the end of the loop force the switch
-                if (i == 14) {
-                    forceSwitch();
+                    return;
                 }
             }
         }
+        // if it didn't break, force the switch of turns
+        forceSwitch();
     }
 
     //This forces the switch of turns.It is called when one player doesn't have valid moves
@@ -307,6 +296,9 @@ public class Board extends AppCompatActivity {
         else if (player2.getTurn()) {
             switchTurns(player2);
         }
+        //checks if there is a valid method
+        //If not, change the turn to the other player
+        checkIfPlayerCanPlay();
     }
 
     //switches turn to the player who is given as a parameter
@@ -333,15 +325,10 @@ public class Board extends AppCompatActivity {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
             Log.i("Cup id:", Integer.toString(cupNumber));
-//            Log.i("Player's 1 turn:", Boolean.toString(player1.getTurn()));
-//            Log.i("Player's 2 turn:", Boolean.toString(player2.getTurn()));
             //condition for when the cup is the playerCup
             if (cupNumber == 7) {
                 if (player1.getTurn()) {
-                    //SHOULD I MODIFY THE player1.playerCup or the cup in the array??
                     player1.increaseScore(1);
-                    //PlayerCup player1Cup = (PlayerCup)cups[i];
-                    //player1Cup.addMarbles(1);
                     playZoomAnimation(cups[cupNumber], i);
                     cupNumber++; //jumps PlayerCup and goes to next one
                     continue; //finish current iteration on this point and to go to next iteration
@@ -350,10 +337,7 @@ public class Board extends AppCompatActivity {
                 }
             } else if (cupNumber == 15) {
                 if (player2.getTurn()) {
-                    //SHOULD I MODIFY THE player2.playerCup or the cup in the array??
                     player2.increaseScore(1);
-                    //PlayerCup player2Cup = (PlayerCup)cups[i];
-                    //player2Cup.addMarbles(1);
                     playZoomAnimation(cups[cupNumber], i);
                     cupNumber = 0;
                     continue; //finish current iteration on this point and to go to next iteration
@@ -394,15 +378,15 @@ public class Board extends AppCompatActivity {
 
             nextPocketCup.addMarbles(1);
 
+            cupNumber++;
             //update id for the next cup, and stay in the range of 15.
-            if (cupNumber >= 15) {
+            if (cupNumber > 15) {
                 cupNumber = 0;
-            } else {
-                cupNumber++;
             }
 
 
         }//END OF FOR LOOP
+
     }
 
     //view is the object the animation needs to be aplied to
