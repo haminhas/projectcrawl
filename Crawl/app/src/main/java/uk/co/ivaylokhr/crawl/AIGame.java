@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,7 +64,6 @@ public class AIGame extends AppCompatActivity {
         }
         final TextView text1 = (TextView) findViewById(R.id.player1);
         final TextView text2 = (TextView) findViewById(R.id.player2);
-        Log.i("tag", "player1");
         text1.setText(player1);
         text2.setText(player2);
         b.addNames(text1, text2);
@@ -150,18 +148,12 @@ public class AIGame extends AppCompatActivity {
             editor.commit();
         }
         editor.commit();
-        Log.i("tag", temp);
-        Log.i("tag",time);
-        Log.i("tag",one + " " + two);
-        Log.i("tag",three + " " + four);
     }
 
     //ends the game and starts the end game screen
     public void endGame(Player winner, Player loser){
         Intent intent = new Intent(this, End.class);
         intent.putExtra("name", winner.getName());
-        Log.i("tag", winner.getName() + "2");
-        Log.i("tag", intent.getStringExtra("name")+ "1");
         intent.putExtra("score", winner.getScore()+"");
         intent.putExtra("name2", loser.getName());
         intent.putExtra("score2", loser.getScore()+"");
