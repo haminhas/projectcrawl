@@ -40,10 +40,6 @@
             android:name=".Set"
             android:label="@string/title_activity_set" >
         </activity>
-        <activity
-            android:name=".AIGame"
-            android:label="@string/title_activity_aigame" >
-        </activity>
     </application>
 
 </manifest>
