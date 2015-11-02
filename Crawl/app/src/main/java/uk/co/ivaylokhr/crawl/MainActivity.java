@@ -5,7 +5,6 @@ package uk.co.ivaylokhr.crawl;
     import android.content.SharedPreferences;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
-    import android.util.Log;
     import android.util.TypedValue;
     import android.view.Menu;
     import android.view.MenuItem;
@@ -73,7 +72,6 @@ package uk.co.ivaylokhr.crawl;
         }
         //starts a two player game
         public void twoPlayer(View view){
-            Log.i("tag", (String) two.getText());
             if (two.getText().equals("2 player")) {
                 one.setText("Host");
                 two.setText("Connect");
@@ -106,7 +104,6 @@ package uk.co.ivaylokhr.crawl;
         public void Settings(View view){
             if(three.getText().equals("Settings")) {
                 Intent intent = new Intent(this, Set.class);
-                Log.i("tag","test1");
                 startActivity(intent);
             }else{
                 one.setText("1 player");

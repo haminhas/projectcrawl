@@ -139,7 +139,7 @@ public class AIPlayer extends AppCompatActivity {
 
     }
 
-    //adds Game.java content to the board class
+    //adds AIGame.java content to the board class
     public void addContent(Context context){
         context = this.context;
     }
