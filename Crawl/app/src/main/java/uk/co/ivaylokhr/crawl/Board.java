@@ -340,11 +340,9 @@ public class Board extends AppCompatActivity {
                     cupNumber = 0;
                 }
             }
-
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
-
             playZoomAnimation(nextPocketCup, i);
-
+            updateBoardView();
             //check at the last iteration if cup is empty
             if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
                 PocketCup oppositeCup;

@@ -15,6 +15,7 @@ public class End extends AppCompatActivity {
     private TextView winner2;
     private TextView loser1;
     private TextView loser2;
+    //creates end screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

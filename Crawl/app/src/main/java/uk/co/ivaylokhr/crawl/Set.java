@@ -13,6 +13,8 @@ import android.widget.TextView;
 public class Set extends AppCompatActivity {
     private  String player1;
     private String player2;
+
+    //create new window that lets you change the player names
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,8 @@ public class Set extends AppCompatActivity {
         one.setText(player1);
         two.setText(player2);
     }
+
+    //return to start screen and save the new player names
     public void save(View view){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -44,6 +48,8 @@ public class Set extends AppCompatActivity {
             editor.commit();
         finish();
     }
+
+    //return to start screen without saving
     public void cancel(View view){
         finish();
     }

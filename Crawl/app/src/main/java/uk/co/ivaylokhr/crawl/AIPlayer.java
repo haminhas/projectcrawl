@@ -166,7 +166,7 @@ public class AIPlayer extends AppCompatActivity {
             return;
         }
 
-        for(int i = 8; i < 14;i++){
+        for(int i = 8; i < 15;i++){
             opposite(i,cups[i].getMarbles());
         }
 
@@ -336,18 +336,18 @@ public class AIPlayer extends AppCompatActivity {
                     cupNumber = 0;
                     playZoomAnimation(cups[cupNumber], i);
 
-                    continue; //finish current iteration on this point and to go to next iteration
-                } else {
-                    cupNumber = 0;
-                }
+                continue; //finish current iteration on this point and to go to next iteration
+            } else {
+                cupNumber = 0;
             }
+        }
 
-            PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
-            playZoomAnimation(nextPocketCup, i);
+        PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
+        playZoomAnimation(nextPocketCup, i);
 
-            //check at the last iteration if cup is empty
-            if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
-                PocketCup oppositeCup;
+        //check at the last iteration if cup is empty
+        if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
+            PocketCup oppositeCup;
                 if (player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();

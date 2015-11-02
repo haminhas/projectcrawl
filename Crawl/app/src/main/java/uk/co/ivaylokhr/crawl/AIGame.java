@@ -41,9 +41,21 @@ public class AIGame extends AppCompatActivity {
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
         cups = fillTheArray();
-
         b = new AIPlayer(this);
         addgame();
+        setTextFields();
+        settings();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    //Sets the text fields and retrieves player 1 and player 2's names
+    public void setTextFields(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
         String player1 = sp.getString("player1", "");
@@ -56,8 +68,11 @@ public class AIGame extends AppCompatActivity {
         Log.i("tag", "player1");
         text1.setText(player1);
         text2.setText(player2);
-        b.addNames(text1,text2);
-        //Create the Settings button on click listener
+        b.addNames(text1, text2);
+    }
+
+    //Create the Settings button on click listener
+    public void settings(){
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,11 +108,11 @@ public class AIGame extends AppCompatActivity {
                         popupWindow.dismiss();
                     }
                 });
-
                 popupWindow.showAsDropDown(imgButton, 50, -30);
             }
         });
     }
+
     //Creates timer
     public Runnable updateTimer = new Runnable() {
         public void run() {
@@ -111,13 +126,7 @@ public class AIGame extends AppCompatActivity {
             handler.postDelayed(this, 0);
         }};
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
+    //set the high score for the least time a game has taken to complete
     public void setTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -147,6 +156,7 @@ public class AIGame extends AppCompatActivity {
         Log.i("tag",three + " " + four);
     }
 
+    //ends the game and starts the end game screen
     public void endGame(Player winner, Player loser){
         Intent intent = new Intent(this, End.class);
         intent.putExtra("name", winner.getName());
@@ -158,6 +168,7 @@ public class AIGame extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //adds game to the number of games played
     public void addgame(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -183,29 +194,12 @@ public class AIGame extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //closes window and returns to main menu
     public void back() {
         finish();
     }
 
-    public void setNames(Editable player1, Editable player2){
-        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        if(!player1.toString().equals("")){
-            editor.putString("player1", player1.toString());
-            editor.commit();}
-        else{
-            editor.putString("player1", "Player 1");
-            editor.commit();
-        }
-        if(!player2.toString().equals("")) {
-            editor.putString("player2", player2.toString());
-            editor.commit();
-        }
-        else{
-            editor.putString("player2", "Player 2");
-            editor.commit();
-        }
-    }
+    //fills the array with Player Cups and Pocket Cups and sets there ids
     public Cup[] fillTheArray(){
         cups = new Cup[16];
 
@@ -226,6 +220,7 @@ public class AIGame extends AppCompatActivity {
         return cups;
     }
 
+    //returns cups
     public Cup[] getCups(){
         return cups;
     }

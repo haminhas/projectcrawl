@@ -34,7 +34,6 @@ public class Game extends AppCompatActivity {
     long startTime;
     long timeCounter=0;
     Handler handler = new Handler();
-    private LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,19 @@ public class Game extends AppCompatActivity {
         cups = fillTheArray();
         b = new Board(this);
         addgame();
+        setTextFields();
+        settings();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    //Sets the text fields and retrieves player 1 and player 2's names
+    public void setTextFields(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
         String player1 = sp.getString("player1", "");
@@ -61,10 +73,24 @@ public class Game extends AppCompatActivity {
         Log.i("tag", "player1");
         text1.setText(player1);
         text2.setText(player2);
+        b.addNames(text1, text2);
+    }
 
+                //Creates timer
+    public Runnable updateTimer = new Runnable() {
+        public void run() {
+            timeCounter = System.currentTimeMillis()-startTime;
+            long totalTime = timeCounter;
+            long hours = totalTime/3600000;
+            long minutes = (totalTime-hours*3600000)/60000;
+            long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
+            String time = String.format("%02d:%02d",minutes, seconds);
+            timer.setText(time);
+            handler.postDelayed(this, 0);
+        }};
 
-        b.addNames(text1,text2);
-        //Create the Settings button on click listener
+    //Create the Settings button on click listener
+    public void settings(){
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +105,6 @@ public class Game extends AppCompatActivity {
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
-
                 popupWindow.setFocusable(true);
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -104,34 +129,13 @@ public class Game extends AppCompatActivity {
                 popupWindow.showAsDropDown(imgButton, 50, -30);
             }
         });
-            }
-                //Creates timer
-    public Runnable updateTimer = new Runnable() {
-        public void run() {
-            timeCounter = System.currentTimeMillis()-startTime;
-            long totalTime = timeCounter;
-            long hours = totalTime/3600000;
-            long minutes = (totalTime-hours*3600000)/60000;
-            long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
-            String time = String.format("%02d:%02d",minutes, seconds);
-            timer.setText(time);
-            handler.postDelayed(this, 0);
-        }};
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     //warn the player that going back will end his game
     @Override
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
-
         Intent mainMenu = new Intent(this, MainActivity.class);
-
         optionpane.setTitle("Go back?");
         optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
                 "the progress of this game will be lost!").setCancelable(true).setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
@@ -145,6 +149,7 @@ public class Game extends AppCompatActivity {
         alertDialog.show();
     }
 
+    //adds game to the number of games played
     public void addgame(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -161,19 +166,19 @@ public class Game extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    //closes window and returns to main menu
     public void back() {
         finish();
     }
 
+    //set the high score for the least time a game has taken to complete
     public void setTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -202,6 +207,8 @@ public class Game extends AppCompatActivity {
         Log.i("tag",one + " " + two);
         Log.i("tag",three + " " + four);
     }
+
+    //fills the array with Player Cups and Pocket Cups and sets there ids
     public Cup[] fillTheArray(){
         cups = new Cup[16];
 
@@ -221,10 +228,13 @@ public class Game extends AppCompatActivity {
 
         return cups;
     }
+
+    //returns cups
     public Cup[] getCups(){
         return cups;
     }
 
+    //ends the game and starts the end game screen
     public void endGame(Player winner, Player loser){
         Intent intent = new Intent(this, End.class);
         intent.putExtra("name", winner.getName());
@@ -238,13 +248,10 @@ public class Game extends AppCompatActivity {
 
     //This is for the dialog. It goes to the main menu if you say you want to
     public class GoToMainMenu implements DialogInterface.OnClickListener{
-
         private Intent mainMenu;
-
         public GoToMainMenu(Intent intent){
             mainMenu = intent;
         }
-
         @Override
         public void onClick(DialogInterface dialog, int which) {
             startActivity(mainMenu);
