@@ -1,26 +1,37 @@
 package uk.co.ivaylokhr.crawl;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class AIPlayer extends AppCompatActivity {
+    private AIGame activity;
     private Cup[] cups;
-    private Player player1, ai;
+    private Player player1, ai, player3;
     private boolean isFinished;
     private boolean isFirstTurn;
     private String winner;
     Context context;
     private Boolean opp;
+    private TextView playerone;
+    private TextView playertwo;
+    private TextView turn;
 
-    public AIPlayer(Cup[] cups) {
-        this.cups = cups;
+    public AIPlayer(AIGame activity) {
+        this.activity = activity;
+        cups = activity.getCups();
         player1 = new Player((PlayerCup) cups[7]);
+        player3 = new Player((PlayerCup) cups[7]);
         ai = new Player((PlayerCup) cups[15]);
         isFinished = false;
         isFirstTurn = true;
@@ -40,52 +51,35 @@ public class AIPlayer extends AppCompatActivity {
         }
     }
 
-    public void opposite(int cup, int marbles) {
-        PocketCup nextPocketCup;
-        int temp = cup;
-        for (int j = 0; j < marbles; j++) {
-            cup = temp + j;
-            if (cup == 7) {
-                cup = 8;
-            }
-            if (cup == 15) {
-                int t = 15 - temp;
-                marbles = marbles - t + 1;
-                temp = 0;
-                j = 0;
-            } else {
-                if (cup + 1 != 15 && cup + 1 != 7) {
-                    nextPocketCup = (PocketCup) cups[cup + 1];
-                    if (j == marbles - 1 && nextPocketCup.isEmpty() && cup > 7) {
-                        opp = true;
-                        PocketCup t = (PocketCup) cups[cup];
-                        int x = t.emptyCup();
-                        putMarblesInNextCups(cup, marbles);
-                        PocketCup oppositeCup = (PocketCup) cups[(14 - (cup + 1))];
-                        int oppositeCupNumbers = oppositeCup.emptyCup();
-                        nextPocketCup.addMarbles(-1);
-                        cups[15].addMarbles(oppositeCupNumbers + 1);
+    public PocketCup opposite() {
 
-                    }
-
+        for(int i = 8; i < 15;i++){
+            int op = (cups[i].getMarbles() +cups[i].getId())%16;
+            if((op != 7 && op != 15) && cups[i].getMarbles() != 0){
+                PocketCup nextPocketCup = (PocketCup) cups[op];
+                if(nextPocketCup.isEmpty()){
+                    return (PocketCup) cups[i];
                 }
             }
         }
+        return (PocketCup) cups[1];
     }
 
-    public Boolean extraTurn(){
+    public PocketCup extraTurn(){
         for(int i = 8; i < 15;i++){
             if(cups[i].getMarbles() +cups[i].getId() == 15){
-                return true;
+                return (PocketCup) cups[i];
             }
         }
-        return false;
+        return (PocketCup) cups[1];
     }
 
 
     public void doMove(){
-        int next = 0;
-        opp = false;
+        int finalButtonID =0;
+        boolean again = false;
+        boolean steal = false;
+        //get id of the pressed cup
         ArrayList<PocketCup> temp = new ArrayList<>();
         //Assuming ai player is at the top
         for (int i = 8; i < 15; i++) {
@@ -93,50 +87,57 @@ public class AIPlayer extends AppCompatActivity {
                 temp.add((PocketCup)cups[i]);
             }
         }
-        //If the AI has all empty moves then skip the turn
         if(temp.isEmpty()){
+            forceSwitch();
             return;
         }
-        if (extraTurn()){
-            for(int i = 8; i < 15;i++) {
-                if (cups[i].getMarbles() + cups[i].getId() == 15) {
-                    Log.i("Cup", Integer.toString(cups[i].getId()));
-                    Log.i("marbles", Integer.toString(cups[i].getMarbles()));
-                    putMarblesInNextCups(cups[i].getId(), ((PocketCup) cups[i]).emptyCup());
-                    i = 8;
-                }
-            }
-            doMove();
-            //Return statement to prevent the rest of the method and giving AI another turn
-            return;
-        }
-
-        for(int i = 8; i < 14;i++){
-            opposite(i, cups[i].getMarbles());
-            if(opp){
-                continue;
-            }
-        }
-
-        if (!opp) {
+        int id;
+        if(!extraTurn().equals(cups[1])) {
+            id = extraTurn().getId();
+            again = true;
+        }else if(!opposite().equals(cups[1])){
+                id = opposite().getId();
+            steal = true;
+        }else{
             Random rand = new Random();
             int randCup = rand.nextInt(temp.size());
             PocketCup chosenCup = temp.get(randCup);
-            int id = chosenCup.getId();
-            int marblesFromEmptiedCup = chosenCup.emptyCup();
-            putMarblesInNextCups(id, marblesFromEmptiedCup);
+            id = chosenCup.getId();
         }
-        switchTurns(ai);
-        forceSwitch();
+        //empty cup
+        PocketCup pressedPocketCup = (PocketCup) cups[id];
+        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
+        //at this point please check if the cup in the array still has the marbles
+        putMarblesInNextCups(id, marblesFromEmptiedCup);
 
-        for(int i = 0; i < 7;i++){
-            next += cups[i].getMarbles();
+        finalButtonID = id + marblesFromEmptiedCup;
+        if (finalButtonID > 15) {
+            finalButtonID -= 15;
         }
+        decideTurn(finalButtonID);
 
-        if (next == 0){
-            doMove();
+        if (isGameFinished()) {
+            updateScores();
+            if(checkWinner().equals(player1)) {
+                activity.endGame(checkWinner(), ai);
+            }else if(checkWinner().equals(ai)){
+                activity.endGame(checkWinner(), player1);
+            }else{
+                activity.endGame(checkWinner(), player1);
+            }
         }
-
+        checkIfPlayerCanPlay();
+        updateBoardView();
+        if(again){
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 2s = 2000ms
+                    doMove();
+                }
+            }, 2000);
+        }
     }
 
     //adds AIGame.java content to the board class
@@ -145,6 +146,7 @@ public class AIPlayer extends AppCompatActivity {
     }
 
     public void pressCup(View view) {
+        playClickSound();
         int finalButtonID =0;
         if (player1.getTurn()) {
             //get id of the pressed cup
@@ -162,31 +164,91 @@ public class AIPlayer extends AppCompatActivity {
             decideTurn(finalButtonID);
 
         }
-        updateButtonText();
+
+    if (isGameFinished()) {
+        updateScores();
+        if(checkWinner().equals(player1)) {
+            activity.endGame(checkWinner(), ai);
+        }else if(checkWinner().equals(ai)){
+            activity.endGame(checkWinner(), player1);
+        }else{
+            activity.endGame(checkWinner(), player1);
+        }
+    }
+    //decides which turn is next by the id of the last modified cup
+    //checks if it is the first turn
+    //if it is, it gives the player who made the turn first to be the first player
+        checkIfPlayerCanPlay();
+        updateBoardView();
 
         if (ai.getTurn()) {
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    // Do something after 5s = 5000ms
-                    updateButtonText();
+                    // Do something after 2s = 2000ms
                     doMove();
-                    updateButtonText();
                 }
             }, 2000);
         }
-
-    if (isGameFinished()) {
-        winner = checkWinner().getName();
-    }
-    //decides which turn is next by the id of the last modified cup
-    //checks if it is the first turn
-    //if it is, it gives the player who made the turn first to be the first player
-    checkIfPlayerCanPlay();
-    updateButtonText();
     }
 
+    //updates the information on the board
+    private void updateBoardView(){
+        updateTurnText();
+        updatePlayerTurnIndicators();
+        updateButtonText();
+    }
+
+    private void playClickSound(){
+        MediaPlayer media = MediaPlayer.create(activity, R.raw.click);
+        media.start();
+    }
+
+    //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
+    private void updateTurnText(){
+        String turnText = "";
+        if(player1.getTurn()) {
+            turnText = (String) playerone.getText();
+        }else{
+            turnText = (String) playertwo.getText();
+        }
+        turn.setText(turnText + "'s turn");
+        turn.setTextColor(Color.GREEN);
+    }
+
+    //update the turn indicators Sola made
+    private void updatePlayerTurnIndicators() {
+        if (player1.getTurn()) {
+            playerone.setTextColor(Color.GREEN);
+            playertwo.setTextColor(Color.BLACK);
+        } else {
+            playertwo.setTextColor(Color.GREEN);
+            playerone.setTextColor(Color.BLACK);
+        }
+    }
+
+    //This method edits the highscores after the game
+    public void updateScores() {
+        Integer score = checkWinner().playerCup.getMarbles();
+        Integer one = Preferences.fromPreferences(activity.getBaseContext(), -1, "first", "your_prefs");
+        Integer two = Preferences.fromPreferences(activity.getBaseContext(), -1, "second", "your_prefs");
+        Integer three = Preferences.fromPreferences(activity.getBaseContext(), -1, "third", "your_prefs");
+        activity.setTime();
+        if (score > one) {
+            three = two;
+            two = one;
+            one = score;
+        } else if (score > two) {
+            three = two;
+            two = score;
+        } else if (score > three) {
+            three = score;
+        }
+        Preferences.toPreferences(activity.getBaseContext(), one, "first", "your_prefs");
+        Preferences.toPreferences(activity.getBaseContext(), two, "second", "your_prefs");
+        Preferences.toPreferences(activity.getBaseContext(), three, "third", "your_prefs");
+    }
 
     private void updateButtonText() {
         for ( Cup c : cups) {
@@ -207,6 +269,7 @@ public class AIPlayer extends AppCompatActivity {
                 // at the end of the loop force the switch
                 if (i == 6) {
                     forceSwitch();
+                    doMove();
                 }
             }
         } else if (ai.getTurn()) {
@@ -231,6 +294,16 @@ public class AIPlayer extends AppCompatActivity {
         } else {
             switchTurns(player1);
         }
+    }
+
+    public void addNames(TextView player1, TextView player2){
+        playerone = player1;
+        playertwo = player2;
+        this.player1.setName((String) player1.getText());
+        ai.setName((String) player2.getText());
+        turn = (TextView) activity.findViewById(R.id.turn);
+        turn.setText("Turn 1");
+        turn.setTextColor(Color.GREEN);
     }
 
     //decides which turn is next depending on the id of the final marblees that has been put
@@ -265,6 +338,8 @@ public class AIPlayer extends AppCompatActivity {
         for (int i = 0; i < 7; i++) {
             if (player1.getTurn() && cups[i].getMarbles() != 0) {
                 cups[i].setEnabled(true);
+            }else{
+                cups[i].setEnabled(false);
             }
         }
         for (int i = 0; i < 15; i++) {
@@ -281,6 +356,7 @@ public class AIPlayer extends AppCompatActivity {
             if (cupNumber == 7) {
                 if (player1.getTurn()) {
                     player1.increaseScore(1);
+                    playZoomAnimation(cups[cupNumber], i);
                     cupNumber++; //jumps PlayerCup and goes to next one
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
@@ -289,6 +365,7 @@ public class AIPlayer extends AppCompatActivity {
             } else if (cupNumber == 15) {
                 if (ai.getTurn()) {
                     ai.increaseScore(1);
+                    playZoomAnimation(cups[cupNumber], i);
                     cupNumber = 0;
                     continue; //finish current iteration on this point and to go to next iteration
                 } else {
@@ -297,7 +374,8 @@ public class AIPlayer extends AppCompatActivity {
             }
 
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
-
+            playZoomAnimation(nextPocketCup, i);
+            updateBoardView();
             //check at the last iteration if cup is empty
             if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
                 PocketCup oppositeCup;
@@ -307,6 +385,13 @@ public class AIPlayer extends AppCompatActivity {
                     nextPocketCup.addMarbles(-1);
                     player1.increaseScore(oppositeCupNumbers + 1);
                 }
+                if(ai.getTurn() && 8 < cupNumber && cupNumber < 15){
+                    oppositeCup = (PocketCup) cups[14-cupNumber];
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    nextPocketCup.addMarbles(-1);
+                    ai.increaseScore(oppositeCupNumbers + 1);
+                }
+
             }
 
             nextPocketCup.addMarbles(1);
@@ -320,6 +405,14 @@ public class AIPlayer extends AppCompatActivity {
 
 
         }//END OF FOR LOOP
+    }
+
+    //view is the object the animation needs to be aplied to
+    //index is the index in the queue if there needs to be chained with other animations
+    private void playZoomAnimation(View view, int index){
+        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.zoomanim);
+        animation.setStartOffset(200*index);
+        view.startAnimation(animation);
     }
 
     public boolean isGameFinished() {
@@ -345,8 +438,11 @@ public class AIPlayer extends AppCompatActivity {
         //checks who won
         if(player1.getScore() > ai.getScore()) {
             return player1;
+        }else if(player1.getScore() < ai.getScore()) {
+            return ai;
+        } else{
+            return player3;
         }
-        return ai;
     }
 
 }
