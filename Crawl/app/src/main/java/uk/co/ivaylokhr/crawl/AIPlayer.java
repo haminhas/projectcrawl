@@ -389,7 +389,7 @@ public class AIPlayer extends AppCompatActivity {
                     oppositeCup = (PocketCup) cups[14-cupNumber];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     nextPocketCup.addMarbles(-1);
-                    player1.increaseScore(oppositeCupNumbers + 1);
+                    ai.increaseScore(oppositeCupNumbers + 1);
                 }
 
             }
