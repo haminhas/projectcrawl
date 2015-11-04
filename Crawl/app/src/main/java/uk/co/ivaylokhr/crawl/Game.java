@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,12 +15,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.RelativeLayout;
 
 public class Game extends AppCompatActivity {
 
@@ -40,7 +34,7 @@ public class Game extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         initialiseGame();
-        addgame();
+        increaseGamesPlayed();
         setPlayersNameTextFields();
         settings();
     }
@@ -61,7 +55,7 @@ public class Game extends AppCompatActivity {
     }
 
     //adds game to the number of games played
-    public void addgame(){
+    public void increaseGamesPlayed(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         Integer games = sp.getInt("games", -1);
