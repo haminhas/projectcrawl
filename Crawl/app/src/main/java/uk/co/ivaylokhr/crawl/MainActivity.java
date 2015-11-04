@@ -10,8 +10,6 @@ package uk.co.ivaylokhr.crawl;
     import android.view.MenuItem;
     import android.view.View;
     import android.widget.Button;
-    import android.widget.EditText;
-    import android.widget.RadioButton;
     import android.widget.TextView;
 
     public class MainActivity extends AppCompatActivity {
@@ -106,7 +104,7 @@ package uk.co.ivaylokhr.crawl;
 
         public void Settings(View view){
             if(buttonThree.getText().equals("Settings")) {
-                Intent intent = new Intent(this, Set.class);
+                Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
             }else{
                 buttonOne.setText("1 player");
