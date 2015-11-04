@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 public class Game extends AppCompatActivity {
 
     private Cup[] cups;
-    private Board b;
+    private Board board;
     private ImageButton imgButton;
     private TextView timer;
     long startTime;
@@ -39,11 +39,7 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        timer= (TextView) findViewById(R.id.Timer);
-        startTime = System.currentTimeMillis();
-        handler.postDelayed(updateTimer, 0);
-        cups = fillTheArray();
-        b = new Board(this);
+        initialiseGame();
         addgame();
         setTextFields();
         settings();
@@ -54,6 +50,14 @@ public class Game extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public void initialiseGame() {
+        timer = (TextView) findViewById(R.id.Timer);
+        startTime = System.currentTimeMillis();
+        handler.postDelayed(updateTimer, 0);
+        cups = fillTheArray();
+        board = new Board(this);
     }
 
     //Sets the text fields and retrieves player 1 and player 2's names
@@ -72,10 +76,10 @@ public class Game extends AppCompatActivity {
         final TextView text2 = (TextView) findViewById(R.id.player2);
         text1.setText(player1);
         text2.setText(player2);
-        b.addNames(text1, text2);
+        board.addNames(text1, text2);
     }
 
-                //Creates timer
+    //Creates timer
     public Runnable updateTimer = new Runnable() {
         public void run() {
             timeCounter = System.currentTimeMillis()-startTime;
@@ -116,7 +120,7 @@ public class Game extends AppCompatActivity {
                         back();
                     }
                 });
-//              //Creates onClickListener that closes the settings menu
+                //Creates onClickListener that closes the settings menu
                 btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
