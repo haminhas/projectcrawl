@@ -50,7 +50,7 @@ public class Game extends AppCompatActivity {
         timer = (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        cups = fillTheArray();
+        cups = fillCupsArray();
         board = new Board(this);
     }
 
@@ -202,7 +202,7 @@ public class Game extends AppCompatActivity {
     }
 
     //fills the array with Player Cups and Pocket Cups and sets there ids
-    public Cup[] fillTheArray(){
+    public Cup[] fillCupsArray(){
         cups = new Cup[16];
 
         int[] ids = {R.id.b0, R.id.b1, R.id.b2, R.id.b3, R.id.b4, R.id.b5,
