@@ -42,7 +42,6 @@ public class AIPlayer extends AppCompatActivity {
     //Initialize onClickListener and update the view of all the buttons on board
     private void initializeButtons(){
         for (Cup c : cups) {
-            c.setText(Integer.toString(c.getMarbles()));
             c.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -50,10 +49,10 @@ public class AIPlayer extends AppCompatActivity {
                 }
             });
         }
-
         for (int i = 8; i < 15; i++) {
             cups[i].setEnabled(false);
         }
+        updateButtonText();
     }
 
     //The human player has a go
@@ -270,8 +269,23 @@ public class AIPlayer extends AppCompatActivity {
     }
 
     private void updateButtonText() {
-        for ( Cup c : cups) {
-            c.setText(Integer.toString(c.getMarbles()));
+        int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
+                R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
+        for (int i = 0; i < cups.length; i++) {
+            Cup c = cups[i];
+            int marbles = c.getMarbles();
+            c.setText(Integer.toString(marbles));
+            if(i == 7 || i == 15) {
+                continue;
+            }
+            else{
+                if(marbles <= 7) {
+                    c.setBackgroundResource(backgrounds[marbles]);
+                }
+                else{
+                    c.setBackgroundResource(backgrounds[8]);
+                }
+            }
         }
     }
 
