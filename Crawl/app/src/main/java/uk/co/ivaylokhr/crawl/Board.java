@@ -10,7 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-
+//TODO: This is a test.
 public class Board extends AppCompatActivity {
     private Cup[] cups;
     private Player player1, player2, player3;
