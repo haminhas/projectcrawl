@@ -27,7 +27,7 @@ package uk.co.ivaylokhr.crawl;
             setContentView(R.layout.activity_main);
             initialiseScreen();
         }
-
+        //TODO: Either use MenuItems or remove this.
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
@@ -47,7 +47,7 @@ package uk.co.ivaylokhr.crawl;
         }
 
         //starts a one player game
-        public void onePlayer(View view){
+        public void onClickOnePlayer(View view){
             if (buttonOne.getText().equals("1 player")) {
                 Intent intent = new Intent(this, AIGame.class);
                 players = 1;
@@ -62,7 +62,8 @@ package uk.co.ivaylokhr.crawl;
         }
 
         //starts a two player game
-        public void twoPlayer(View view){
+
+        public void onClickTwoPlayer(View view){
             if (buttonTwo.getText().equals("2 player")) {
                 buttonOne.setText("Host");
                 buttonTwo.setText("Connect");
@@ -92,7 +93,7 @@ package uk.co.ivaylokhr.crawl;
             }
         }
 
-        public void highScore(View view){
+        public void onClickHighScore(View view){
             if(buttonFour.getText().equals("Statistics")) {
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
@@ -102,7 +103,7 @@ package uk.co.ivaylokhr.crawl;
             }
         }
 
-        public void Settings(View view){
+        public void onClickSettings(View view){
             if(buttonThree.getText().equals("Settings")) {
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
@@ -113,7 +114,7 @@ package uk.co.ivaylokhr.crawl;
                 buttonFour.setText("Statistics");
             }
         }
-
+        //TODO: Either use MenuItems or remove this.
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             // Handle action bar item clicks here. The action bar will
