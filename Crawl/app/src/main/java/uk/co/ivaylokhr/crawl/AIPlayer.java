@@ -18,11 +18,7 @@ public class AIPlayer extends AppCompatActivity {
     private AIGame activity;
     private Cup[] cups;
     private Player player1, ai, player3;
-    private boolean isFinished;
-    private boolean isFirstTurn;
-    private String winner;
     Context context;
-    private Boolean opp;
     private TextView playerone;
     private TextView playertwo;
     private TextView turn;
@@ -33,8 +29,6 @@ public class AIPlayer extends AppCompatActivity {
         player1 = new Player((PlayerCup) cups[7]);
         player3 = new Player((PlayerCup) cups[7]);
         ai = new Player((PlayerCup) cups[15]);
-        isFinished = false;
-        isFirstTurn = true;
 
         for (Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
@@ -126,7 +120,6 @@ public class AIPlayer extends AppCompatActivity {
                 activity.endGame(checkWinner(), player1);
             }
         }
-        checkIfPlayerCanPlay();
         updateBoardView();
         if(again){
             final Handler handler = new Handler();
@@ -175,10 +168,6 @@ public class AIPlayer extends AppCompatActivity {
             activity.endGame(checkWinner(), player1);
         }
     }
-    //decides which turn is next by the id of the last modified cup
-    //checks if it is the first turn
-    //if it is, it gives the player who made the turn first to be the first player
-        checkIfPlayerCanPlay();
         updateBoardView();
 
         if (ai.getTurn()) {
@@ -323,6 +312,7 @@ public class AIPlayer extends AppCompatActivity {
         else if (ai.getTurn()) {
             switchTurns(ai);
         }
+        checkIfPlayerCanPlay();
     }
 
     //switches turn to the player who is given as a parameter
