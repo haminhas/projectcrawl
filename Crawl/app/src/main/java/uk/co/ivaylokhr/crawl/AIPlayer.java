@@ -194,8 +194,8 @@ public class AIPlayer extends AppCompatActivity {
             if (finalButtonID > 15) {
                 finalButtonID -= 15;
             }
-            updateBoardView();
             checkForGameFinish();
+            updateBoardView();
             decideTurn(finalButtonID);
         }
 
