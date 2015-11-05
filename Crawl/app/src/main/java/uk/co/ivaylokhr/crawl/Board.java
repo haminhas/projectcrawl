@@ -297,9 +297,6 @@ public class Board extends AppCompatActivity {
         else if (player2.getTurn()) {
             switchTurns(player2);
         }
-        //checks if there is a valid method
-        //If not, change the turn to the other player
-        checkIfPlayerCanPlay();
     }
 
     //switches turn to the player who is given as a parameter
@@ -320,6 +317,9 @@ public class Board extends AppCompatActivity {
                 cups[i].setEnabled(false);
             }
         }
+        //checks if there is a valid method
+        //If not, change the turn to the other player
+        checkIfPlayerCanPlay();
     }
 
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {

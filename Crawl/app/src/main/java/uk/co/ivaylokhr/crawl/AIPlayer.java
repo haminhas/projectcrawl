@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +21,7 @@ public class AIPlayer extends AppCompatActivity {
     private TextView playerone;
     private TextView playertwo;
     private TextView turn;
+    private boolean isFirstTurn;
 
     public AIPlayer(AIGame activity) {
         this.activity = activity;
@@ -29,7 +29,18 @@ public class AIPlayer extends AppCompatActivity {
         player1 = new Player((PlayerCup) cups[7]);
         player3 = new Player((PlayerCup) cups[7]);
         ai = new Player((PlayerCup) cups[15]);
+        initializeFirstTurn();
+        initializeButtons();
+    }
 
+    private void initializeFirstTurn(){
+        player1.setTurn(true);
+        ai.setTurn(false);
+        isFirstTurn = true;
+    }
+
+    //Initialize onClickListener and update the view of all the buttons on board
+    private void initializeButtons(){
         for (Cup c : cups) {
             c.setText(Integer.toString(c.getMarbles()));
             c.setOnClickListener(new View.OnClickListener() {
@@ -45,8 +56,44 @@ public class AIPlayer extends AppCompatActivity {
         }
     }
 
-    public PocketCup opposite() {
+    //The human player has a go
+    //The id of the button that was pressed is remembered
+    //Then the computer makes its move and then the changes are applied
+    private void doFirstTurn(int playerID){
+        int aiID = doFirstAIMove();
+        applyFirstMove(playerID, aiID);
+        isFirstTurn = false;
+        switchTurns(player1);
+        updateBoardView();
+    }
 
+    //Pure random move for the first turn
+    private int doFirstAIMove(){
+        switchTurns(ai);
+        Random rand = new Random();
+        return rand.nextInt(6) + 8;
+    }
+
+    //update the board with the first turn moves of the human and AI players
+    private void applyFirstMove(int playerMove, int AIMove){
+        ((PocketCup)cups[playerMove]).emptyCup();
+        ((PocketCup)cups[AIMove]).emptyCup();
+        for (int i = 1; i < 8; i++){
+            int nextCupID = i + playerMove;
+            cups[nextCupID].addMarbles(1);
+            playZoomAnimation(cups[nextCupID], i-1);
+        }
+        for(int i = 1; i < 8; i++){
+            int nextCupID = i + AIMove;
+            if(nextCupID > 15){
+                nextCupID -= 16;
+            }
+            cups[nextCupID].addMarbles(1);
+            playZoomAnimation(cups[nextCupID], i-1);
+        }
+    }
+
+    private PocketCup opposite() {
         for(int i = 8; i < 15;i++){
             int op = (cups[i].getMarbles() +cups[i].getId())%16;
             if((op != 7 && op != 15) && cups[i].getMarbles() != 0){
@@ -61,7 +108,7 @@ public class AIPlayer extends AppCompatActivity {
 
     public PocketCup extraTurn(){
         for(int i = 8; i < 15;i++){
-            if(cups[i].getMarbles() +cups[i].getId() == 15){
+            if((cups[i].getMarbles() +cups[i].getId())%15 == 0){
                 return (PocketCup) cups[i];
             }
         }
@@ -108,18 +155,8 @@ public class AIPlayer extends AppCompatActivity {
         if (finalButtonID > 15) {
             finalButtonID -= 15;
         }
+        checkForGameFinish();
         decideTurn(finalButtonID);
-
-        if (isGameFinished()) {
-            updateScores();
-            if(checkWinner().equals(player1)) {
-                activity.endGame(checkWinner(), ai);
-            }else if(checkWinner().equals(ai)){
-                activity.endGame(checkWinner(), player1);
-            }else{
-                activity.endGame(checkWinner(), player1);
-            }
-        }
         updateBoardView();
         if(again){
             final Handler handler = new Handler();
@@ -129,7 +166,7 @@ public class AIPlayer extends AppCompatActivity {
                     // Do something after 2s = 2000ms
                     doMove();
                 }
-            }, 2000);
+            }, 2500);
         }
     }
 
@@ -140,6 +177,10 @@ public class AIPlayer extends AppCompatActivity {
 
     public void pressCup(View view) {
         playClickSound();
+        if(isFirstTurn){
+            doFirstTurn(view.getId());
+            return;
+        }
         int finalButtonID =0;
         if (player1.getTurn()) {
             //get id of the pressed cup
@@ -154,21 +195,10 @@ public class AIPlayer extends AppCompatActivity {
             if (finalButtonID > 15) {
                 finalButtonID -= 15;
             }
+            updateBoardView();
+            checkForGameFinish();
             decideTurn(finalButtonID);
-
         }
-
-    if (isGameFinished()) {
-        updateScores();
-        if(checkWinner().equals(player1)) {
-            activity.endGame(checkWinner(), ai);
-        }else if(checkWinner().equals(ai)){
-            activity.endGame(checkWinner(), player1);
-        }else{
-            activity.endGame(checkWinner(), player1);
-        }
-    }
-        updateBoardView();
 
         if (ai.getTurn()) {
             final Handler handler = new Handler();
@@ -178,7 +208,7 @@ public class AIPlayer extends AppCompatActivity {
                     // Do something after 2s = 2000ms
                     doMove();
                 }
-            }, 2000);
+            }, 2500);
         }
     }
 
@@ -312,7 +342,6 @@ public class AIPlayer extends AppCompatActivity {
         else if (ai.getTurn()) {
             switchTurns(ai);
         }
-        checkIfPlayerCanPlay();
     }
 
     //switches turn to the player who is given as a parameter
@@ -337,6 +366,7 @@ public class AIPlayer extends AppCompatActivity {
                 cups[i].setEnabled(false);
             }
         }
+        checkIfPlayerCanPlay();
     }
 
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
@@ -421,6 +451,19 @@ public class AIPlayer extends AppCompatActivity {
 
         }
         return false;
+    }
+
+    private void checkForGameFinish(){
+        if (isGameFinished()) {
+            updateScores();
+            if(checkWinner().equals(player1)) {
+                activity.endGame(checkWinner(), ai);
+            }else if(checkWinner().equals(ai)){
+                activity.endGame(checkWinner(), player1);
+            }else{
+                activity.endGame(checkWinner(), player1);
+            }
+        }
     }
 
 
