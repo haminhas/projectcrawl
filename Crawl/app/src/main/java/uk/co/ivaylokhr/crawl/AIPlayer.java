@@ -180,16 +180,15 @@ public class AIPlayer extends AppCompatActivity {
             doFirstTurn(view.getId());
             return;
         }
+        //get id of the pressed cup
+        int id = ((PocketCup) view).getId();
+        //empty cup
+        PocketCup pressedPocketCup = (PocketCup) cups[id];
+        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         int finalButtonID =0;
         if (player1.getTurn()) {
-            //get id of the pressed cup
-            int id = ((PocketCup) view).getId();
-            //empty cup
-            PocketCup pressedPocketCup = (PocketCup) cups[id];
-            int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
             //at this point please check if the cup in the array still has the marbles
             putMarblesInNextCups(id, marblesFromEmptiedCup);
-
             finalButtonID = id + marblesFromEmptiedCup;
             if (finalButtonID > 15) {
                 finalButtonID -= 15;
@@ -207,7 +206,7 @@ public class AIPlayer extends AppCompatActivity {
                     // Do something after 2s = 2000ms
                     doMove();
                 }
-            }, 2500);
+            }, (marblesFromEmptiedCup * 250)+1000);
         }
     }
 
