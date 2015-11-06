@@ -247,7 +247,7 @@ public class AIPlayer extends AppCompatActivity {
 
     //This method edits the highscores after the game
     public void updateScores() {
-        Integer score = checkWinner().playerCup.getMarbles();
+        Integer score = player1.getScore();
         Integer one = Preferences.fromPreferences(activity.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(activity.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(activity.getBaseContext(), -1, "third", "your_prefs");
