@@ -1,5 +1,6 @@
 package uk.co.ivaylokhr.crawl;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class Board extends AppCompatActivity {
     //first turn stuff
     private Player firstPlayer;
     private int firstID, secondID;
+    Context context;
     private boolean firstHasPlayed, secondHasPlayed;
 
     public Board(Game activity) {
@@ -69,6 +71,10 @@ public class Board extends AppCompatActivity {
                 cups[i].setEnabled(true);
             }
         }
+    }
+    //adds Game.java content to the board class
+    public void addContent(Context context){
+        context = this.context;
     }
 
     //This method edits the highscores after the game
@@ -291,9 +297,6 @@ public class Board extends AppCompatActivity {
         else if (player2.getTurn()) {
             switchTurns(player2);
         }
-        //checks if there is a valid method
-        //If not, change the turn to the other player
-        checkIfPlayerCanPlay();
     }
 
     //switches turn to the player who is given as a parameter
@@ -314,6 +317,9 @@ public class Board extends AppCompatActivity {
                 cups[i].setEnabled(false);
             }
         }
+        //checks if there is a valid method
+        //If not, change the turn to the other player
+        checkIfPlayerCanPlay();
     }
 
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
@@ -418,5 +424,4 @@ public class Board extends AppCompatActivity {
             return player3;
         }
     }
-
 }

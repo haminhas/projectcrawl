@@ -32,7 +32,10 @@ public class End extends AppCompatActivity {
         String draw = intent.getStringExtra("score");
         if (draw.equals("49")){
             winner1.setText("Draw");
-            winner2.setText(intent.getStringExtra("name") + "-" + intent.getStringExtra("name2"));
+            if(intent.getStringExtra("name").equals(null)){
+            }else {
+                winner2.setText(intent.getStringExtra("name") + "-" + intent.getStringExtra("name2"));
+            }
             loser1.setText("49 - 49");
             loser2.setText(intent.getStringExtra(""));
         }else {

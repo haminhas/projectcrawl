@@ -5,7 +5,6 @@ package uk.co.ivaylokhr.crawl;
     import android.content.SharedPreferences;
     import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
-    import android.util.Log;
     import android.util.TypedValue;
     import android.view.Menu;
     import android.view.MenuItem;
@@ -46,7 +45,7 @@ package uk.co.ivaylokhr.crawl;
         //starts a one player game
         public void onePlayer(View view){
             if (one.getText().equals("1 player")) {
-                Intent intent = new Intent(this, Game.class);
+                Intent intent = new Intent(this, AIGame.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
                 startActivity(intent);
@@ -73,7 +72,6 @@ package uk.co.ivaylokhr.crawl;
         }
         //starts a two player game
         public void twoPlayer(View view){
-            Log.i("tag", (String) two.getText());
             if (two.getText().equals("2 player")) {
                 one.setText("Host");
                 two.setText("Connect");
@@ -96,17 +94,14 @@ package uk.co.ivaylokhr.crawl;
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
             }else{
-                Intent intent = new Intent(this, Game.class);
-                players = 2;
-                intent.putExtra(EXTRA_MESSAGE, players);
-                startActivity(intent);
+                    Intent intent = new Intent(this, Game.class);
+                    startActivity(intent);
             }
         }
 
         public void Settings(View view){
             if(three.getText().equals("Settings")) {
                 Intent intent = new Intent(this, Set.class);
-                Log.i("tag","test1");
                 startActivity(intent);
             }else{
                 one.setText("1 player");
