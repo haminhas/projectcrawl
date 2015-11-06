@@ -118,7 +118,6 @@ public class AIPlayer extends AppCompatActivity {
     public void doMove(){
         int finalButtonID =0;
         boolean again = false;
-        boolean steal = false;
         //get id of the pressed cup
         ArrayList<PocketCup> temp = new ArrayList<>();
         //Assuming ai player is at the top
@@ -137,7 +136,6 @@ public class AIPlayer extends AppCompatActivity {
             again = true;
         }else if(!opposite().equals(cups[1])){
                 id = opposite().getId();
-            steal = true;
         }else{
             Random rand = new Random();
             int randCup = rand.nextInt(temp.size());
@@ -450,20 +448,7 @@ public class AIPlayer extends AppCompatActivity {
 
     public boolean isGameFinished() {
         //check if game is finished
-        for (int i = 0; i < cups.length; i++) {
-            if (i != 7 && i != 15) {
-                PocketCup pocketCup = (PocketCup) cups[i];
-                if (!pocketCup.isEmpty()) {
-                    break;
-                }
-            }
-
-            if (i == 14) {
-                return true;
-            }
-
-        }
-        return false;
+        return ai.getScore() + player1.getScore() == 98;
     }
 
     private void checkForGameFinish(){
