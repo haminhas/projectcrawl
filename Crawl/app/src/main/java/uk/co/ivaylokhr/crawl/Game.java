@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,17 +15,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.RelativeLayout;
 
 public class Game extends AppCompatActivity {
 
     private Cup[] cups;
-    private Board b;
+    private Board board;
     private ImageButton imgButton;
     private TextView timer;
     long startTime;
@@ -39,13 +33,9 @@ public class Game extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        timer= (TextView) findViewById(R.id.Timer);
-        startTime = System.currentTimeMillis();
-        handler.postDelayed(updateTimer, 0);
-        cups = fillTheArray();
-        b = new Board(this);
-        addgame();
-        setTextFields();
+        initialiseGame();
+        increaseGamesPlayed();
+        setPlayersNameTextFields();
         settings();
     }
 
@@ -56,8 +46,26 @@ public class Game extends AppCompatActivity {
         return true;
     }
 
+    public void initialiseGame() {
+        timer = (TextView) findViewById(R.id.Timer);
+        startTime = System.currentTimeMillis();
+        handler.postDelayed(updateTimer, 0);
+        cups = fillCupsArray();
+        board = new Board(this);
+    }
+
+    //adds game to the number of games played
+    public void increaseGamesPlayed(){
+        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        Integer games = sp.getInt("games", -1);
+        games++;
+        editor.putInt("games", games);
+        editor.commit();
+    }
+
     //Sets the text fields and retrieves player 1 and player 2's names
-    public void setTextFields(){
+    public void setPlayersNameTextFields(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
         String player1 = sp.getString("player1", "");
@@ -72,21 +80,8 @@ public class Game extends AppCompatActivity {
         final TextView text2 = (TextView) findViewById(R.id.player2);
         text1.setText(player1);
         text2.setText(player2);
-        b.addNames(text1, text2);
+        board.addNames(text1, text2);
     }
-
-                //Creates timer
-    public Runnable updateTimer = new Runnable() {
-        public void run() {
-            timeCounter = System.currentTimeMillis()-startTime;
-            long totalTime = timeCounter;
-            long hours = totalTime/3600000;
-            long minutes = (totalTime-hours*3600000)/60000;
-            long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
-            String time = String.format("%02d:%02d",minutes, seconds);
-            timer.setText(time);
-            handler.postDelayed(this, 0);
-        }};
 
     //Create the Settings button on click listener
     public void settings(){
@@ -116,7 +111,7 @@ public class Game extends AppCompatActivity {
                         back();
                     }
                 });
-//              //Creates onClickListener that closes the settings menu
+                //Creates onClickListener that closes the settings menu
                 btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
@@ -129,6 +124,20 @@ public class Game extends AppCompatActivity {
             }
         });
     }
+
+    //Creates timer
+    public Runnable updateTimer = new Runnable() {
+        public void run() {
+            timeCounter = System.currentTimeMillis()-startTime;
+            long totalTime = timeCounter;
+            long hours = totalTime/3600000;
+            long minutes = (totalTime-hours*3600000)/60000;
+            long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
+            String time = String.format("%02d:%02d",minutes, seconds);
+            timer.setText(time);
+            handler.postDelayed(this, 0);
+        }};
+
 
     //warn the player that going back will end his game
     @Override
@@ -147,17 +156,6 @@ public class Game extends AppCompatActivity {
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }
-
-    //adds game to the number of games played
-    public void addgame(){
-        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        Integer games = sp.getInt("games", -1);
-        games++;
-        editor.putInt("games", games);
-        editor.commit();
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -178,7 +176,7 @@ public class Game extends AppCompatActivity {
     }
 
     //set the high score for the least time a game has taken to complete
-    public void setTime(){
+    public void setShortedPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         String temp = (String) sp.getString("times", "");
@@ -204,7 +202,7 @@ public class Game extends AppCompatActivity {
     }
 
     //fills the array with Player Cups and Pocket Cups and sets there ids
-    public Cup[] fillTheArray(){
+    public Cup[] fillCupsArray(){
         cups = new Cup[16];
 
         int[] ids = {R.id.b0, R.id.b1, R.id.b2, R.id.b3, R.id.b4, R.id.b5,

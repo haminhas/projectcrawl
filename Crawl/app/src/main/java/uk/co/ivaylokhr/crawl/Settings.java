@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class Set extends AppCompatActivity {
+public class Settings extends AppCompatActivity {
     private  String player1;
     private String player2;
 

@@ -10,41 +10,45 @@ package uk.co.ivaylokhr.crawl;
     import android.view.MenuItem;
     import android.view.View;
     import android.widget.Button;
-    import android.widget.EditText;
-    import android.widget.RadioButton;
     import android.widget.TextView;
 
     public class MainActivity extends AppCompatActivity {
         int players;
         public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
         TextView textView;
-        public Button one;
-        public Button two;
-        public Button three;
-        public Button four;
+        public Button buttonOne;
+        public Button buttonTwo;
+        public Button buttonThree;
+        public Button buttonFour;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setScores();
             setContentView(R.layout.activity_main);
-            textView = (TextView) findViewById(R.id.textView);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimension(R.dimen.textsize));
-            one = (Button) findViewById(R.id.button);
-            two = (Button) findViewById(R.id.button9);
-            three = (Button) findViewById(R.id.button3);
-            four = (Button) findViewById(R.id.button2);
+            initialiseScreen();
         }
-
+        //TODO: Either use MenuItems or remove this.
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
             getMenuInflater().inflate(R.menu.menu_main, menu);
             return true;
         }
+
+        //initalise text mesages and home sreen buttons
+        public void initialiseScreen() {
+            textView = (TextView) findViewById(R.id.textView);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimension(R.dimen.textsize));
+            buttonOne = (Button) findViewById(R.id.button);
+            buttonTwo = (Button) findViewById(R.id.button9);
+            buttonThree = (Button) findViewById(R.id.button3);
+            buttonFour = (Button) findViewById(R.id.button2);
+        }
+
         //starts a one player game
-        public void onePlayer(View view){
-            if (one.getText().equals("1 player")) {
+        public void onClickOnePlayer(View view){
+            if (buttonOne.getText().equals("1 player")) {
                 Intent intent = new Intent(this, AIGame.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
@@ -56,27 +60,15 @@ package uk.co.ivaylokhr.crawl;
                 startActivity(intent);
             }
         }
-        //Initialise the high scores.
-        public  void setScores(){
-            SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-                Integer games = sp.getInt("games", -1);
-            if (games == -1) {
-                editor.putInt("first", 0);
-                editor.putInt("second", 0);
-                editor.putString("times","00:00");
-                editor.putInt("third", 0);
-                editor.putInt("games", 0);
-                editor.commit();
-            }
-        }
+
         //starts a two player game
-        public void twoPlayer(View view){
-            if (two.getText().equals("2 player")) {
-                one.setText("Host");
-                two.setText("Connect");
-                three.setText("Back");
-                four.setText("Share");
+
+        public void onClickTwoPlayer(View view){
+            if (buttonTwo.getText().equals("2 player")) {
+                buttonOne.setText("Host");
+                buttonTwo.setText("Connect");
+                buttonThree.setText("Back");
+                buttonFour.setText("Share");
             }
             else {
                 Integer hosting = 0;
@@ -86,11 +78,23 @@ package uk.co.ivaylokhr.crawl;
             }
         }
 
+        //Initialise the high scores.
+        public  void setScores(){
+            SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            Integer games = sp.getInt("games", -1);
+            if (games == -1) {
+                editor.putInt("first", 0);
+                editor.putInt("second", 0);
+                editor.putString("times","00:00");
+                editor.putInt("third", 0);
+                editor.putInt("games", 0);
+                editor.commit();
+            }
+        }
 
-
-
-        public void highScore(View view){
-            if(four.getText().equals("Statistics")) {
+        public void onClickHighScore(View view){
+            if(buttonFour.getText().equals("Statistics")) {
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
             }else{
@@ -99,17 +103,18 @@ package uk.co.ivaylokhr.crawl;
             }
         }
 
-        public void Settings(View view){
-            if(three.getText().equals("Settings")) {
-                Intent intent = new Intent(this, Set.class);
+        public void onClickSettings(View view){
+            if(buttonThree.getText().equals("Settings")) {
+                Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
             }else{
-                one.setText("1 player");
-                two.setText("2 player");
-                three.setText("Settings");
-                four.setText("Statistics");
+                buttonOne.setText("1 player");
+                buttonTwo.setText("2 player");
+                buttonThree.setText("Settings");
+                buttonFour.setText("Statistics");
             }
         }
+        //TODO: Either use MenuItems or remove this.
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             // Handle action bar item clicks here. The action bar will
