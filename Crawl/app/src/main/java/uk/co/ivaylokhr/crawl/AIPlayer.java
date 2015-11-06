@@ -194,8 +194,8 @@ public class AIPlayer extends AppCompatActivity {
                 finalButtonID -= 15;
             }
             checkForGameFinish();
-            updateBoardView();
             decideTurn(finalButtonID);
+            updateBoardView();
         }
 
         if (ai.getTurn()) {
@@ -408,7 +408,7 @@ public class AIPlayer extends AppCompatActivity {
 
             PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
             playZoomAnimation(nextPocketCup, i);
-            updateBoardView();
+
             //check at the last iteration if cup is empty
             if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
                 PocketCup oppositeCup;
