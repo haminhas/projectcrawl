@@ -165,7 +165,7 @@ public class AIPlayer extends AppCompatActivity {
                     // Do something after 2s = 2000ms
                     doMove();
                 }
-            }, 2500);
+            }, (marblesFromEmptiedCup * 250)+1000);
         }
     }
 
