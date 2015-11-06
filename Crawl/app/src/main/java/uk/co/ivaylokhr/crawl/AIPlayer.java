@@ -106,7 +106,7 @@ public class AIPlayer extends AppCompatActivity {
     }
 
     public PocketCup extraTurn(){
-        for(int i = 8; i < 15;i++){
+        for(int i = 14; i > 7;i--){
             if((cups[i].getMarbles() +cups[i].getId())%15 == 0){
                 return (PocketCup) cups[i];
             }
