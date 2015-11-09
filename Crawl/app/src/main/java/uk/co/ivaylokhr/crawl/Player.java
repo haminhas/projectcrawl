@@ -10,7 +10,7 @@ public class Player {
     public Player(){
         turn = true;
     }
-    
+
     public void setTurn(boolean turn) {
         this.turn = turn;
     }
