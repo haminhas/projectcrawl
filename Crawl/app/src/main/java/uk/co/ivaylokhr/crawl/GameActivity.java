@@ -6,14 +6,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -38,9 +42,11 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         initialiseGame();
+        initializeButtons();
         increaseGamesPlayed();
         enableAllButtons();
         addPlayerNames();
+        updateView();
         settings();
     }
 
@@ -231,7 +237,7 @@ public class GameActivity extends AppCompatActivity {
     public Button[] getButtons(){
         return buttons;
     }
-
+/*
     //ends the game and starts the end game screen
     public void endGame(Player winner, Player loser){
         Intent intent = new Intent(this, End.class);
@@ -241,6 +247,7 @@ public class GameActivity extends AppCompatActivity {
         intent.putExtra("score2", loser.getScore()+"");
         startActivity(intent);
     }
+    */
 
     //This is for the dialog. It goes to the main menu if you say you want to
     public class GoToMainMenu implements DialogInterface.OnClickListener{
@@ -273,20 +280,38 @@ public class GameActivity extends AppCompatActivity {
 
     //Initialize onClickListener and update the view of all the buttons on board
     private void initializeButtons(){
+        Log.i("tag","test7");
         for (final Button b : buttons) {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     game.pressCup(b.getId());
+                    playClickSound();
+                    Log.i("tag", "test6");
                     swapEnabledButtonsOnTurnChange();
+                    updateView();
                 }
             });
 
         }
     }
+    //view is the object the animation needs to be aplied to
+    //index is the index in the queue if there needs to be chained with other animations
+    private void playZoomAnimation(View view, int index){
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.zoomanim);
+        animation.setStartOffset(200*index);
+        view.startAnimation(animation);
+    }
+
+
+    private void playClickSound(){
+        MediaPlayer media = MediaPlayer.create(this, R.raw.click);
+        media.start();
+    }
 
     public void swapEnabledButtonsOnTurnChange() {
         if(game.isPlayerOneTurn()){
+            Log.i("tag","playeroneturn");
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(true);
             }
@@ -295,6 +320,7 @@ public class GameActivity extends AppCompatActivity {
                 buttons[i].setEnabled(false);
             }
         }else{
+            Log.i("tag","playertwoturn");
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(false);
             }
@@ -304,62 +330,64 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-    public void updateView(){
+    public void updateView() {
         Cup[] cups = game.board.getCups();
-        for(int i = 0 ; i < cups.length; i++){
-            buttons[i].setText(cups[i].getMarbles());
+        int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
+                R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
+        for (int i = 0; i < cups.length; i++) {
+            buttons[i].setText(Integer.toString(cups[i].getMarbles()));
+
+            int marbles = cups[i].getMarbles();
+            if (marbles <= 7) {
+                buttons[i].setBackgroundResource(backgrounds[marbles]);
+            } else {
+                buttons[i].setBackgroundResource(backgrounds[8]);
+            }
         }
     }
     //updates the information on the board
     private void updateBoardView(){
         updateTurnText();
-        updatePlayerTurnIndicators();
-        updateButtonText();
+        updateView();
     }
 
     //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
     private void updateTurnText(){
         String turnText = "";
-        if(player1.getTurn()) {
-            turnText = (String) playerone.getText();
+        if(game.isPlayerOneTurn()) {
+            turnText = (String) playerOneLabelName.getText();
+            playerOneLabelName.setTextColor(Color.GREEN);
+            playerTwoLabelName.setTextColor(Color.BLACK);
         }else{
-            turnText = (String) playertwo.getText();
+            turnText = (String) playerTwoLabelName.getText();
+            playerTwoLabelName.setTextColor(Color.GREEN);
+            playerOneLabelName.setTextColor(Color.BLACK);
         }
         turn.setText(turnText + "'s turn");
         turn.setTextColor(Color.GREEN);
     }
 
-    //update the turn indicators Sola made
-    private void updatePlayerTurnIndicators(){
-        if(player1.getTurn()){
-            playerone.setTextColor(Color.GREEN);
-            playertwo.setTextColor(Color.BLACK);
-        }else{
-            playertwo.setTextColor(Color.GREEN);
-            playerone.setTextColor(Color.BLACK);
+    //This method edits the highscores after the game
+    public void updateScores() {
+        Integer score = game.checkWinnerScore();
+        Integer one = Preferences.fromPreferences(this, -1, "first", "your_prefs");
+        Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
+        Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");
+        this.setShortedPlayedTime();
+        if (score > one) {
+            three = two;
+            two = one;
+            one = score;
+        } else if (score > two) {
+            three = two;
+            two = score;
+        } else if (score > three) {
+            three = score;
         }
+        Preferences.toPreferences(this.getBaseContext(), one, "first", "your_prefs");
+        Preferences.toPreferences(this.getBaseContext(), two, "second", "your_prefs");
+        Preferences.toPreferences(this.getBaseContext(), three, "third", "your_prefs");
     }
 
-    //update all the buttons (background and text)
-    private void updateButtonText() {
-        int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
-                R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
-        for (int i = 0; i < cups.length; i++) {
-            Cup c = cups[i];
-            int marbles = c.getMarbles();
-            c.setText(Integer.toString(marbles));
-            if(i == 7 || i == 15) {
-                continue;
-            }
-            else{
-                if(marbles <= 7) {
-                    c.setBackgroundResource(backgrounds[marbles]);
-                }
-                else{
-                    c.setBackgroundResource(backgrounds[8]);
-                }
-            }
-        }
-    }
 
 }

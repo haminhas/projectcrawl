@@ -40,6 +40,7 @@ public class Game {
     public void pressCup(int id) {
         if(isFirstTurn){
            firstTurnPlay(id);
+            return;
         }
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
@@ -48,8 +49,18 @@ public class Game {
         if(finalButtonID > 15){
             finalButtonID -= 15;
         }
+        checkForAnotherTurn(finalButtonID);
+        forceSwitch();
     }
 
+    public void checkForAnotherTurn(int another){
+        if(player1.getTurn() && another == 7){
+            forceSwitch();
+        }
+        if(player2.getTurn() && another == 15){
+            forceSwitch();
+        }
+    }
 
     /**
      * the logic behind the first turn, where the players do the turn together
@@ -59,23 +70,28 @@ public class Game {
         if (id < 7) {
             if (!secondHasPlayed) {
                 firstPlayer = player1;
+                player2.setTurn(true);
+                Log.i("tag","test2");
             }
             firstID = id;
             firstHasPlayed = true;
+            Log.i("tag", "test1");
         } else {
             if (!firstHasPlayed) {
                 firstPlayer = player2;
+                player1.setTurn(true);
+                Log.i("tag","test3");
             }
             secondID = id;
             secondHasPlayed = true;
-            for (int i = 8; i < 16; i++) {
-            }
+            Log.i("tag","test4");
         }
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
-            if(firstPlayer == player1){
-            }
+            Log.i("tag","test5");
+            Log.i("tag",firstPlayer.getName());
             switchTurns(firstPlayer);
+
             applyFirstTurnChanges(firstID, secondID);
         }
     }
@@ -85,11 +101,11 @@ public class Game {
      */
     private void switchTurns(Player player) {
         if (player.equals(player2)) {
-            player2.setTurn(true);
             player1.setTurn(false);
-        } else {
-            player2.setTurn(false);
+            player2.setTurn(true);
+        } else if (player.equals(player1)){
             player1.setTurn(true);
+            player2.setTurn(false);
         }
         //checks if there is a valid method
         //If not, change the turn to the other player
@@ -140,6 +156,11 @@ public class Game {
      */
     private boolean isPlayerOneTurn(int finalButtonID) {
         boolean playerOneTurn = false;
+        if(player1.getTurn()){
+            Log.i("tag","p1t");
+        }else if(player2.getTurn()){
+            Log.i("tag","p2t");
+        }
         if (player1.getTurn() && finalButtonID != 7) {
             switchTurns(player2);
         }
@@ -158,6 +179,8 @@ public class Game {
         if(player1.getTurn()){
             playerOneTurn = true;
         }
+
+        Log.i("tag",playerOneTurn+"");
         return playerOneTurn;
     }
 
@@ -179,7 +202,7 @@ public class Game {
             } else if (cupNumber == 15) {
                 if (player2.getTurn()) {
                     board.playerCup2.addMarbles(1);
-                    cupNumber++;
+                    cupNumber = 0;
                     continue;
                 }
                 cupNumber = 0;
@@ -199,7 +222,7 @@ public class Game {
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
-                    board.playerCup1.addMarbles(oppositeCupNumbers + 1);
+                    board.playerCup2.addMarbles(oppositeCupNumbers + 1);
                 }
             }
 
@@ -245,6 +268,47 @@ public class Game {
             return true;
         }
         return false;
+    }
+
+    public boolean isGameFinished() {
+        //check if game is finished
+        for (int i = 0; i < board.getCups().length; i++) {
+            if (i != 7 && i != 15) {
+                PocketCup pocketCup = (PocketCup) board.getCups()[i];
+                if (!pocketCup.isEmpty()) {
+                    break;
+                }
+            }
+
+            if (i == 14) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public int checkWinnerScore() {
+        //checks who won
+        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
+            return board.playerCup1.getMarbles();
+        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
+            return board.playerCup2.getMarbles();
+        } else{
+            return 0;
+        }
+    }
+
+
+    public Player checkWinner() {
+        //checks who won
+        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
+            return player1;
+        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
+            return player2;
+        } else{
+            return null;
+        }
     }
 
 }
