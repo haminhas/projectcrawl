@@ -16,11 +16,13 @@ public class Game {
         player1 = new Player();
         player2 = new Player();
         board = new Board();
-        playFirstTurn();
+        initialiseVariablesFirstTurn();
     }
 
-    //a separate method for initializing values of the variables neeeded for first Turn
-    private void playFirstTurn(){
+    /**
+     * Initialise values of the variables needed for first Turn
+     */
+    private void initialiseVariablesFirstTurn(){
         player1.setTurn(false);
         player2.setTurn(false);
         //The player who will have the first play
@@ -30,14 +32,14 @@ public class Game {
         isFirstTurn = true;
     }
 
-    public Board getBoard(){
-        return board;
-    }
-
+    /**
+     * Action triggered when you press a Cup on the screen
+     * @param id
+     * @return
+     */
     public boolean pressCup(int id) {
-        //empty cup
         if(isFirstTurn){
-           return firstTurn(id);
+           return firstTurnPlay(id);
         }
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
@@ -53,9 +55,11 @@ public class Game {
     }
 
 
-    //the logic behind the first turn, where the players do the turn together
-    //after both players make their moves, the one that clicked first is first to go
-    private boolean firstTurn(int id) {
+    /**
+     * the logic behind the first turn, where the players do the turn together
+     * after both players make their moves, the one that clicked first is first to go
+     */
+    private boolean firstTurnPlay(int id) {
         boolean playerOneEnabled = false;
         if (id < 7) {
             if (!secondHasPlayed) {
@@ -84,7 +88,9 @@ public class Game {
         return playerOneEnabled;
     }
 
-    //switches turn to the player who is given as a parameter
+    /**
+     * switches turn to the player who is given as a parameter
+     */
     private void switchTurns(Player player) {
         if (player.equals(player2)) {
             player2.setTurn(true);
@@ -95,12 +101,14 @@ public class Game {
         }
         //checks if there is a valid method
         //If not, change the turn to the other player
-        checkIfPlayerCanPlay();
+        checkAreThereMarblesInCups();
     }
 
-    //This method loops through the current player's half and determine if you can make a move
-    //If there is no valid move, it switches the player to make a move
-    private void checkIfPlayerCanPlay() {
+    /**
+     * This method loops through the current player's half and determine if you can make a move
+     * If there is no valid move, it switches the player to make a move
+    */
+     private void checkAreThereMarblesInCups() {
         if (player1.getTurn()) {
             //loops through the half ot player 1
             for (int i = 0; i < 7; i++) {
@@ -122,8 +130,10 @@ public class Game {
         forceSwitch();
     }
 
-    //This forces the switch of turns.It is called when one player doesn't have valid moves
-    private void forceSwitch(){
+    /**
+     * This forces the switch of turns.It is called when one player doesn't have valid moves
+     */
+     private void forceSwitch(){
         if(player1.getTurn()){
             switchTurns(player2);
         } else {
@@ -131,7 +141,11 @@ public class Game {
         }
     }
 
-    //decides which turn is next depending on the id of the final marblees that has been put
+    /**
+     * decides which turn is next depending on the id of the final marblees that has been put
+     * @param finalButtonID
+     * @return
+     */
     private boolean isPlayerOneTurn(int finalButtonID) {
         boolean playerOneTurn = false;
         if (player1.getTurn() && finalButtonID != 7) {
@@ -155,7 +169,10 @@ public class Game {
         return playerOneTurn;
     }
 
-
+    /**
+     * @param idCurrentCup
+     * @param marblesFromEmptiedCup
+     */
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
@@ -184,15 +201,14 @@ public class Game {
                 PocketCup oppositeCup;
                 if (player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) board.cups[cupNumber + ((7 - cupNumber) * 2)];
-                    //..or [(cupNumber -14)*-1]
                     int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //have to do it so it adds 1 more to the playerCup, sry :S
+                    //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
                     board.playerCup1.addMarbles(oppositeCupNumbers + 1);
                 } else if (player2.getTurn() && cupNumber > 7) {
                     oppositeCup = (PocketCup) board.cups[(14 - cupNumber)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //have to do it so it adds 1 more to the playerCup, sry :S
+                    //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
                     board.playerCup1.addMarbles(oppositeCupNumbers + 1);
                 }
@@ -201,15 +217,20 @@ public class Game {
             nextPocketCup.addMarbles(1);
 
             cupNumber++;
-            //update id for the next cup, and stay in the range of 15.
+            //stay in the range of 16 cups.
             if (cupNumber > 15) {
                 cupNumber = 0;
             }
 
-
         }//END OF FOR LOOP
     }
-    //This is called only in the first turn to update the board after both players made their moves
+
+
+    /**
+     *  This is called only in the first turn to update the board after both players made their moves
+     * @param firstID
+     * @param secondID
+     */
     private void applyFirstTurnChanges(int firstID, int secondID){
         ((PocketCup)board.cups[firstID]).emptyCup();
         ((PocketCup)board.cups[secondID]).emptyCup();
@@ -225,4 +246,9 @@ public class Game {
             board.cups[nextCupID].addMarbles(1);
         }
     }
+
+    public Board getBoard(){
+        return board;
+    }
+
 }

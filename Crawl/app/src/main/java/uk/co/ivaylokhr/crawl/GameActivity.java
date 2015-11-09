@@ -48,11 +48,11 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void initialiseGame() {
+        game = new Game();
         timer = (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
         buttons = fillButtonsArray();
-        game = new Game();
     }
 
     //adds game to the number of games played
@@ -247,8 +247,10 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+//  *******************************************************
+//  ///GOOD METHODS FOR THE NEW VERSION OF THIS ACTIVITY///
+//  *******************************************************
 
-    ///
 
     private void enableAllButtons() {
         for (int i = 0; i < buttons.length; i++) {
