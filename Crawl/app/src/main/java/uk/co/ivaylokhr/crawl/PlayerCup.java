@@ -9,9 +9,7 @@ import android.view.View;
  */
 public class PlayerCup extends Cup {
 
-    public PlayerCup(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.setEnabled(false);
+    public PlayerCup() {
         marbles = 0;
     }
 }

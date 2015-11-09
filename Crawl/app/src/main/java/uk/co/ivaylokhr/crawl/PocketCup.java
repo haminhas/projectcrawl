@@ -8,8 +8,7 @@ import android.util.AttributeSet;
  */
 public class PocketCup extends Cup {
 
-    public PocketCup(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public PocketCup() {
         marbles = 7;
     }
 

@@ -7,12 +7,11 @@ import android.widget.Button;
 /**
  * Created by Hassan on 19/10/2015.
  */
-public class Cup extends Button {
+public class Cup {
 
     protected int marbles;
 
-    public Cup(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public Cup() {
         marbles = 0;
         //marbles = 7;
     }
