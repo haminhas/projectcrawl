@@ -18,14 +18,14 @@ public class Board extends AppCompatActivity {
     private TextView playerone;
     private TextView playertwo;
     private TextView turn;
-    private Game activity;
+    private GameActivity activity;
     //first turn stuff
     private Player firstPlayer;
     private int firstID, secondID;
     Context context;
     private boolean firstHasPlayed, secondHasPlayed;
 
-    public Board(Game activity) {
+    public Board(GameActivity activity) {
         this.activity = activity;
         cups = activity.getCups();
         player1 = new Player((PlayerCup) cups[7]);
@@ -72,7 +72,7 @@ public class Board extends AppCompatActivity {
             }
         }
     }
-    //adds Game.java content to the board class
+    //adds GameActivity.java content to the board class
     public void addContent(Context context){
         context = this.context;
     }

@@ -98,7 +98,7 @@ package uk.co.ivaylokhr.crawl;
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
             }else{
-                    Intent intent = new Intent(this, Game.class);
+                    Intent intent = new Intent(this, GameActivity.class);
                     startActivity(intent);
             }
         }
