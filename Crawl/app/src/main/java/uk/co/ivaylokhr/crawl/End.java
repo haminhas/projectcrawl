@@ -18,6 +18,7 @@ public class End extends AppCompatActivity {
     //creates end screen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("tag","testing1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end);
         winner1 = (TextView) findViewById(R.id.winner1);
@@ -30,7 +31,7 @@ public class End extends AppCompatActivity {
         loser2.setTextColor(Color.rgb(92,81,15));
         Intent intent = getIntent();
         String draw = intent.getStringExtra("score");
-        if (draw.equals("49")){
+        if (draw.equals(null)){
             winner1.setText("Draw");
             if(intent.getStringExtra("name").equals(null)){
             }else {
@@ -76,6 +77,7 @@ public class End extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
+        Log.i("tag","testing");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

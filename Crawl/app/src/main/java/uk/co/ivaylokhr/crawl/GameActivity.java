@@ -237,17 +237,16 @@ public class GameActivity extends AppCompatActivity {
     public Button[] getButtons(){
         return buttons;
     }
-/*
+
     //ends the game and starts the end game screen
-    public void endGame(Player winner, Player loser){
+    public void endGame(String[] finalScores){
         Intent intent = new Intent(this, End.class);
-        intent.putExtra("name", winner.getName());
-        intent.putExtra("score", winner.getScore()+"");
-        intent.putExtra("name2", loser.getName());
-        intent.putExtra("score2", loser.getScore()+"");
+        intent.putExtra("name", finalScores[0]);
+        intent.putExtra("score", finalScores[1]);
+        intent.putExtra("name2", finalScores[2]);
+        intent.putExtra("score2", finalScores[3]);
         startActivity(intent);
     }
-    */
 
     //This is for the dialog. It goes to the main menu if you say you want to
     public class GoToMainMenu implements DialogInterface.OnClickListener{
@@ -260,11 +259,6 @@ public class GameActivity extends AppCompatActivity {
             startActivity(mainMenu);
         }
     }
-
-
-//  *******************************************************
-//  ///GOOD METHODS FOR THE NEW VERSION OF THIS ACTIVITY///
-//  *******************************************************
 
 
     private void enableAllButtons() {
@@ -280,18 +274,20 @@ public class GameActivity extends AppCompatActivity {
 
     //Initialize onClickListener and update the view of all the buttons on board
     private void initializeButtons(){
-        Log.i("tag","test7");
         for (final Button b : buttons) {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int marbles = game.board.getCups()[b.getId()].getMarbles();
+                        activateAnimation(b.getId(), marbles);
                     game.pressCup(b.getId());
-                    activateAnimation(b.getId(), marbles);
                     playClickSound();
-                    Log.i("tag", "test6");
                     swapEnabledButtonsOnTurnChange();
-                    updateView();
+                    updateBoardView();
+                    if(game.isGameFinished()){
+                        updateScores();
+                        endGame(game.checkWinner());
+                    }
                 }
             });
 
@@ -328,7 +324,6 @@ public class GameActivity extends AppCompatActivity {
 
     public void swapEnabledButtonsOnTurnChange() {
         if(game.isPlayerOneTurn()){
-            Log.i("tag","playeroneturn");
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(true);
             }
@@ -337,7 +332,6 @@ public class GameActivity extends AppCompatActivity {
                 buttons[i].setEnabled(false);
             }
         }else{
-            Log.i("tag","playertwoturn");
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(false);
             }

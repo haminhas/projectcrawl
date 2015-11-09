@@ -1,7 +1,5 @@
 package uk.co.ivaylokhr.crawl;
 
-import android.util.Log;
-
 
 public class Game {
     Player player1, player2;
@@ -49,8 +47,10 @@ public class Game {
         if(finalButtonID > 15){
             finalButtonID -= 15;
         }
-        checkForAnotherTurn(finalButtonID);
-        forceSwitch();
+        if(!isGameFinished()) {
+            checkForAnotherTurn(finalButtonID);
+            forceSwitch();
+        }
     }
 
     public void checkForAnotherTurn(int another){
@@ -71,25 +71,19 @@ public class Game {
             if (!secondHasPlayed) {
                 firstPlayer = player1;
                 player2.setTurn(true);
-                Log.i("tag","test2");
             }
             firstID = id;
             firstHasPlayed = true;
-            Log.i("tag", "test1");
         } else {
             if (!firstHasPlayed) {
                 firstPlayer = player2;
                 player1.setTurn(true);
-                Log.i("tag","test3");
             }
             secondID = id;
             secondHasPlayed = true;
-            Log.i("tag","test4");
         }
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
-            Log.i("tag","test5");
-            Log.i("tag",firstPlayer.getName());
             switchTurns(firstPlayer);
 
             applyFirstTurnChanges(firstID, secondID);
@@ -156,11 +150,6 @@ public class Game {
      */
     private boolean isPlayerOneTurn(int finalButtonID) {
         boolean playerOneTurn = false;
-        if(player1.getTurn()){
-            Log.i("tag","p1t");
-        }else if(player2.getTurn()){
-            Log.i("tag","p2t");
-        }
         if (player1.getTurn() && finalButtonID != 7) {
             switchTurns(player2);
         }
@@ -179,8 +168,6 @@ public class Game {
         if(player1.getTurn()){
             playerOneTurn = true;
         }
-
-        Log.i("tag",playerOneTurn+"");
         return playerOneTurn;
     }
 
@@ -300,15 +287,24 @@ public class Game {
     }
 
 
-    public Player checkWinner() {
+    public String[] checkWinner() {
+        String[] results = new String[4];
         //checks who won
         if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
-            return player1;
+            results[0] = player1.getName();
+            results[1] = String.valueOf(board.playerCup1.getMarbles());
+            results[2] = player2.getName();
+            results[3] = String.valueOf(board.playerCup2.getMarbles());
         }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
-            return player2;
+            results[2] = player1.getName();
+            results[3] = String.valueOf(board.playerCup1.getMarbles());
+            results[0] = player2.getName();
+            results[1] = String.valueOf(board.playerCup2.getMarbles());
         } else{
-            return null;
+            results[0] = player1.getName();
+            results[2] = player2.getName();
         }
+        return results;
     }
 
 }
