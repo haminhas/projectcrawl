@@ -61,17 +61,7 @@ public class Board1 extends AppCompatActivity {
         updateButtonText();
     }
 
-    //this method is called only at the start of the game, when both players can make a move
-    private void enableAllButtons() {
-        for (int i = 0; i < cups.length; i++) {
-            //ignore the player cups
-            if (i == 7 || i == 15) {
-                continue;
-            } else {
-                cups[i].setEnabled(true);
-            }
-        }
-    }
+
     //adds GameActivity.java content to the board class
     public void addContent(Context context){
         context = this.context;

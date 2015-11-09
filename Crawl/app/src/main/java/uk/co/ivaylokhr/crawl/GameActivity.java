@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class GameActivity extends AppCompatActivity {
 
     private Button[] buttons;
-    private Board1 board1;
+    private Game game ;
     private ImageButton imgButton;
     private TextView timer;
     long startTime;
@@ -36,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
         initialiseGame();
         increaseGamesPlayed();
         setPlayersNameTextFields();
+        enableAllButtons();
         settings();
     }
 
@@ -50,8 +51,8 @@ public class GameActivity extends AppCompatActivity {
         timer = (TextView) findViewById(R.id.Timer);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        cups = fillCupsArray();
-        board1 = new Board1(this);
+        buttons = fillButtonsArray();
+        game = new Game();
     }
 
     //adds game to the number of games played
@@ -242,5 +243,33 @@ public class GameActivity extends AppCompatActivity {
         public void onClick(DialogInterface dialog, int which) {
             startActivity(mainMenu);
         }
+    }
+
+
+
+    ///
+
+    private void enableAllButtons() {
+        for (int i = 0; i < buttons.length; i++) {
+            //ignore the player cups
+            if (i == 7 || i == 15) {
+                continue;
+            } else {
+                buttons[i].setEnabled(true);
+            }
+        }
+    }
+
+    //Initialize onClickListener and update the view of all the buttons on board
+    private void initializeButtons(){
+        for (final Button b : buttons) {
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    game.board.pressCup(b.getId());
+                }
+            });
+        }
+        updateButtonText();
     }
 }

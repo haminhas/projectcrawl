@@ -17,6 +17,9 @@ public class Board {
         fillCupsArray();
     }
 
+
+
+
     public void fillCupsArray(){
         for (int i = 0; i < cups.length; i++) {
             //ignore the player cups
