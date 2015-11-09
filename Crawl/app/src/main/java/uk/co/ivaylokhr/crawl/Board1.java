@@ -27,7 +27,7 @@ public class Board1 extends AppCompatActivity {
 
     public Board1(GameActivity activity) {
         this.activity = activity;
-        cups = activity.getCups();
+        cups = activity.getButtons();
         player1 = new Player((PlayerCup) cups[7]);
         player2 = new Player((PlayerCup) cups[15]);
         //player 3 is for draw
