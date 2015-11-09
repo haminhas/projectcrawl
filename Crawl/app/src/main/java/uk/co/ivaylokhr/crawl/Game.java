@@ -43,8 +43,6 @@ public class Game {
         }
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
-        //at this point please check if the cup in the array still has the marbles
-        Log.i("Pressed Cup", "New move");
         putMarblesInNextCups(id, marblesFromEmptiedCup);
         int finalButtonID = id + marblesFromEmptiedCup;
         if(finalButtonID > 15){
@@ -176,28 +174,25 @@ public class Game {
     public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
-            Log.i("Cup id:", Integer.toString(cupNumber));
-            //condition for when the cup is the playerCup
+            //condition for when the cup is a playerCup
             if (cupNumber == 7) {
                 if (player1.getTurn()) {
                     board.playerCup1.addMarbles(1);
                     cupNumber++;
                     continue;
-                } else {
-                    cupNumber++;
                 }
+                cupNumber++;
             } else if (cupNumber == 15) {
                 if (player2.getTurn()) {
                     board.playerCup2.addMarbles(1);
                     cupNumber++;
                     continue;
-                } else {
-                    cupNumber = 0;
                 }
+                cupNumber = 0;
             }
             PocketCup nextPocketCup = (PocketCup) board.cups[cupNumber];
             //check at the last iteration if cup is empty
-            if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
+            if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
                 PocketCup oppositeCup;
                 if (player1.getTurn() && cupNumber < 7) {
                     oppositeCup = (PocketCup) board.cups[cupNumber + ((7 - cupNumber) * 2)];
@@ -205,7 +200,7 @@ public class Game {
                     //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
                     board.playerCup1.addMarbles(oppositeCupNumbers + 1);
-                } else if (player2.getTurn() && cupNumber > 7) {
+                } else if (player2.getTurn() && cupNumber > 7 && cupNumber < 15) {
                     oppositeCup = (PocketCup) board.cups[(14 - cupNumber)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     //take last marble from the cup alongside the opposite cup's one.
