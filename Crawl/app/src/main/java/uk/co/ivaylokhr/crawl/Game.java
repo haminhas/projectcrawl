@@ -2,9 +2,7 @@ package uk.co.ivaylokhr.crawl;
 
 import android.util.Log;
 
-/**
- * Created by k1464377 on 09/11/15.
- */
+
 public class Game {
     Player player1, player2;
     Board board;

@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-/**
- * Created by solan_000 on 25/10/2015.
- */
 
     //Sends a integer "value" with a key "key" to be stored in the pKey
 public class Preferences {

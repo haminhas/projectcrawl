@@ -1,11 +1,6 @@
 package uk.co.ivaylokhr.crawl;
 
-import android.util.Log;
-import android.view.View;
 
-/**
- * Created by k1464377 on 09/11/15.
- */
 public class Board {
     PlayerCup playerCup1, playerCup2;
     Cup[] cups;
@@ -19,9 +14,6 @@ public class Board {
     public Cup[] getCups(){
         return cups;
     }
-
-
-
 
     public void fillCupsArray(){
         for (int i = 0; i < cups.length; i++) {

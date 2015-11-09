@@ -4,9 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-/**
- * Created by Hassan on 19/10/2015.
- */
+
 public class Cup {
 
     protected int marbles;
@@ -15,8 +13,6 @@ public class Cup {
         marbles = 0;
         //marbles = 7;
     }
-
-
 
     public int getMarbles(){
         return marbles;

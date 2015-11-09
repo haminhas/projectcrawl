@@ -147,7 +147,8 @@ public class GameActivity extends AppCompatActivity {
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle("Go back?");
         optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
-                "the progress of this game will be lost!").setCancelable(true).setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
+                "the progress of this game will be lost!").setCancelable(true)
+                .setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
                 .setNegativeButton("Continue with the game", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
