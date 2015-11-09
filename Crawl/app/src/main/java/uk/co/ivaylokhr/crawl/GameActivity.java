@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class GameActivity extends AppCompatActivity {
 
     private Cup[] cups;
-    private Board board;
+    private Board1 board1;
     private ImageButton imgButton;
     private TextView timer;
     long startTime;
@@ -51,7 +51,7 @@ public class GameActivity extends AppCompatActivity {
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
         cups = fillCupsArray();
-        board = new Board(this);
+        board1 = new Board1(this);
     }
 
     //adds game to the number of games played
@@ -80,7 +80,7 @@ public class GameActivity extends AppCompatActivity {
         final TextView text2 = (TextView) findViewById(R.id.player2);
         text1.setText(player1);
         text2.setText(player2);
-        board.addNames(text1, text2);
+        board1.addNames(text1, text2);
     }
 
     //Create the Settings button on click listener
