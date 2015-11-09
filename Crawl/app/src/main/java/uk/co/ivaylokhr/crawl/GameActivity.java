@@ -271,7 +271,7 @@ public class GameActivity extends AppCompatActivity {
         for (int i = 0; i < buttons.length; i++) {
             //ignore the player cups
             if (i == 7 || i == 15) {
-                continue;
+                buttons[i].setEnabled(false);
             } else {
                 buttons[i].setEnabled(true);
             }
@@ -285,7 +285,9 @@ public class GameActivity extends AppCompatActivity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int marbles = game.board.getCups()[b.getId()].getMarbles();
                     game.pressCup(b.getId());
+                    activateAnimation(b.getId(), marbles);
                     playClickSound();
                     Log.i("tag", "test6");
                     swapEnabledButtonsOnTurnChange();
@@ -295,6 +297,21 @@ public class GameActivity extends AppCompatActivity {
 
         }
     }
+
+
+    public void activateAnimation(int idCurrentCup, int marbles) {
+        int nextCup = idCurrentCup + 1;
+        for (int i = 0; i < marbles; i++) {
+            playZoomAnimation(buttons[nextCup], i);
+            nextCup += 1;
+            if (nextCup > 15){
+                nextCup = 0;
+            }
+        }
+    }
+
+
+
     //view is the object the animation needs to be aplied to
     //index is the index in the queue if there needs to be chained with other animations
     private void playZoomAnimation(View view, int index){
