@@ -37,9 +37,9 @@ public class Game {
      * @param id
      * @return
      */
-    public boolean pressCup(int id) {
+    public void pressCup(int id) {
         if(isFirstTurn){
-           return firstTurnPlay(id);
+           firstTurnPlay(id);
         }
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
@@ -48,8 +48,6 @@ public class Game {
         if(finalButtonID > 15){
             finalButtonID -= 15;
         }
-        //decides which turn is next by the id of the last modified cup
-        return isPlayerOneTurn(finalButtonID);
     }
 
 
@@ -57,8 +55,7 @@ public class Game {
      * the logic behind the first turn, where the players do the turn together
      * after both players make their moves, the one that clicked first is first to go
      */
-    private boolean firstTurnPlay(int id) {
-        boolean playerOneEnabled = false;
+    private void firstTurnPlay(int id) {
         if (id < 7) {
             if (!secondHasPlayed) {
                 firstPlayer = player1;
@@ -68,7 +65,6 @@ public class Game {
         } else {
             if (!firstHasPlayed) {
                 firstPlayer = player2;
-                playerOneEnabled = true;
             }
             secondID = id;
             secondHasPlayed = true;
@@ -78,12 +74,10 @@ public class Game {
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
             if(firstPlayer == player1){
-                playerOneEnabled = true;
             }
             switchTurns(firstPlayer);
             applyFirstTurnChanges(firstID, secondID);
         }
-        return playerOneEnabled;
     }
 
     /**
@@ -244,6 +238,13 @@ public class Game {
 
     public Board getBoard(){
         return board;
+    }
+
+    public boolean isPlayerOneTurn() {
+        if(player1.getTurn()) {
+            return true;
+        }
+        return false;
     }
 
 }

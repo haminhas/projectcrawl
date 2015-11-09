@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,9 @@ public class GameActivity extends AppCompatActivity {
     long startTime;
     long timeCounter=0;
     Handler handler = new Handler();
+    private TextView turn;
+    private TextView playerOneLabelName;
+    private TextView playerTwoLabelName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +39,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         initialiseGame();
         increaseGamesPlayed();
-        setPlayersNameTextFields();
         enableAllButtons();
+        addPlayerNames();
         settings();
     }
 
@@ -49,10 +53,33 @@ public class GameActivity extends AppCompatActivity {
 
     public void initialiseGame() {
         game = new Game();
+        turn = (TextView) findViewById(R.id.turn);
         timer = (TextView) findViewById(R.id.Timer);
+        playerOneLabelName = (TextView) findViewById(R.id.player1);
+        playerTwoLabelName = (TextView) findViewById(R.id.player2);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
         buttons = fillButtonsArray();
+    }
+
+
+    public void addPlayerNames(){
+        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
+        //Displays Player 1 and Player 2
+        String playerOneName = sp.getString("player1", "");
+        String playerTwoName = sp.getString("player2", "");
+        if(playerOneName.equals("")){
+            playerOneName = "Player 1";
+        }
+        if(playerTwoName.equals("")){
+            playerTwoName = "Player 2";
+        }
+        playerOneLabelName.setText(playerOneName);
+        playerTwoLabelName.setText(playerTwoName);
+        game.player1.setName(playerOneName);
+        game.player2.setName(playerTwoName);
+        turn.setText("Turn 1");
+        turn.setTextColor(Color.GREEN);
     }
 
     //adds game to the number of games played
@@ -63,25 +90,6 @@ public class GameActivity extends AppCompatActivity {
         games++;
         editor.putInt("games", games);
         editor.commit();
-    }
-
-    //Sets the text fields and retrieves player 1 and player 2's names
-    public void setPlayersNameTextFields(){
-        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-        //Displays Player 1 and Player 2
-        String player1 = sp.getString("player1", "");
-        String player2 = sp.getString("player2", "");
-        if(player1.equals("")){
-            player1 = "Player 1";
-        }
-        if(player2.equals("")){
-            player2 = "Player 2";
-        }
-        final TextView text1 = (TextView) findViewById(R.id.player1);
-        final TextView text2 = (TextView) findViewById(R.id.player2);
-        text1.setText(player1);
-        text2.setText(player2);
-        board1.addNames(text1, text2);
     }
 
     //Create the Settings button on click listener
@@ -269,10 +277,89 @@ public class GameActivity extends AppCompatActivity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    game.board.pressCup(b.getId());
+                    game.pressCup(b.getId());
+                    swapEnabledButtonsOnTurnChange();
                 }
             });
+
         }
+    }
+
+    public void swapEnabledButtonsOnTurnChange() {
+        if(game.isPlayerOneTurn()){
+            for (int i = 0; i < 7; i++) {
+                buttons[i].setEnabled(true);
+            }
+
+            for (int i = 8; i < 15; i++) {
+                buttons[i].setEnabled(false);
+            }
+        }else{
+            for (int i = 0; i < 7; i++) {
+                buttons[i].setEnabled(false);
+            }
+
+            for (int i = 8; i < 15; i++) {
+                buttons[i].setEnabled(true);
+            }
+        }
+    }
+    public void updateView(){
+        Cup[] cups = game.board.getCups();
+        for(int i = 0 ; i < cups.length; i++){
+            buttons[i].setText(cups[i].getMarbles());
+        }
+    }
+    //updates the information on the board
+    private void updateBoardView(){
+        updateTurnText();
+        updatePlayerTurnIndicators();
         updateButtonText();
     }
+
+    //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
+    private void updateTurnText(){
+        String turnText = "";
+        if(player1.getTurn()) {
+            turnText = (String) playerone.getText();
+        }else{
+            turnText = (String) playertwo.getText();
+        }
+        turn.setText(turnText + "'s turn");
+        turn.setTextColor(Color.GREEN);
+    }
+
+    //update the turn indicators Sola made
+    private void updatePlayerTurnIndicators(){
+        if(player1.getTurn()){
+            playerone.setTextColor(Color.GREEN);
+            playertwo.setTextColor(Color.BLACK);
+        }else{
+            playertwo.setTextColor(Color.GREEN);
+            playerone.setTextColor(Color.BLACK);
+        }
+    }
+
+    //update all the buttons (background and text)
+    private void updateButtonText() {
+        int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
+                R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
+        for (int i = 0; i < cups.length; i++) {
+            Cup c = cups[i];
+            int marbles = c.getMarbles();
+            c.setText(Integer.toString(marbles));
+            if(i == 7 || i == 15) {
+                continue;
+            }
+            else{
+                if(marbles <= 7) {
+                    c.setBackgroundResource(backgrounds[marbles]);
+                }
+                else{
+                    c.setBackgroundResource(backgrounds[8]);
+                }
+            }
+        }
+    }
+
 }
