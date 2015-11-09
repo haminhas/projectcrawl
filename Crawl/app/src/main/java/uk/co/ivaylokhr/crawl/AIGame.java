@@ -1,269 +1,354 @@
 package uk.co.ivaylokhr.crawl;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.AbsoluteLayout;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+import android.util.Log;
 
-public class AIGame extends AppCompatActivity {
-//
-//
-//    private GameActivity activity;
-//    private Cup[] cups;
-//    private AIPlayer b;
-//    private ImageButton imgButton;
-//    private TextView timer;
-//    long startTime;
-//    long timeCounter=0;
-//    Handler handler = new Handler();
-//    private LinearLayout layout;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_game);
-//        timer= (TextView) findViewById(R.id.Timer);
-//        startTime = System.currentTimeMillis();
-//        handler.postDelayed(updateTimer, 0);
-//        fillTheArray();
-//        b = new AIPlayer(this);
-//        b.addContent(getBaseContext());
-//        addgame();
-//        setTextFields();
-//        settings();
-//    }
-//
-//    //warn the player that going back will end his game
-//    @Override
-//    public void onBackPressed() {
-//        AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
-//        Intent mainMenu = new Intent(this, MainActivity.class);
-//        optionpane.setTitle("Go back?");
-//        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
-//                "the progress of this game will be lost!").setCancelable(true).setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
-//                .setNegativeButton("Continue with the game", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                    }
-//                });
-//
-//        AlertDialog alertDialog = optionpane.create();
-//        alertDialog.show();
-//    }
-//
-//    //Creates timer
-//    public Runnable updateTimer = new Runnable() {
-//        public void run() {
-//            timeCounter = System.currentTimeMillis()-startTime;
-//            long totalTime = timeCounter;
-//            long hours = totalTime/3600000;
-//            long minutes = (totalTime-hours*3600000)/60000;
-//            long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
-//            String time = String.format("%02d:%02d",minutes, seconds);
-//            timer.setText(time);
-//            handler.postDelayed(this, 0);
-//        }};
-//
-//    //Create the Settings button on click listener
-//    public void settings(){
-//        imgButton =(ImageButton)findViewById(R.id.imageButton);
-//        imgButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                LayoutInflater layoutInflater
-//                        = (LayoutInflater) getBaseContext()
-//                        .getSystemService(LAYOUT_INFLATER_SERVICE);
-//                View popupView = layoutInflater.inflate(R.layout.settings, null);
-//                final PopupWindow popupWindow = new PopupWindow(
-//                        popupView,
-//                        AbsoluteLayout.LayoutParams.WRAP_CONTENT,
-//                        AbsoluteLayout.LayoutParams.WRAP_CONTENT);
-//                Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
-//                Button btnMain = (Button) popupView.findViewById(R.id.main);
-//                popupWindow.setFocusable(true);
-//                popupWindow.update();
-//                popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-//                popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-//                //Creates onClickListener that closes the game and returns to the main menu
-//                btnMain.setOnClickListener(new Button.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(View v) {
-//                        back();
-//                    }
-//                });
-////              //Creates onClickListener that closes the settings menu
-//                btnDismiss.setOnClickListener(new Button.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(View v) {
-//                        popupWindow.dismiss();
-//                    }
-//                });
-//
-//                popupWindow.showAsDropDown(imgButton, 50, -30);
-//            }
-//        });
-//    }
-//
-//    //Sets the text fields and retrieves player 1 and player 2's names
-//    public void setTextFields(){
-//        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-//        //Displays Player 1 and Player 2
-//        String player1 = sp.getString("player1", "");
-//        String player2 = "Computer";
-//        if(player1.equals("")){
-//            player1 = "Player 1";
-//        }
-//        if(player2.equals("")){
-//            player2 = "Player 2";
-//        }
-//        final TextView text1 = (TextView) findViewById(R.id.player1);
-//        final TextView text2 = (TextView) findViewById(R.id.player2);
-//        text1.setText(player1);
-//        text2.setText(player2);
-//        b.addNames(text1, text2);
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    public void addgame(){
-//        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        Integer games = sp.getInt("games", -1);
-//        games++;
-//        editor.putInt("games", games);
-//        editor.commit();
-//    }
-//
-//    //set the high score for the least time a game has taken to complete
-//    public void setTime(){
-//        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        String temp = (String) sp.getString("times", "");
-//        if(temp.equals("")){
-//            temp = "00:00";
-//        }
-//        String time = ""+ timer.getText();
-//        int one = temp.charAt(0)*10+temp.charAt(1);
-//        int two = temp.charAt(3)*10+temp.charAt(4);
-//        int three =time.charAt(0)*10+time.charAt(1);
-//        int four = time.charAt(3)*10+time.charAt(4);
-//        if(three < one) {
-//            editor.putString("times", time);
-//            editor.commit();
-//        }else if(four < two && one == three){
-//            editor.putString("times", time);
-//            editor.commit();
-//        }else if(temp.equals("00:00")){
-//            editor.putString("times", time);
-//            editor.commit();
-//        }
-//        editor.commit();
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    public void back() {
-//        finish();
-//    }
-//
-//    public void setNames(Editable player1, Editable player2){
-//        SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        if(!player1.toString().equals("")){
-//            editor.putString("player1", player1.toString());
-//            editor.commit();}
-//        else{
-//            editor.putString("player1", "Player 1");
-//            editor.commit();
-//        }
-//        if(!player2.toString().equals("")) {
-//            editor.putString("player2", player2.toString());
-//            editor.commit();
-//        }
-//        else{
-//            editor.putString("player2", "Player 2");
-//            editor.commit();
-//        }
-//    }
-//    public Cup[] fillTheArray(){
-//        cups = new Cup[16];
-//
-//        int[] ids = {R.id.b0, R.id.b1, R.id.b2, R.id.b3, R.id.b4, R.id.b5,
-//                R.id.b6, R.id.b7, R.id.b8, R.id.b9, R.id.b10, R.id.b11,
-//                R.id.b12, R.id.b13, R.id.b14, R.id.b15};
-//
-//        for(int i=0; i<ids.length; i++) {
-//            if (i==7 || i==15) {
-//                cups[i] = (PlayerCup) findViewById(ids[i]);
-//                cups[i].setId(i);
-//            } else {
-//                cups[i] = (PocketCup) findViewById(ids[i]);
-//                cups[i].setId(i);
-//            }
-//        }
-//
-//        return cups;
-//    }
-//    //returns cups
-//    public Cup[] getCups(){
-//        return cups;
-//    }
-//
-//    //ends the game and starts the end game screen
-//    public void endGame(Player winner, Player loser){
-//        Intent intent = new Intent(this, End.class);
-//        intent.putExtra("name", winner.getName());
-//        intent.putExtra("score", winner.getScore()+"");
-//        intent.putExtra("name2", loser.getName());
-//        intent.putExtra("score2", loser.getScore()+"");
-//        startActivity(intent);
-//    }
-//
-//    //This is for the dialog. It goes to the main menu if you say you want to
-//    public class GoToMainMenu implements DialogInterface.OnClickListener{
-//        private Intent mainMenu;
-//        public GoToMainMenu(Intent intent){
-//            mainMenu = intent;
-//        }
-//        @Override
-//        public void onClick(DialogInterface dialog, int which) {
-//            startActivity(mainMenu);
-//        }
-//    }
+import java.util.ArrayList;
+import java.util.Random;
+
+/**
+ * Created by solan_000 on 09/11/2015.
+ */
+public class AIGame extends Game {
+
+    Player player1, ai;
+    Board board;
+    private int firstButton;
+    private int marbles;
+
+    public AIGame() {
+        firstButton = 0;
+        marbles = 0;
+        player1 = new Player();
+        ai = new Player();
+        board = new Board();
+    }
+
+    /**
+     * Initialise values of the variables needed for first Turn
+     */
+    private void initialiseVariablesFirstTurn(){
+        player1.setTurn(true);
+        ai.setTurn(false);
+    }
+
+    /**
+     * Action triggered when you press a Cup on the screen
+     * @param id
+     * @return
+     */
+    public void pressCup(int id) {
+        PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
+        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
+        putMarblesInNextCups(id, marblesFromEmptiedCup);
+        int finalButtonID = id + marblesFromEmptiedCup;
+        if (finalButtonID > 15) {
+            finalButtonID -= 15;
+        }
+        if (!isGameFinished()) {
+            checkForAnotherTurn(finalButtonID);
+            forceSwitch();
+        }
+    }
+
+    public void doMove(){
+        int finalButtonID =0;
+        boolean again = false;
+        //get id of the pressed cup
+        ArrayList<PocketCup> temp = new ArrayList<>();
+        //Assuming ai player is at the top
+        for (int i = 8; i < 15; i++) {
+            if (!((PocketCup) board.cups[i]).isEmpty()) {
+                temp.add((PocketCup)board.cups[i]);
+            }
+        }
+        if(temp.isEmpty()){
+            forceSwitch();
+            return;
+        }
+        int id;
+        if(!(extraTurn() == -1)) {
+            id = extraTurn();
+            again = true;
+        }else if(!(opposite() == -1)){
+            id = opposite();
+        }else{
+            Random rand = new Random();
+            id = rand.nextInt(6) + 8;
+        }
+        //empty cup
+        PocketCup pressedPocketCup = (PocketCup) board.cups[id];
+        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
+        firstButton = id;
+        marbles = marblesFromEmptiedCup;
+        //at this point please check if the cup in the array still has the marbles
+        putMarblesInNextCups(id, marblesFromEmptiedCup);
+
+        finalButtonID = id + marblesFromEmptiedCup;
+        if (finalButtonID > 15) {
+            finalButtonID -= 15;
+        }
+        if (!isGameFinished()) {
+            checkForAnotherTurn(finalButtonID);
+            forceSwitch();
+        }
+    }
+
+    private int opposite() {
+        for(int i = 8; i < 15;i++){
+            int op = (board.cups[i].getMarbles() +i)%16;
+            if((op != 7 && op != 15) && board.cups[i].getMarbles() != 0){
+                PocketCup nextPocketCup = (PocketCup) board.cups[op];
+                if(nextPocketCup.isEmpty()){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int extraTurn(){
+        for(int i = 14; i > 7;i--){
+            if((board.cups[i].getMarbles() + i)%15 == 0){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void checkForAnotherTurn(int another){
+        if(player1.getTurn() && another == 7){
+            forceSwitch();
+        }
+        if(ai.getTurn() && another == 15) {
+            forceSwitch();
+        }
+    }
+
+
+    /**
+     * switches turn to the player who is given as a parameter
+     */
+    private void switchTurns(Player player) {
+        if (player.equals(ai)) {
+            player1.setTurn(false);
+            ai.setTurn(true);
+        } else if (player.equals(player1)){
+            player1.setTurn(true);
+            ai.setTurn(false);
+        }
+        //checks if there is a valid method
+        //If not, change the turn to the other player
+        checkAreThereMarblesInCups();
+    }
+
+    /**
+     * This method loops through the current player's half and determine if you can make a move
+     * If there is no valid move, it switches the player to make a move
+     */
+    private void checkAreThereMarblesInCups() {
+        if (player1.getTurn()) {
+            //loops through the half ot player 1
+            for (int i = 0; i < 7; i++) {
+                // break if there is a valid move
+                if (!((PocketCup) board.getCups()[i]).isEmpty()) {
+                    return;
+                }
+            }
+        } else if (ai.getTurn()) {
+            //loops through the half ot player 2
+            for (int i = 8; i < 15; i++) {
+                //break if there is a valid move
+                if (!((PocketCup) board.getCups()[i]).isEmpty()) {
+                    return;
+                }
+            }
+        }
+        // if it didn't break, force the switch of turns
+        forceSwitch();
+    }
+
+    /**
+     * This forces the switch of turns.It is called when one player doesn't have valid moves
+     */
+    private void forceSwitch(){
+        if(player1.getTurn()){
+            switchTurns(ai);
+        } else {
+            switchTurns(player1);
+        }
+    }
+
+    /**
+     * decides which turn is next depending on the id of the final marblees that has been put
+     * @param finalButtonID
+     * @return
+     */
+    private boolean isPlayerOneTurn(int finalButtonID) {
+        boolean playerOneTurn = false;
+        if (player1.getTurn() && finalButtonID != 7) {
+            switchTurns(ai);
+        }
+        //if it landed on the player1 cup and is his turn
+        //we need this to make the button disabled
+        else if (player1.getTurn()) {
+            switchTurns(player1);
+        } else if (ai.getTurn() && finalButtonID != 15) {
+            switchTurns(player1);
+        }
+        //if it landed on the ai cup and is his turn
+        //we need this to make the button disabled
+        else if (ai.getTurn()) {
+            switchTurns(ai);
+        }
+        if(player1.getTurn()){
+            playerOneTurn = true;
+        }
+        return playerOneTurn;
+    }
+
+    public int returnMarbles(){
+        return marbles;
+    }
+
+    public int returnFirstButton(){
+        return firstButton;
+    }
+
+    /**
+     * @param idCurrentCup
+     * @param marblesFromEmptiedCup
+     */
+    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+        int cupNumber = idCurrentCup + 1;
+        for (int i = 0; i < marblesFromEmptiedCup; i++) {
+            //condition for when the cup is a playerCup
+            if (cupNumber == 7) {
+                if (player1.getTurn()) {
+                    board.playerCup1.addMarbles(1);
+                    cupNumber++;
+                    continue;
+                }
+                cupNumber++;
+            } else if (cupNumber == 15) {
+                if (ai.getTurn()) {
+                    board.playerCup2.addMarbles(1);
+                    cupNumber = 0;
+                    continue;
+                }
+                cupNumber = 0;
+            }
+            PocketCup nextPocketCup = (PocketCup) board.cups[cupNumber];
+            //check at the last iteration if cup is empty
+            if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
+                PocketCup oppositeCup;
+                if (player1.getTurn() && cupNumber < 7) {
+                    oppositeCup = (PocketCup) board.cups[cupNumber + ((7 - cupNumber) * 2)];
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    //take last marble from the cup alongside the opposite cup's one.
+                    nextPocketCup.addMarbles(-1);
+                    board.playerCup1.addMarbles(oppositeCupNumbers + 1);
+                } else if (ai.getTurn() && cupNumber > 7 && cupNumber < 15) {
+                    oppositeCup = (PocketCup) board.cups[(14 - cupNumber)];
+                    int oppositeCupNumbers = oppositeCup.emptyCup();
+                    //take last marble from the cup alongside the opposite cup's one.
+                    nextPocketCup.addMarbles(-1);
+                    board.playerCup2.addMarbles(oppositeCupNumbers + 1);
+                }
+            }
+
+            nextPocketCup.addMarbles(1);
+
+            cupNumber++;
+            //stay in the range of 16 cups.
+            if (cupNumber > 15) {
+                cupNumber = 0;
+            }
+
+        }//END OF FOR LOOP
+    }
+
+
+    /**
+     *  This is called only in the first turn to update the board after both players made their moves
+     * @param firstID
+     * @param secondID
+     */
+    private void applyFirstTurnChanges(int firstID, int secondID){
+        ((PocketCup)board.cups[firstID]).emptyCup();
+        ((PocketCup)board.cups[secondID]).emptyCup();
+        for (int i = 1; i < 8; i++){
+            int nextCupID = i + firstID;
+            board.cups[nextCupID].addMarbles(1);
+        }
+        for(int i = 1; i < 8; i++){
+            int nextCupID = i + secondID;
+            if(nextCupID > 15){
+                nextCupID -= 16;
+            }
+            board.cups[nextCupID].addMarbles(1);
+        }
+    }
+
+    public Board getBoard(){
+        return board;
+    }
+
+    public boolean isPlayerOneTurn() {
+        if(player1.getTurn()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isGameFinished() {
+        //check if game is finished
+        for (int i = 0; i < board.getCups().length; i++) {
+            if (i != 7 && i != 15) {
+                PocketCup pocketCup = (PocketCup) board.getCups()[i];
+                if (!pocketCup.isEmpty()) {
+                    break;
+                }
+            }
+
+            if (i == 14) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public int checkWinnerScore() {
+        //checks who won
+        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
+            return board.playerCup1.getMarbles();
+        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
+            return board.playerCup2.getMarbles();
+        } else{
+            return 0;
+        }
+    }
+
+
+    public String[] checkWinner() {
+        String[] results = new String[4];
+        //checks who won
+        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
+            results[0] = player1.getName();
+            results[1] = String.valueOf(board.playerCup1.getMarbles());
+            results[2] = "Computer";
+            results[3] = String.valueOf(board.playerCup2.getMarbles());
+        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
+            results[2] = player1.getName();
+            results[3] = String.valueOf(board.playerCup1.getMarbles());
+            results[0] = "Computer";
+            results[1] = String.valueOf(board.playerCup2.getMarbles());
+        } else{
+            results[0] = player1.getName();
+            results[2] = ai.getName();
+        }
+        return results;
+    }
+
 }

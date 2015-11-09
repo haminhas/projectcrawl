@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AIGame"
+            android:name=".AIGameActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_game"
             android:screenOrientation="landscape" >

@@ -49,7 +49,7 @@ package uk.co.ivaylokhr.crawl;
         //starts a one player game
         public void onClickOnePlayer(View view){
             if (buttonOne.getText().equals("1 player")) {
-                Intent intent = new Intent(this, AIGame.class);
+                Intent intent = new Intent(this, AIGameActivity.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
                 startActivity(intent);
