@@ -5,14 +5,13 @@ package uk.co.ivaylokhr.crawl;
  */
 public class Game {
     Player player1, player2;
-    Board1 board;
+    Board board;
 
     public Game() {
         player1 = new Player();
         player2 = new Player();
-        board = new Board1();
+        board = new Board();
     }
-
 
 
 
