@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
 
-    private Cup[] cups;
+    private Button[] buttons;
     private Board1 board1;
     private ImageButton imgButton;
     private TextView timer;
@@ -202,29 +202,24 @@ public class GameActivity extends AppCompatActivity {
     }
 
     //fills the array with Player Cups and Pocket Cups and sets there ids
-    public Cup[] fillCupsArray(){
-        cups = new Cup[16];
+    public Button[] fillButtonsArray(){
+        buttons = new Button[16];
 
         int[] ids = {R.id.b0, R.id.b1, R.id.b2, R.id.b3, R.id.b4, R.id.b5,
                 R.id.b6, R.id.b7, R.id.b8, R.id.b9, R.id.b10, R.id.b11,
                 R.id.b12, R.id.b13, R.id.b14, R.id.b15};
 
         for(int i=0; i<ids.length; i++) {
-            if (i==7 || i==15) {
-                cups[i] = (PlayerCup) findViewById(ids[i]);
-                cups[i].setId(i);
-            } else {
-                cups[i] = (PocketCup) findViewById(ids[i]);
-                cups[i].setId(i);
-            }
+                buttons[i] = (Button) findViewById(ids[i]);
+                buttons[i].setId(i);
         }
 
-        return cups;
+        return buttons;
     }
 
     //returns cups
-    public Cup[] getCups(){
-        return cups;
+    public Button[] getButtons(){
+        return buttons;
     }
 
     //ends the game and starts the end game screen
