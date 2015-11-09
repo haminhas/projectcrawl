@@ -48,18 +48,6 @@ public class Board1 extends AppCompatActivity {
         isFirstTurn = true;
     }
 
-    //Initialize onClickListener and update the view of all the buttons on board
-    private void initializeButtons(){
-        for (Cup c : cups) {
-            c.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pressCup(v);
-                }
-            });
-        }
-        updateButtonText();
-    }
 
 
     //adds GameActivity.java content to the board class
@@ -89,38 +77,6 @@ public class Board1 extends AppCompatActivity {
         Preferences.toPreferences(activity.getBaseContext(), three, "third", "your_prefs");
     }
 
-    public void pressCup(View view) {
-        playClickSound();
-        //get id of the pressed cup
-        int id = ((PocketCup)view).getId();
-        //empty cup
-        if(isFirstTurn){
-            firstTurn(id);
-            return;
-        }
-        PocketCup pressedPocketCup = (PocketCup) cups[id];
-        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
-        //at this point please check if the cup in the array still has the marbles
-        Log.i("Pressed Cup", "New move");
-        putMarblesInNextCups(id, marblesFromEmptiedCup);
-        if(isGameFinished()) {
-            updateScores();
-            if(checkWinner().equals(player1)) {
-                activity.endGame(checkWinner(), player2);
-            }else if(checkWinner().equals(player2)){
-                activity.endGame(checkWinner(), player1);
-            }else{
-                activity.endGame(checkWinner(), player1);
-            }
-        }
-        int finalButtonID = id + marblesFromEmptiedCup;
-        if(finalButtonID > 15){
-                finalButtonID -= 15;
-        }
-        //decides which turn is next by the id of the last modified cup
-        decideTurn(finalButtonID);
-        updateBoardView();
-    }
 
     //the logic behind the first turn, where the players do the turn together
     //after both players make their moves, the one that clicked first is first to go
@@ -312,71 +268,6 @@ public class Board1 extends AppCompatActivity {
         checkIfPlayerCanPlay();
     }
 
-    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
-        int cupNumber = idCurrentCup + 1;
-        for (int i = 0; i < marblesFromEmptiedCup; i++) {
-            Log.i("Cup id:", Integer.toString(cupNumber));
-            //condition for when the cup is the playerCup
-            if (cupNumber == 7) {
-                if (player1.getTurn()) {
-                    player1.increaseScore(1);
-                    playZoomAnimation(cups[cupNumber], i);
-                    cupNumber++; //jumps PlayerCup and goes to next one
-                    continue; //finish current iteration on this point and to go to next iteration
-                } else {
-                    cupNumber = 8;
-                }
-            } else if (cupNumber == 15) {
-                if (player2.getTurn()) {
-                    player2.increaseScore(1);
-                    playZoomAnimation(cups[cupNumber], i);
-                    cupNumber = 0;
-                    continue; //finish current iteration on this point and to go to next iteration
-                } else {
-                    cupNumber = 0;
-                }
-            }
-            PocketCup nextPocketCup = (PocketCup) cups[cupNumber];
-            playZoomAnimation(nextPocketCup, i);
-            updateBoardView();
-            //check at the last iteration if cup is empty
-            if (i == marblesFromEmptiedCup - 1 && nextPocketCup.isEmpty()) {
-                PocketCup oppositeCup;
-                if (player1.getTurn() && cupNumber < 7) {
-                    oppositeCup = (PocketCup) cups[cupNumber + ((7 - cupNumber) * 2)];
-                    //..or [(cupNumber -14)*-1]
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //have to do it so it adds 1 more to the playerCup, sry :S
-                    nextPocketCup.addMarbles(-1);
-                    player1.increaseScore(oppositeCupNumbers + 1);
-                    //animation
-                    playZoomAnimation(oppositeCup, i+1);
-                    playZoomAnimation(player1.playerCup, i+1);
-                }
-                else if(player2.getTurn() && cupNumber > 7) {
-                    oppositeCup = (PocketCup) cups[(14-cupNumber)];
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //have to do it so it adds 1 more to the playerCup, sry :S
-                    nextPocketCup.addMarbles(-1);
-                    player2.increaseScore(oppositeCupNumbers + 1);
-                    //animation
-                    playZoomAnimation(oppositeCup, i+1);
-                    playZoomAnimation(player2.playerCup, i+1);
-                }
-            }
-
-            nextPocketCup.addMarbles(1);
-
-            cupNumber++;
-            //update id for the next cup, and stay in the range of 15.
-            if (cupNumber > 15) {
-                cupNumber = 0;
-            }
-
-
-        }//END OF FOR LOOP
-
-    }
 
     //view is the object the animation needs to be aplied to
     //index is the index in the queue if there needs to be chained with other animations

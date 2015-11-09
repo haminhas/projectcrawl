@@ -16,6 +16,9 @@ public class Board {
         cups = new Cup[16];
         fillCupsArray();
     }
+    public Cup[] getCups(){
+        return cups;
+    }
 
 
 
@@ -34,33 +37,5 @@ public class Board {
         }
     }
 
-    public void pressCup(int id) {
-        //empty cup
-        if(isFirstTurn){
-            firstTurn(id);
-            return;
-        }
-        PocketCup pressedPocketCup = (PocketCup) cups[id];
-        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
-        //at this point please check if the cup in the array still has the marbles
-        Log.i("Pressed Cup", "New move");
-        putMarblesInNextCups(id, marblesFromEmptiedCup);
-        if(isGameFinished()) {
-            updateScores();
-            if(checkWinner().equals(player1)) {
-                activity.endGame(checkWinner(), player2);
-            }else if(checkWinner().equals(player2)){
-                activity.endGame(checkWinner(), player1);
-            }else{
-                activity.endGame(checkWinner(), player1);
-            }
-        }
-        int finalButtonID = id + marblesFromEmptiedCup;
-        if(finalButtonID > 15){
-            finalButtonID -= 15;
-        }
-        //decides which turn is next by the id of the last modified cup
-        decideTurn(finalButtonID);
-        updateBoardView();
-    }
+
 }
