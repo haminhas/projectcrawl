@@ -1,10 +1,12 @@
-package uk.co.ivaylokhr.crawl;
-
-import android.os.Handler;
-import android.util.Log;
+package Controller;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import Model.Board;
+import Model.Cup;
+import Model.Player;
+import Model.PocketCup;
 
 /**
  * Created by solan_000 on 09/11/2015.
@@ -58,8 +60,8 @@ public class AIGame extends Game {
         ArrayList<PocketCup> temp = new ArrayList<>();
         //Assuming ai player is at the top
         for (int i = 8; i < 15; i++) {
-            if (!((PocketCup) board.cups[i]).isEmpty()) {
-                temp.add((PocketCup)board.cups[i]);
+            if (!((PocketCup) board.getCups()[i]).isEmpty()) {
+                temp.add((PocketCup)board.getCups()[i]);
             }
         }
         if(temp.isEmpty()){
@@ -77,7 +79,7 @@ public class AIGame extends Game {
             id = rand.nextInt(6) + 8;
         }
         //empty cup
-        PocketCup pressedPocketCup = (PocketCup) board.cups[id];
+        PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         firstButton = id;
         marbles = marblesFromEmptiedCup;
@@ -96,9 +98,9 @@ public class AIGame extends Game {
 
     private int opposite() {
         for(int i = 8; i < 15;i++){
-            int op = (board.cups[i].getMarbles() +i)%16;
-            if((op != 7 && op != 15) && board.cups[i].getMarbles() != 0){
-                PocketCup nextPocketCup = (PocketCup) board.cups[op];
+            int op = (board.getCups()[i].getMarbles() +i)%16;
+            if((op != 7 && op != 15) && board.getCups()[i].getMarbles() != 0){
+                PocketCup nextPocketCup = (PocketCup) board.getCups()[op];
                 if(nextPocketCup.isEmpty()){
                     return i;
                 }
@@ -109,7 +111,7 @@ public class AIGame extends Game {
 
     private int extraTurn(){
         for(int i = 14; i > 7;i--){
-            if((board.cups[i].getMarbles() + i)%15 == 0){
+            if((board.getCups()[i].getMarbles() + i)%15 == 0){
                 return i;
             }
         }
@@ -225,35 +227,35 @@ public class AIGame extends Game {
             //condition for when the cup is a playerCup
             if (cupNumber == 7) {
                 if (player1.getTurn()) {
-                    board.playerCup1.addMarbles(1);
+                    board.getPlayerCup1().addMarbles(1);
                     cupNumber++;
                     continue;
                 }
                 cupNumber++;
             } else if (cupNumber == 15) {
                 if (ai.getTurn()) {
-                    board.playerCup2.addMarbles(1);
+                    board.getPlayerCup2().addMarbles(1);
                     cupNumber = 0;
                     continue;
                 }
                 cupNumber = 0;
             }
-            PocketCup nextPocketCup = (PocketCup) board.cups[cupNumber];
+            PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
             //check at the last iteration if cup is empty
             if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
                 PocketCup oppositeCup;
                 if (player1.getTurn() && cupNumber < 7) {
-                    oppositeCup = (PocketCup) board.cups[cupNumber + ((7 - cupNumber) * 2)];
+                    oppositeCup = (PocketCup) board.getCups()[cupNumber + ((7 - cupNumber) * 2)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
-                    board.playerCup1.addMarbles(oppositeCupNumbers + 1);
+                    board.getPlayerCup1().addMarbles(oppositeCupNumbers + 1);
                 } else if (ai.getTurn() && cupNumber > 7 && cupNumber < 15) {
-                    oppositeCup = (PocketCup) board.cups[(14 - cupNumber)];
+                    oppositeCup = (PocketCup) board.getCups()[(14 - cupNumber)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
-                    board.playerCup2.addMarbles(oppositeCupNumbers + 1);
+                    board.getPlayerCup2().addMarbles(oppositeCupNumbers + 1);
                 }
             }
 
@@ -275,18 +277,18 @@ public class AIGame extends Game {
      * @param secondID
      */
     private void applyFirstTurnChanges(int firstID, int secondID){
-        ((PocketCup)board.cups[firstID]).emptyCup();
-        ((PocketCup)board.cups[secondID]).emptyCup();
+        ((PocketCup)board.getCups()[firstID]).emptyCup();
+        ((PocketCup)board.getCups()[secondID]).emptyCup();
         for (int i = 1; i < 8; i++){
             int nextCupID = i + firstID;
-            board.cups[nextCupID].addMarbles(1);
+            board.getCups()[nextCupID].addMarbles(1);
         }
         for(int i = 1; i < 8; i++){
             int nextCupID = i + secondID;
             if(nextCupID > 15){
                 nextCupID -= 16;
             }
-            board.cups[nextCupID].addMarbles(1);
+            board.getCups()[nextCupID].addMarbles(1);
         }
     }
 
@@ -321,10 +323,10 @@ public class AIGame extends Game {
 
     public int checkWinnerScore() {
         //checks who won
-        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
-            return board.playerCup1.getMarbles();
-        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
-            return board.playerCup2.getMarbles();
+        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
+            return board.getPlayerCup1Marbles();
+        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
+            return board.getPlayerCup2Marbles();
         } else{
             return 0;
         }
@@ -334,16 +336,16 @@ public class AIGame extends Game {
     public String[] checkWinner() {
         String[] results = new String[4];
         //checks who won
-        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
+        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
             results[0] = player1.getName();
-            results[1] = String.valueOf(board.playerCup1.getMarbles());
+            results[1] = String.valueOf(board.getPlayerCup1Marbles());
             results[2] = "Computer";
-            results[3] = String.valueOf(board.playerCup2.getMarbles());
-        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
+            results[3] = String.valueOf(board.getPlayerCup2Marbles());
+        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
             results[2] = player1.getName();
-            results[3] = String.valueOf(board.playerCup1.getMarbles());
+            results[3] = String.valueOf(board.getPlayerCup1Marbles());
             results[0] = "Computer";
-            results[1] = String.valueOf(board.playerCup2.getMarbles());
+            results[1] = String.valueOf(board.getPlayerCup2Marbles());
         } else{
             results[0] = player1.getName();
             results[2] = ai.getName();

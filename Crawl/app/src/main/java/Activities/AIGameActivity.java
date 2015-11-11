@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl;
+package Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,10 +23,15 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class GameActivity extends Activity {
+import Controller.AIGame;
+import Model.Cup;
+import Model.Preferences;
+import uk.co.ivaylokhr.crawl.R;
+
+public class AIGameActivity extends Activity {
 
     private Button[] buttons;
-    private Game game ;
+    private AIGame aiGame;
     private ImageButton imgButton;
     private TextView timer;
     private long startTime;
@@ -55,8 +61,8 @@ public class GameActivity extends Activity {
         return true;
     }
 
-    private void initialiseGame() {
-        game = new Game();
+    public void initialiseGame() {
+        aiGame = new AIGame();
         turn = (TextView) findViewById(R.id.turn);
         timer = (TextView) findViewById(R.id.Timer);
         playerOneLabelName = (TextView) findViewById(R.id.player1);
@@ -67,27 +73,23 @@ public class GameActivity extends Activity {
     }
 
 
-    private void addPlayerNames(){
+    public void addPlayerNames(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
         String playerOneName = sp.getString("player1", "");
-        String playerTwoName = sp.getString("player2", "");
         if(playerOneName.equals("")){
             playerOneName = "Player 1";
         }
-        if(playerTwoName.equals("")){
-            playerTwoName = "Player 2";
-        }
         playerOneLabelName.setText(playerOneName);
-        playerTwoLabelName.setText(playerTwoName);
-        game.getPlayer1().setName(playerOneName);
-        game.getPlayer2().setName(playerTwoName);
+        playerTwoLabelName.setText("Computer");
+        aiGame.getHumanPlayer().setName(playerOneName);
+        aiGame.getAIPlayer().setName("Computer");
         turn.setText("Turn 1");
         turn.setTextColor(Color.GREEN);
     }
 
-    //adds game to the number of games played
-    private void increaseGamesPlayed(){
+    //adds aiGame to the number of games played
+    public void increaseGamesPlayed(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         Integer games = sp.getInt("games", -1);
@@ -97,7 +99,7 @@ public class GameActivity extends Activity {
     }
 
     //Create the Settings button on click listener
-    private void settings(){
+    public void settings(){
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +118,7 @@ public class GameActivity extends Activity {
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-                //Creates onClickListener that closes the game and returns to the main menu
+                //Creates onClickListener that closes the aiGame and returns to the main menu
                 btnMain.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
@@ -139,7 +141,7 @@ public class GameActivity extends Activity {
     }
 
     //Creates timer
-    private Runnable updateTimer = new Runnable() {
+    public Runnable updateTimer = new Runnable() {
         public void run() {
             timeCounter = System.currentTimeMillis()-startTime;
             long totalTime = timeCounter;
@@ -152,13 +154,13 @@ public class GameActivity extends Activity {
         }};
 
 
-    //warn the player that going back will end his game
+    //warn the player that going back will end his aiGame
     @Override
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle("Go back?");
-        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
+        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all " +
                 "the progress of this game will be lost!").setCancelable(true)
                 .setPositiveButton("Yes", new GoToMainMenu(mainMenu))
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -189,8 +191,8 @@ public class GameActivity extends Activity {
         finish();
     }
 
-    //set the high score for the least time a game has taken to complete
-    private void setShortestPlayedTime(){
+    //set the high score for the least time a aiGame has taken to complete
+    public void setShortedPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         String temp = (String) sp.getString("times", "");
@@ -216,7 +218,7 @@ public class GameActivity extends Activity {
     }
 
     //fills the array with Player Cups and Pocket Cups and sets there ids
-    private Button[] fillButtonsArray(){
+    public Button[] fillButtonsArray(){
         buttons = new Button[16];
 
         int[] ids = {R.id.b0, R.id.b1, R.id.b2, R.id.b3, R.id.b4, R.id.b5,
@@ -224,8 +226,8 @@ public class GameActivity extends Activity {
                 R.id.b12, R.id.b13, R.id.b14, R.id.b15};
 
         for(int i=0; i<ids.length; i++) {
-                buttons[i] = (Button) findViewById(ids[i]);
-                buttons[i].setId(i);
+            buttons[i] = (Button) findViewById(ids[i]);
+            buttons[i].setId(i);
         }
 
         return buttons;
@@ -236,7 +238,7 @@ public class GameActivity extends Activity {
         return buttons;
     }
 
-    //ends the game and starts the end game screen
+    //ends the aiGame and starts the end aiGame screen
     public void endGame(String[] finalScores){
         Intent intent = new Intent(this, End.class);
         intent.putExtra("name", finalScores[0]);
@@ -260,13 +262,11 @@ public class GameActivity extends Activity {
 
 
     private void enableAllButtons() {
-        for (int i = 0; i < buttons.length; i++) {
-            //ignore the player cups
-            if (i == 7 || i == 15) {
-                buttons[i].setEnabled(false);
-            } else {
+        for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(true);
-            }
+        }
+        for (int i = 7; i < 16; i++) {
+            buttons[i].setEnabled(false);
         }
     }
 
@@ -276,15 +276,18 @@ public class GameActivity extends Activity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                        activateAnimation(b.getId(), marbles);
-                    game.pressCup(b.getId());
+                    int marbles = aiGame.getBoardCups()[b.getId()].getMarbles();
+                    activateAnimation(b.getId(), marbles);
+                    aiGame.pressCup(b.getId());
                     playClickSound();
                     swapEnabledButtonsOnTurnChange();
                     updateBoardView();
-                    if(game.isGameFinished()){
+                    if(aiGame.isGameFinished()){
                         updateScores();
-                        endGame(game.checkWinner());
+                        endGame(aiGame.checkWinner());
+                    }
+                    if(!aiGame.isPlayerOneTurn()){
+                        aiMove(marbles);
                     }
                 }
             });
@@ -292,13 +295,37 @@ public class GameActivity extends Activity {
         }
     }
 
-    private void activateAnimation(int idCurrentCup, int marbles) {
+    private void aiMove(int marbles) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("tag", "test1");
+                    aiGame.doMove();
+                    // Do something after 2s = 2000ms
+                    swapEnabledButtonsOnTurnChange();
+                    updateBoardView();
+                    activateAnimation(aiGame.returnFirstButton(), aiGame.returnMarbles());
+                    if(aiGame.isGameFinished()){
+                        updateScores();
+                        endGame(aiGame.checkWinner());
+                    }
+                    if(!aiGame.isPlayerOneTurn()){
+                        aiMove(aiGame.returnMarbles());
+                    }
+                }
+            }, (marbles * 250)+1000);
+
+        }
+
+
+    public void activateAnimation(int idCurrentCup, int marbles) {
         int nextCup = idCurrentCup + 1;
         for (int i = 0; i < marbles; i++) {
-            if (nextCup == 15 && game.isPlayerOneTurn()){
+            if (nextCup == 15 && aiGame.isPlayerOneTurn()){
                 nextCup = 0;
             }
-            if (nextCup == 7 && !game.isPlayerOneTurn()){
+            if (nextCup == 7 && !aiGame.isPlayerOneTurn()){
                 nextCup += 1;
             }
             playZoomAnimation(buttons[nextCup], i);
@@ -308,6 +335,8 @@ public class GameActivity extends Activity {
             }
         }
     }
+
+
 
     //view is the object the animation needs to be aplied to
     //index is the index in the queue if there needs to be chained with other animations
@@ -323,28 +352,20 @@ public class GameActivity extends Activity {
         media.start();
     }
 
-    private void swapEnabledButtonsOnTurnChange() {
-        if(game.isPlayerOneTurn()){
+    public void swapEnabledButtonsOnTurnChange() {
+        if(aiGame.isPlayerOneTurn()){
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(true);
-            }
-
-            for (int i = 8; i < 15; i++) {
-                buttons[i].setEnabled(false);
             }
         }else{
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(false);
             }
-
-            for (int i = 8; i < 15; i++) {
-                buttons[i].setEnabled(true);
-            }
         }
     }
 
     public void updateView() {
-        Cup[] cups = game.getBoardCups();
+        Cup[] cups = aiGame.getBoardCups();
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
                 R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
         for (int i = 0; i < cups.length; i++) {
@@ -358,6 +379,7 @@ public class GameActivity extends Activity {
             }
         }
     }
+
     //updates the information on the board
     private void updateBoardView(){
         updateTurnText();
@@ -367,7 +389,7 @@ public class GameActivity extends Activity {
     //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
     private void updateTurnText(){
         String turnText = "";
-        if(game.isPlayerOneTurn()) {
+        if(aiGame.isPlayerOneTurn()) {
             turnText = (String) playerOneLabelName.getText();
             playerOneLabelName.setTextColor(Color.GREEN);
             playerTwoLabelName.setTextColor(Color.BLACK);
@@ -380,13 +402,13 @@ public class GameActivity extends Activity {
         turn.setTextColor(Color.GREEN);
     }
 
-    //This method edits the highscores after the game
+    //This method edits the highscores after the aiGame
     public void updateScores() {
-        Integer score = game.checkWinnerScore();
+        Integer score = aiGame.checkWinnerScore();
         Integer one = Preferences.fromPreferences(this, -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");
-        this.setShortestPlayedTime();
+        this.setShortedPlayedTime();
         if (score > one) {
             three = two;
             two = one;
@@ -401,6 +423,4 @@ public class GameActivity extends Activity {
         Preferences.toPreferences(this.getBaseContext(), two, "second", "your_prefs");
         Preferences.toPreferences(this.getBaseContext(), three, "third", "your_prefs");
     }
-
-
 }

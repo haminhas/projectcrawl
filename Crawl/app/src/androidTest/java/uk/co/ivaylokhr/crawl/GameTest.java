@@ -1,9 +1,8 @@
 package uk.co.ivaylokhr.crawl;
 
-import android.app.Application;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.ApplicationTestCase;
-import android.util.Log;
+
+import Controller.Game;
 
 /**
  * Created by solan_000 on 09/11/2015.

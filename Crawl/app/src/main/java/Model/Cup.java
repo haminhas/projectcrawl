@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl;
+package Model;
 
 import android.content.Context;
 import android.util.AttributeSet;

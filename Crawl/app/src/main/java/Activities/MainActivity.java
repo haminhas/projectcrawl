@@ -1,9 +1,8 @@
-package uk.co.ivaylokhr.crawl;
+package Activities;
 
     import android.app.Activity;
     import android.content.Intent;
     import android.content.SharedPreferences;
-    import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
     import android.util.TypedValue;
     import android.view.Menu;
@@ -12,7 +11,9 @@ package uk.co.ivaylokhr.crawl;
     import android.widget.Button;
     import android.widget.TextView;
 
-    public class MainActivity extends Activity {
+    import uk.co.ivaylokhr.crawl.R;
+
+public class MainActivity extends Activity {
         private int players;
         public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
         private TextView textView;

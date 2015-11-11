@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl;
+package Model;
 
 
 public class Board {
@@ -10,10 +10,6 @@ public class Board {
         playerCup2 = new PlayerCup();
         cups = new Cup[16];
         fillCupsArray();
-    }
-
-    public Cup[] getCups(){
-        return cups;
     }
 
     public void fillCupsArray(){
@@ -28,6 +24,26 @@ public class Board {
                 cups[i] = new PocketCup() ;
             }
         }
+    }
+
+    public Cup[] getCups(){
+        return cups;
+    }
+
+    public PlayerCup getPlayerCup1(){
+        return playerCup1;
+    }
+
+    public int getPlayerCup1Marbles(){
+        return playerCup1.getMarbles();
+    }
+
+    public PlayerCup getPlayerCup2(){
+        return playerCup2;
+    }
+
+    public int getPlayerCup2Marbles(){
+        return playerCup2.getMarbles();
     }
 
 }

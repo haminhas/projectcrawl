@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl;
+package Activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import uk.co.ivaylokhr.crawl.R;
 
 public class Settings extends Activity {
     private  String player1;

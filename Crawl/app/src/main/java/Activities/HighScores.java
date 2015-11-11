@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl;
+package Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import uk.co.ivaylokhr.crawl.R;
 
 public class HighScores extends Activity {
     private TextView first;

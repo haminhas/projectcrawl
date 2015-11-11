@@ -1,5 +1,10 @@
-package uk.co.ivaylokhr.crawl;
+package Controller;
 
+
+import Model.Board;
+import Model.Cup;
+import Model.Player;
+import Model.PocketCup;
 
 public class Game {
     private Player player1, player2;
@@ -181,35 +186,35 @@ public class Game {
             //condition for when the cup is a playerCup
             if (cupNumber == 7) {
                 if (player1.getTurn()) {
-                    board.playerCup1.addMarbles(1);
+                    board.getPlayerCup1().addMarbles(1);
                     cupNumber++;
                     continue;
                 }
                 cupNumber++;
             } else if (cupNumber == 15) {
                 if (player2.getTurn()) {
-                    board.playerCup2.addMarbles(1);
+                    board.getPlayerCup2().addMarbles(1);
                     cupNumber = 0;
                     continue;
                 }
                 cupNumber = 0;
             }
-            PocketCup nextPocketCup = (PocketCup) board.cups[cupNumber];
+            PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
             //check at the last iteration if cup is empty
             if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
                 PocketCup oppositeCup;
                 if (player1.getTurn() && cupNumber < 7) {
-                    oppositeCup = (PocketCup) board.cups[cupNumber + ((7 - cupNumber) * 2)];
+                    oppositeCup = (PocketCup) board.getCups()[cupNumber + ((7 - cupNumber) * 2)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
-                    board.playerCup1.addMarbles(oppositeCupNumbers + 1);
+                    board.getPlayerCup1().addMarbles(oppositeCupNumbers + 1);
                 } else if (player2.getTurn() && cupNumber > 7 && cupNumber < 15) {
-                    oppositeCup = (PocketCup) board.cups[(14 - cupNumber)];
+                    oppositeCup = (PocketCup) board.getCups()[(14 - cupNumber)];
                     int oppositeCupNumbers = oppositeCup.emptyCup();
                     //take last marble from the cup alongside the opposite cup's one.
                     nextPocketCup.addMarbles(-1);
-                    board.playerCup2.addMarbles(oppositeCupNumbers + 1);
+                    board.getPlayerCup2().addMarbles(oppositeCupNumbers + 1);
                 }
             }
 
@@ -231,18 +236,18 @@ public class Game {
      * @param secondID
      */
     private void applyFirstTurnChanges(int firstID, int secondID){
-        ((PocketCup)board.cups[firstID]).emptyCup();
-        ((PocketCup)board.cups[secondID]).emptyCup();
+        ((PocketCup)board.getCups()[firstID]).emptyCup();
+        ((PocketCup)board.getCups()[secondID]).emptyCup();
         for (int i = 1; i < 8; i++){
             int nextCupID = i + firstID;
-            board.cups[nextCupID].addMarbles(1);
+            board.getCups()[nextCupID].addMarbles(1);
         }
         for(int i = 1; i < 8; i++){
             int nextCupID = i + secondID;
             if(nextCupID > 15){
                 nextCupID -= 16;
             }
-            board.cups[nextCupID].addMarbles(1);
+            board.getCups()[nextCupID].addMarbles(1);
         }
     }
 
@@ -277,10 +282,10 @@ public class Game {
 
     public int checkWinnerScore() {
         //checks who won
-        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
-            return board.playerCup1.getMarbles();
-        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
-            return board.playerCup2.getMarbles();
+        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
+            return board.getPlayerCup1Marbles();
+        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
+            return board.getPlayerCup2Marbles();
         } else{
             return 0;
         }
@@ -290,16 +295,16 @@ public class Game {
     public String[] checkWinner() {
         String[] results = new String[4];
         //checks who won
-        if(board.playerCup1.getMarbles() > board.playerCup2.getMarbles()) {
+        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
             results[0] = player1.getName();
-            results[1] = String.valueOf(board.playerCup1.getMarbles());
+            results[1] = String.valueOf(board.getPlayerCup1Marbles());
             results[2] = player2.getName();
-            results[3] = String.valueOf(board.playerCup2.getMarbles());
-        }else if(board.playerCup1.getMarbles() < board.playerCup2.getMarbles()) {
+            results[3] = String.valueOf(board.getPlayerCup2Marbles());
+        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
             results[2] = player1.getName();
-            results[3] = String.valueOf(board.playerCup1.getMarbles());
+            results[3] = String.valueOf(board.getPlayerCup1Marbles());
             results[0] = player2.getName();
-            results[1] = String.valueOf(board.playerCup2.getMarbles());
+            results[1] = String.valueOf(board.getPlayerCup2Marbles());
         } else{
             results[0] = player1.getName();
             results[2] = player2.getName();

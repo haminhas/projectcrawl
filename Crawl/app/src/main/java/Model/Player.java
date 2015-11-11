@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl;
+package Model;
 
 
 public class Player {

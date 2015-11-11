@@ -1,7 +1,4 @@
-package uk.co.ivaylokhr.crawl;
-
-import android.content.Context;
-import android.util.AttributeSet;
+package Model;
 
 
 public class PocketCup extends Cup {
