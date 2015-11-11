@@ -276,7 +276,7 @@ public class Game {
     }
 
 
-    public String[] checkWinner() {
+    public String[] getFinalResults() {
         String[] results = new String[4];
         //checks who won
         if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {

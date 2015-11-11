@@ -165,7 +165,7 @@ public class GameActivity extends Activity {
         optionpane.setTitle("Go back?");
         optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
                 "the progress of this game will be lost!").setCancelable(true)
-                .setPositiveButton("Yes", new GoToMainMenu(mainMenu))
+                .setPositiveButton("Yes", new GoToActivityListener(mainMenu))
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -252,14 +252,14 @@ public class GameActivity extends Activity {
     }
 
     //This is for the dialog. It goes to the main menu if you say you want to
-    public class GoToMainMenu implements DialogInterface.OnClickListener{
-        private Intent mainMenu;
-        public GoToMainMenu(Intent intent){
-            mainMenu = intent;
+    public class GoToActivityListener implements DialogInterface.OnClickListener{
+        private Intent activity;
+        public GoToActivityListener(Intent intent){
+            activity = intent;
         }
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            startActivity(mainMenu);
+            startActivity(activity);
         }
     }
 
@@ -289,12 +289,25 @@ public class GameActivity extends Activity {
                     updateBoardView();
                     if(game.isGameFinished()){
                         updateScores();
-                        endGame(game.checkWinner());
+                        popUpGameFinished();
                     }
                 }
             });
 
         }
+    }
+
+    private void popUpGameFinished() {
+        String[] finalResults = game.getFinalResults();
+        AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
+        Intent mainMenu = new Intent(this, MainActivity.class);
+        Intent newGame = new Intent(this, GameActivity.class);
+        optionpane.setTitle("Game Finished");
+        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
+                .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
+                .setNegativeButton("Play Again", new GoToActivityListener(newGame));
+        AlertDialog alertDialog = optionpane.create();
+        alertDialog.show();
     }
 
     private void activateAnimation(int idCurrentCup, int marbles) {
@@ -321,7 +334,6 @@ public class GameActivity extends Activity {
         animation.setStartOffset(200*index);
         view.startAnimation(animation);
     }
-
 
     private void playClickSound(){
         MediaPlayer media = MediaPlayer.create(this, R.raw.click);
@@ -406,6 +418,4 @@ public class GameActivity extends Activity {
         Preferences.toPreferences(this.getBaseContext(), two, "second", "your_prefs");
         Preferences.toPreferences(this.getBaseContext(), three, "third", "your_prefs");
     }
-
-
 }
