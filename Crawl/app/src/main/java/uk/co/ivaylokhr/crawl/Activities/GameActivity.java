@@ -343,9 +343,12 @@ public class GameActivity extends Activity {
     private void swapEnabledButtonsOnTurnChange() {
         if(game.isPlayerOneTurn()){
             for (int i = 0; i < 7; i++) {
-                buttons[i].setEnabled(true);
+                if(game.getBoardCups()[i].getMarbles() == 0) {
+                    buttons[i].setEnabled(false);
+                } else {
+                    buttons[i].setEnabled(true);
+                }
             }
-
             for (int i = 8; i < 15; i++) {
                 buttons[i].setEnabled(false);
             }
@@ -355,7 +358,11 @@ public class GameActivity extends Activity {
             }
 
             for (int i = 8; i < 15; i++) {
-                buttons[i].setEnabled(true);
+                if(game.getBoardCups()[i].getMarbles() == 0) {
+                    buttons[i].setEnabled(false);
+                } else {
+                    buttons[i].setEnabled(true);
+                }
             }
         }
     }
