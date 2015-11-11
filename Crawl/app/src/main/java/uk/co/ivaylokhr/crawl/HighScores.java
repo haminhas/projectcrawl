@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class HighScores extends AppCompatActivity {
+public class HighScores extends Activity {
     private TextView first;
     private TextView second;
     private TextView third;

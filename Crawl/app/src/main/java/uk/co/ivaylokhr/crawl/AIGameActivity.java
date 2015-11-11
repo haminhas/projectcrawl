@@ -24,7 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class AIGameActivity extends AppCompatActivity {
+public class AIGameActivity extends Activity {
 
     private Button[] buttons;
     private AIGame game ;

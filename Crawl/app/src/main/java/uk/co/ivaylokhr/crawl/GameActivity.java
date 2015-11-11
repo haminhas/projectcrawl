@@ -24,7 +24,7 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends Activity {
 
     private Button[] buttons;
     private Game game ;

@@ -12,7 +12,7 @@ package uk.co.ivaylokhr.crawl;
     import android.widget.Button;
     import android.widget.TextView;
 
-    public class MainActivity extends AppCompatActivity {
+    public class MainActivity extends Activity {
         int players;
         public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
         TextView textView;
