@@ -3,7 +3,6 @@ package uk.co.ivaylokhr.crawl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +44,7 @@ public class Settings extends Activity {
         String playerr = ""+ two.getText();
         editor.putString("player1", player);
         editor.putString("player2", playerr);
-            editor.commit();
+        editor.commit();
         finish();
     }
 
@@ -75,4 +74,10 @@ public class Settings extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
 }

@@ -2,8 +2,8 @@ package uk.co.ivaylokhr.crawl;
 
 
 public class Game {
-    Player player1, player2;
-    Board board;
+    private Player player1, player2;
+    private Board board;
     //first turn stuff
     private Player firstPlayer;
     private int firstID, secondID;
@@ -53,7 +53,7 @@ public class Game {
         }
     }
 
-    public void checkForAnotherTurn(int another){
+    private void checkForAnotherTurn(int another){
         if(player1.getTurn() && another == 7){
             forceSwitch();
         }
@@ -175,7 +175,7 @@ public class Game {
      * @param idCurrentCup
      * @param marblesFromEmptiedCup
      */
-    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+    private void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
             //condition for when the cup is a playerCup
@@ -305,6 +305,18 @@ public class Game {
             results[2] = player2.getName();
         }
         return results;
+    }
+
+    public Player getPlayer1(){
+        return player1;
+    }
+
+    public Player getPlayer2(){
+        return player2;
+    }
+
+    public Cup[] getBoardCups(){
+        return board.getCups();
     }
 
 }

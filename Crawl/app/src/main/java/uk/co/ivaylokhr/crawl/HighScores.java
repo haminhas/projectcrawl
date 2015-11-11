@@ -68,4 +68,9 @@ public class HighScores extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
 }

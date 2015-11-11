@@ -13,13 +13,14 @@ package uk.co.ivaylokhr.crawl;
     import android.widget.TextView;
 
     public class MainActivity extends Activity {
-        int players;
+        private int players;
         public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
-        TextView textView;
-        public Button buttonOne;
-        public Button buttonTwo;
-        public Button buttonThree;
-        public Button buttonFour;
+        private TextView textView;
+        private Button buttonOne;
+        private Button buttonTwo;
+        private Button buttonThree;
+        private Button buttonFour;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -132,6 +133,8 @@ package uk.co.ivaylokhr.crawl;
 
         @Override
         public void onBackPressed(){
-            finish();
+            Intent goHome = new Intent(Intent.ACTION_MAIN);
+            goHome.addCategory(Intent.CATEGORY_HOME);
+            startActivity(goHome);
         }
     }

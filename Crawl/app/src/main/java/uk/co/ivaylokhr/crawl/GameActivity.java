@@ -9,8 +9,6 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +28,9 @@ public class GameActivity extends Activity {
     private Game game ;
     private ImageButton imgButton;
     private TextView timer;
-    long startTime;
-    long timeCounter=0;
-    Handler handler = new Handler();
+    private long startTime;
+    private long timeCounter=0;
+    private Handler handler = new Handler();
     private TextView turn;
     private TextView playerOneLabelName;
     private TextView playerTwoLabelName;
@@ -57,7 +55,7 @@ public class GameActivity extends Activity {
         return true;
     }
 
-    public void initialiseGame() {
+    private void initialiseGame() {
         game = new Game();
         turn = (TextView) findViewById(R.id.turn);
         timer = (TextView) findViewById(R.id.Timer);
@@ -69,7 +67,7 @@ public class GameActivity extends Activity {
     }
 
 
-    public void addPlayerNames(){
+    private void addPlayerNames(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
         String playerOneName = sp.getString("player1", "");
@@ -82,14 +80,14 @@ public class GameActivity extends Activity {
         }
         playerOneLabelName.setText(playerOneName);
         playerTwoLabelName.setText(playerTwoName);
-        game.player1.setName(playerOneName);
-        game.player2.setName(playerTwoName);
+        game.getPlayer1().setName(playerOneName);
+        game.getPlayer2().setName(playerTwoName);
         turn.setText("Turn 1");
         turn.setTextColor(Color.GREEN);
     }
 
     //adds game to the number of games played
-    public void increaseGamesPlayed(){
+    private void increaseGamesPlayed(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         Integer games = sp.getInt("games", -1);
@@ -99,7 +97,7 @@ public class GameActivity extends Activity {
     }
 
     //Create the Settings button on click listener
-    public void settings(){
+    private void settings(){
         imgButton =(ImageButton)findViewById(R.id.imageButton);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +139,7 @@ public class GameActivity extends Activity {
     }
 
     //Creates timer
-    public Runnable updateTimer = new Runnable() {
+    private Runnable updateTimer = new Runnable() {
         public void run() {
             timeCounter = System.currentTimeMillis()-startTime;
             long totalTime = timeCounter;
@@ -162,8 +160,8 @@ public class GameActivity extends Activity {
         optionpane.setTitle("Go back?");
         optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
                 "the progress of this game will be lost!").setCancelable(true)
-                .setPositiveButton("Go to main menu", new GoToMainMenu(mainMenu))
-                .setNegativeButton("Continue with the game", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new GoToMainMenu(mainMenu))
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -192,7 +190,7 @@ public class GameActivity extends Activity {
     }
 
     //set the high score for the least time a game has taken to complete
-    public void setShortedPlayedTime(){
+    private void setShortestPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         String temp = (String) sp.getString("times", "");
@@ -218,7 +216,7 @@ public class GameActivity extends Activity {
     }
 
     //fills the array with Player Cups and Pocket Cups and sets there ids
-    public Button[] fillButtonsArray(){
+    private Button[] fillButtonsArray(){
         buttons = new Button[16];
 
         int[] ids = {R.id.b0, R.id.b1, R.id.b2, R.id.b3, R.id.b4, R.id.b5,
@@ -278,7 +276,7 @@ public class GameActivity extends Activity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int marbles = game.board.getCups()[b.getId()].getMarbles();
+                    int marbles = game.getBoardCups()[b.getId()].getMarbles();
                         activateAnimation(b.getId(), marbles);
                     game.pressCup(b.getId());
                     playClickSound();
@@ -294,10 +292,15 @@ public class GameActivity extends Activity {
         }
     }
 
-
-    public void activateAnimation(int idCurrentCup, int marbles) {
+    private void activateAnimation(int idCurrentCup, int marbles) {
         int nextCup = idCurrentCup + 1;
         for (int i = 0; i < marbles; i++) {
+            if (nextCup == 15 && game.isPlayerOneTurn()){
+                nextCup = 0;
+            }
+            if (nextCup == 7 && !game.isPlayerOneTurn()){
+                nextCup += 1;
+            }
             playZoomAnimation(buttons[nextCup], i);
             nextCup += 1;
             if (nextCup > 15){
@@ -305,8 +308,6 @@ public class GameActivity extends Activity {
             }
         }
     }
-
-
 
     //view is the object the animation needs to be aplied to
     //index is the index in the queue if there needs to be chained with other animations
@@ -322,7 +323,7 @@ public class GameActivity extends Activity {
         media.start();
     }
 
-    public void swapEnabledButtonsOnTurnChange() {
+    private void swapEnabledButtonsOnTurnChange() {
         if(game.isPlayerOneTurn()){
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(true);
@@ -341,8 +342,9 @@ public class GameActivity extends Activity {
             }
         }
     }
+
     public void updateView() {
-        Cup[] cups = game.board.getCups();
+        Cup[] cups = game.getBoardCups();
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
                 R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
         for (int i = 0; i < cups.length; i++) {
@@ -384,7 +386,7 @@ public class GameActivity extends Activity {
         Integer one = Preferences.fromPreferences(this, -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");
-        this.setShortedPlayedTime();
+        this.setShortestPlayedTime();
         if (score > one) {
             three = two;
             two = one;

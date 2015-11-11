@@ -2,8 +2,8 @@ package uk.co.ivaylokhr.crawl;
 
 
 public class Player {
-    String name ;
-    boolean turn ;
+    private String name ;
+    private boolean turn ;
 
     public Player(){
         turn = true;

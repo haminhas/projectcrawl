@@ -2,8 +2,8 @@ package uk.co.ivaylokhr.crawl;
 
 
 public class Board {
-    PlayerCup playerCup1, playerCup2;
-    Cup[] cups;
+    private PlayerCup playerCup1, playerCup2;
+    private Cup[] cups;
 
     public Board() {
         playerCup1 = new PlayerCup();
@@ -11,6 +11,7 @@ public class Board {
         cups = new Cup[16];
         fillCupsArray();
     }
+
     public Cup[] getCups(){
         return cups;
     }
@@ -28,6 +29,5 @@ public class Board {
             }
         }
     }
-
 
 }

@@ -11,8 +11,8 @@ import java.util.Random;
  */
 public class AIGame extends Game {
 
-    Player player1, ai;
-    Board board;
+    private Player player1, ai;
+    private Board board;
     private int firstButton;
     private int marbles;
 
@@ -107,7 +107,7 @@ public class AIGame extends Game {
         return -1;
     }
 
-    public int extraTurn(){
+    private int extraTurn(){
         for(int i = 14; i > 7;i--){
             if((board.cups[i].getMarbles() + i)%15 == 0){
                 return i;
@@ -116,7 +116,7 @@ public class AIGame extends Game {
         return -1;
     }
 
-    public void checkForAnotherTurn(int another){
+    private void checkForAnotherTurn(int another){
         if(player1.getTurn() && another == 7){
             forceSwitch();
         }
@@ -219,7 +219,7 @@ public class AIGame extends Game {
      * @param idCurrentCup
      * @param marblesFromEmptiedCup
      */
-    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+    private void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
             //condition for when the cup is a playerCup
@@ -349,6 +349,18 @@ public class AIGame extends Game {
             results[2] = ai.getName();
         }
         return results;
+    }
+
+    public Player getAIPlayer(){
+        return ai;
+    }
+
+    public Player getHumanPlayer(){
+        return player1;
+    }
+
+    public Cup[] getBoardCups(){
+        return board.getCups();
     }
 
 }
