@@ -38,7 +38,6 @@ public class Game {
     /**
      * Action triggered when you press a Cup on the screen
      * @param id
-     * @return
      */
     public void pressCup(int id) {
         if(isFirstTurn){
@@ -58,11 +57,15 @@ public class Game {
         }
     }
 
-    private void checkForAnotherTurn(int another){
-        if(player1.getTurn() && another == 7){
+    /**
+     * Checks if the last marble landed on the current player's playerCup
+     * @param buttonID
+     */
+    private void checkForAnotherTurn(int buttonID){
+        if(player1.getTurn() && buttonID == 7){
             forceSwitch();
         }
-        if(player2.getTurn() && another == 15){
+        if(player2.getTurn() && buttonID == 15){
             forceSwitch();
         }
     }
@@ -149,32 +152,16 @@ public class Game {
     }
 
     /**
-     * decides which turn is next depending on the id of the final marblees that has been put
-     * @param finalButtonID
-     * @return
+     *
+     * @return boolean if PlayerOne is the current player
      */
-    private boolean isPlayerOneTurn(int finalButtonID) {
-        boolean playerOneTurn = false;
-        if (player1.getTurn() && finalButtonID != 7) {
-            switchTurns(player2);
+    public boolean isPlayerOneTurn() {
+        if(player1.getTurn()) {
+            return true;
         }
-        //if it landed on the player1 cup and is his turn
-        //we need this to make the button disabled
-        else if (player1.getTurn()) {
-            switchTurns(player1);
-        } else if (player2.getTurn() && finalButtonID != 15) {
-            switchTurns(player1);
-        }
-        //if it landed on the player2 cup and is his turn
-        //we need this to make the button disabled
-        else if (player2.getTurn()) {
-            switchTurns(player2);
-        }
-        if(player1.getTurn()){
-            playerOneTurn = true;
-        }
-        return playerOneTurn;
+        return false;
     }
+
 
     /**
      * @param idCurrentCup
@@ -251,17 +238,11 @@ public class Game {
         }
     }
 
-    public Board getBoard(){
-        return board;
-    }
 
-    public boolean isPlayerOneTurn() {
-        if(player1.getTurn()) {
-            return true;
-        }
-        return false;
-    }
-
+    /**
+     * checks if all the cups have been emptied
+     * @return boolean if the game is finished
+     */
     public boolean isGameFinished() {
         //check if game is finished
         for (int i = 0; i < board.getCups().length; i++) {
@@ -280,6 +261,9 @@ public class Game {
         return false;
     }
 
+    /**
+     * @return the number of marbles in the winner playerCup
+     */
     public int checkWinnerScore() {
         //checks who won
         if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
@@ -310,6 +294,10 @@ public class Game {
             results[2] = player2.getName();
         }
         return results;
+    }
+
+    public Board getBoard(){
+        return board;
     }
 
     public Player getPlayer1(){
