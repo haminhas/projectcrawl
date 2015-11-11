@@ -59,7 +59,7 @@ public class AIGame extends Game {
         ArrayList<PocketCup> temp = new ArrayList<>();
         //Assuming ai player is at the top
         for (int i = 8; i < 15; i++) {
-            if (!((PocketCup) board.getCups()[i]).isEmpty()) {
+            if (!board.getCups()[i].isEmpty()) {
                 temp.add((PocketCup)board.getCups()[i]);
             }
         }
@@ -68,9 +68,9 @@ public class AIGame extends Game {
             return;
         }
         int id;
-        if(!(extraTurn() == -1)) {
+        if(extraTurn() != -1) {
             id = extraTurn();
-        }else if(!(opposite() == -1)){
+        }else if(opposite() != -1){
             id = opposite();
         }else{
             Random rand = new Random();
@@ -96,7 +96,7 @@ public class AIGame extends Game {
 
     private int opposite() {
         for(int i = 8; i < 15;i++){
-            int op = (board.getCups()[i].getMarbles() +i)%16;
+            int op = (board.getCups()[i].getMarbles() + i)%16;
             if((op != 7 && op != 15) && board.getCups()[i].getMarbles() != 0){
                 PocketCup nextPocketCup = (PocketCup) board.getCups()[op];
                 if(nextPocketCup.isEmpty()){

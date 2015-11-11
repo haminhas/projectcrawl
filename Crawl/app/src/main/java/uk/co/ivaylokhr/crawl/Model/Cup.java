@@ -17,4 +17,8 @@ public class Cup {
     public void addMarbles(int x){
         marbles += x;
     }
+
+    public boolean isEmpty(){
+        return marbles == 0;
+    }
 }

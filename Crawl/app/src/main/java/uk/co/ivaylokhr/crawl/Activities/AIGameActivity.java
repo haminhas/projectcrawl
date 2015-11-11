@@ -357,7 +357,12 @@ public class AIGameActivity extends Activity {
     public void swapEnabledButtonsOnTurnChange() {
         if(aiGame.isPlayerOneTurn()){
             for (int i = 0; i < 7; i++) {
-                buttons[i].setEnabled(true);
+                if (aiGame.getBoardCups()[i].getMarbles() > 0){
+                    buttons[i].setEnabled(true);
+                }
+                else{
+                    buttons[i].setEnabled(false);
+                }
             }
         }else{
             for (int i = 0; i < 7; i++) {
