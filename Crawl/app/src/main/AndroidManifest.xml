@@ -39,10 +39,6 @@
             android:label="@string/title_activity_bluetooth" >
         </activity>
         <activity
-            android:name=".Activities.End"
-            android:label="@string/title_activity_end" >
-        </activity>
-        <activity
             android:name=".Activities.Settings"
             android:label="@string/title_activity_set" >
         </activity>

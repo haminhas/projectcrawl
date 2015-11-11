@@ -162,7 +162,7 @@ public class AIGameActivity extends Activity {
         optionpane.setTitle("Go back?");
         optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all " +
                 "the progress of this game will be lost!").setCancelable(true)
-                .setPositiveButton("Yes", new GoToMainMenu(mainMenu))
+                .setPositiveButton("Yes", new GoToActivityListener(mainMenu))
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -238,25 +238,14 @@ public class AIGameActivity extends Activity {
         return buttons;
     }
 
-    //ends the aiGame and starts the end aiGame screen
-    public void endGame(String[] finalScores){
-        Intent intent = new Intent(this, End.class);
-        intent.putExtra("name", finalScores[0]);
-        intent.putExtra("score", finalScores[1]);
-        intent.putExtra("name2", finalScores[2]);
-        intent.putExtra("score2", finalScores[3]);
-        startActivity(intent);
-    }
-
-    //This is for the dialog. It goes to the main menu if you say you want to
-    public class GoToMainMenu implements DialogInterface.OnClickListener{
-        private Intent mainMenu;
-        public GoToMainMenu(Intent intent){
-            mainMenu = intent;
+    public class GoToActivityListener implements DialogInterface.OnClickListener{
+        private Intent activity;
+        public GoToActivityListener(Intent intent){
+            activity = intent;
         }
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            startActivity(mainMenu);
+            startActivity(activity);
         }
     }
 
@@ -284,7 +273,7 @@ public class AIGameActivity extends Activity {
                     updateBoardView();
                     if(aiGame.isGameFinished()){
                         updateScores();
-                        endGame(aiGame.checkWinner());
+                        popUpGameFinished();
                     }
                     if(!aiGame.isPlayerOneTurn()){
                         aiMove(marbles);
@@ -293,6 +282,19 @@ public class AIGameActivity extends Activity {
             });
 
         }
+    }
+
+    private void popUpGameFinished() {
+        String[] finalResults = aiGame.getFinalResults();
+        AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
+        Intent mainMenu = new Intent(this, MainActivity.class);
+        Intent newAIGame = new Intent(this, AIGameActivity.class);
+        optionpane.setTitle("Game Finished");
+        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
+                .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
+                .setNegativeButton("Play Again", new GoToActivityListener(newAIGame));
+        AlertDialog alertDialog = optionpane.create();
+        alertDialog.show();
     }
 
     private void aiMove(int marbles) {
@@ -308,7 +310,7 @@ public class AIGameActivity extends Activity {
                     activateAnimation(aiGame.returnFirstButton(), aiGame.returnMarbles());
                     if(aiGame.isGameFinished()){
                         updateScores();
-                        endGame(aiGame.checkWinner());
+                        popUpGameFinished();
                     }
                     if(!aiGame.isPlayerOneTurn()){
                         aiMove(aiGame.returnMarbles());
@@ -405,7 +407,7 @@ public class AIGameActivity extends Activity {
     //This method edits the highscores after the aiGame
     public void updateScores() {
         Integer score = aiGame.checkWinnerScore();
-        Integer one = Preferences.fromPreferences(this, -1, "first", "your_prefs");
+        Integer one = Preferences.fromPreferences(this.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");
         this.setShortedPlayedTime();

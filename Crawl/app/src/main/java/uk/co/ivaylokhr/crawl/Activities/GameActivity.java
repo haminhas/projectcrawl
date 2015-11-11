@@ -241,16 +241,6 @@ public class GameActivity extends Activity {
         return buttons;
     }
 
-    //ends the game and starts the end game screen
-    public void endGame(String[] finalScores){
-        Intent intent = new Intent(this, End.class);
-        intent.putExtra("name", finalScores[0]);
-        intent.putExtra("score", finalScores[1]);
-        intent.putExtra("name2", finalScores[2]);
-        intent.putExtra("score2", finalScores[3]);
-        startActivity(intent);
-    }
-
     //This is for the dialog. It goes to the main menu if you say you want to
     public class GoToActivityListener implements DialogInterface.OnClickListener{
         private Intent activity;

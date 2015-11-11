@@ -55,7 +55,6 @@ public class AIGame extends Game {
 
     public void doMove(){
         int finalButtonID =0;
-        boolean again = false;
         //get id of the pressed cup
         ArrayList<PocketCup> temp = new ArrayList<>();
         //Assuming ai player is at the top
@@ -71,7 +70,6 @@ public class AIGame extends Game {
         int id;
         if(!(extraTurn() == -1)) {
             id = extraTurn();
-            again = true;
         }else if(!(opposite() == -1)){
             id = opposite();
         }else{
@@ -167,7 +165,9 @@ public class AIGame extends Game {
             }
         }
         // if it didn't break, force the switch of turns
-        forceSwitch();
+        if(!isGameFinished()){
+            forceSwitch();
+        }
     }
 
     /**
@@ -333,7 +333,7 @@ public class AIGame extends Game {
     }
 
 
-    public String[] checkWinner() {
+    public String[] getFinalResults() {
         String[] results = new String[4];
         //checks who won
         if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
