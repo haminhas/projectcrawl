@@ -1,4 +1,4 @@
-package Activities;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,9 +22,9 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import Model.Cup;
-import Controller.Game;
-import Model.Preferences;
+import uk.co.ivaylokhr.crawl.Model.Cup;
+import uk.co.ivaylokhr.crawl.Controller.Game;
+import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
 
 public class GameActivity extends Activity {

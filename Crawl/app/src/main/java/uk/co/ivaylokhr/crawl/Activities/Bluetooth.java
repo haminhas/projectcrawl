@@ -1,4 +1,4 @@
-package Activities;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package Activities;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import uk.co.ivaylokhr.crawl.R;
 
 public class End extends AppCompatActivity {

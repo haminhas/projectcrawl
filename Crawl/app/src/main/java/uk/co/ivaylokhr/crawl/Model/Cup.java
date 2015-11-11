@@ -1,8 +1,4 @@
-package Model;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.Button;
+package uk.co.ivaylokhr.crawl.Model;
 
 
 public class Cup {

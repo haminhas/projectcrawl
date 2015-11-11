@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
-    tools:context="Activities.HighScores">
+    tools:context="uk.co.ivaylokhr.crawl.Activities.HighScores">
 
     <Button
         android:layout_width="0dp"

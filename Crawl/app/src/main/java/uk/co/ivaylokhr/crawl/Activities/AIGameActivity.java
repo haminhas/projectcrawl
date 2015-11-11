@@ -1,4 +1,4 @@
-package Activities;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,9 +23,9 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import Controller.AIGame;
-import Model.Cup;
-import Model.Preferences;
+import uk.co.ivaylokhr.crawl.Controller.AIGame;
+import uk.co.ivaylokhr.crawl.Model.Cup;
+import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
 
 public class AIGameActivity extends Activity {

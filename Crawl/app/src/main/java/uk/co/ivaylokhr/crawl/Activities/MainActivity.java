@@ -1,4 +1,4 @@
-package Activities;
+package uk.co.ivaylokhr.crawl.Activities;
 
     import android.app.Activity;
     import android.content.Intent;
