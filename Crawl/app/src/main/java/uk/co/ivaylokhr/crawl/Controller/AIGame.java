@@ -17,6 +17,9 @@ public class AIGame extends Game {
     private Board board;
     private int firstButton;
     private int marbles;
+    //first turn stff
+    private boolean isFirstTurn;
+    private int humanMoveID;
 
     public AIGame() {
         firstButton = 0;
@@ -24,14 +27,31 @@ public class AIGame extends Game {
         player1 = new Player();
         ai = new Player();
         board = new Board();
+        initialiseVariablesFirstTurn();
     }
 
     /**
      * Initialise values of the variables needed for first Turn
      */
     private void initialiseVariablesFirstTurn(){
+        isFirstTurn = true;
+        humanMoveID = -1;
         player1.setTurn(true);
         ai.setTurn(false);
+    }
+
+    public void setFirstHumanMove(int id){
+        humanMoveID = id;
+    }
+
+    public int getFirstHumanMove(){
+        return humanMoveID;
+    }
+
+    public int generateFirstAIMove(){
+        Random rand = new Random();
+        int aiMoveID = rand.nextInt(6) + 8;
+        return aiMoveID;
     }
 
     /**
@@ -276,7 +296,7 @@ public class AIGame extends Game {
      * @param firstID
      * @param secondID
      */
-    private void applyFirstTurnChanges(int firstID, int secondID){
+    public void applyFirstTurnChanges(int firstID, int secondID){
         ((PocketCup)board.getCups()[firstID]).emptyCup();
         ((PocketCup)board.getCups()[secondID]).emptyCup();
         for (int i = 1; i < 8; i++){
@@ -290,6 +310,7 @@ public class AIGame extends Game {
             }
             board.getCups()[nextCupID].addMarbles(1);
         }
+        isFirstTurn = false;
     }
 
     public Board getBoard(){
@@ -363,6 +384,10 @@ public class AIGame extends Game {
 
     public Cup[] getBoardCups(){
         return board.getCups();
+    }
+
+    public boolean isFirstTurn(){
+        return isFirstTurn;
     }
 
 }

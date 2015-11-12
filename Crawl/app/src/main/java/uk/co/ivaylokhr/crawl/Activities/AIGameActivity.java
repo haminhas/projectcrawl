@@ -195,7 +195,7 @@ public class AIGameActivity extends Activity {
     public void setShortedPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        String temp = (String) sp.getString("times", "");
+        String temp = sp.getString("times", "");
         if(temp.equals("")){
             temp = "00:00";
         }
@@ -265,22 +265,27 @@ public class AIGameActivity extends Activity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int marbles = aiGame.getBoardCups()[b.getId()].getMarbles();
-                    activateAnimation(b.getId(), marbles);
-                    aiGame.pressCup(b.getId());
                     playClickSound();
-                    swapEnabledButtonsOnTurnChange();
-                    updateBoardView();
-                    if(aiGame.isGameFinished()){
-                        updateScores();
-                        popUpGameFinished();
+                    if(aiGame.isFirstTurn()){
+                        aiGame.setFirstHumanMove(b.getId());
+                        firstAIMove();
                     }
-                    if(!aiGame.isPlayerOneTurn()){
-                        aiMove(marbles);
+                    else{
+                        int marbles = aiGame.getBoardCups()[b.getId()].getMarbles();
+                        activateAnimation(b.getId(), marbles);
+                        aiGame.pressCup(b.getId());
+                        swapEnabledButtonsOnTurnChange();
+                        updateBoardView();
+                        if(aiGame.isGameFinished()){
+                            updateScores();
+                            popUpGameFinished();
+                        }
+                        if(!aiGame.isPlayerOneTurn()){
+                            aiMove(marbles);
+                        }
                     }
                 }
             });
-
         }
     }
 
@@ -295,6 +300,21 @@ public class AIGameActivity extends Activity {
                 .setNegativeButton("Play Again", new GoToActivityListener(newAIGame));
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
+    }
+
+    private void firstAIMove(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int humanMove = aiGame.getFirstHumanMove();
+                int aiMove = aiGame.generateFirstAIMove();
+                aiGame.applyFirstTurnChanges(humanMove, aiMove);
+                activateAnimation(humanMove, 7);
+                activateAnimation(aiMove, 7);
+                updateBoardView();
+            }
+        }, 1500);
     }
 
     private void aiMove(int marbles) {
@@ -338,8 +358,6 @@ public class AIGameActivity extends Activity {
         }
     }
 
-
-
     //view is the object the animation needs to be aplied to
     //index is the index in the queue if there needs to be chained with other animations
     private void playZoomAnimation(View view, int index){
@@ -376,9 +394,8 @@ public class AIGameActivity extends Activity {
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
                 R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
         for (int i = 0; i < cups.length; i++) {
-            buttons[i].setText(Integer.toString(cups[i].getMarbles()));
-
             int marbles = cups[i].getMarbles();
+            buttons[i].setText(String.valueOf(marbles));
             if (marbles <= 7) {
                 buttons[i].setBackgroundResource(backgrounds[marbles]);
             } else {
@@ -405,7 +422,7 @@ public class AIGameActivity extends Activity {
             playerTwoLabelName.setTextColor(Color.GREEN);
             playerOneLabelName.setTextColor(Color.BLACK);
         }
-        turn.setText(turnText + "'s turn");
+        turn.setText(String.format("%s's turn", turnText));
         turn.setTextColor(Color.GREEN);
     }
 

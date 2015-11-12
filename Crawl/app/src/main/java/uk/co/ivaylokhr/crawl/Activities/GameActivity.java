@@ -198,7 +198,7 @@ public class GameActivity extends Activity {
     private void setShortestPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        String temp = (String) sp.getString("times", "");
+        String temp = sp.getString("times", "");
         if(temp.equals("")){
             temp = "00:00";
         }
@@ -362,9 +362,8 @@ public class GameActivity extends Activity {
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
                 R.drawable.back4, R.drawable.back5, R.drawable.back6, R.drawable.back7, R.drawable.back8};
         for (int i = 0; i < cups.length; i++) {
-            buttons[i].setText(Integer.toString(cups[i].getMarbles()));
-
             int marbles = cups[i].getMarbles();
+            buttons[i].setText(String.valueOf(marbles));
             if (marbles <= 7) {
                 buttons[i].setBackgroundResource(backgrounds[marbles]);
             } else {
@@ -390,7 +389,7 @@ public class GameActivity extends Activity {
             playerTwoLabelName.setTextColor(Color.GREEN);
             playerOneLabelName.setTextColor(Color.BLACK);
         }
-        turn.setText(turnText + "'s turn");
+        turn.setText(String.format("%s's turn", turnText));
         turn.setTextColor(Color.GREEN);
     }
 
