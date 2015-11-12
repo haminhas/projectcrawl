@@ -109,23 +109,21 @@ public class Game {
     */
      private void checkAreThereMarblesInCups() {
         if (player1.getTurn()) {
-            //loops through the half ot player 1
             for (int i = 0; i < 7; i++) {
                 // break if there is a valid move
-                if (!((PocketCup) board.getCups()[i]).isEmpty()) {
+                if (board.getCups()[i].getMarbles() > 0) {
                     return;
                 }
             }
         } else if (player2.getTurn()) {
-            //loops through the half ot player 2
             for (int i = 8; i < 15; i++) {
                 //break if there is a valid move
-                if (!((PocketCup) board.getCups()[i]).isEmpty()) {
+                if (board.getCups()[i].getMarbles() > 0) {
                     return;
                 }
             }
         }
-        // if it didn't break, force the switch of turns
+        // if it didn't find marbles in any current player's cup, switch the turn
         forceSwitch();
     }
 
