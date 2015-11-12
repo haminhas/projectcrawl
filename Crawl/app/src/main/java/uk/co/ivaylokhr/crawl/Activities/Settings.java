@@ -24,10 +24,10 @@ public class Settings extends Activity {
         player1 = sp.getString("player1", "");
         player2 = sp.getString("player2", "");
         if (player1.equals("")){
-            player1 = "Player 1";
+            player1 = getString(R.string.player1);
         }
         if (player2.equals("")){
-            player2 = "Player 2";
+            player2 = getString(R.string.player2);
         }
         TextView one = (TextView) findViewById(R.id.editText);
         TextView two = (TextView) findViewById(R.id.editText2);

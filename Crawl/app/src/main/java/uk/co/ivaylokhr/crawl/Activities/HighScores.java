@@ -30,16 +30,16 @@ public class HighScores extends Activity {
         games = (TextView) findViewById(R.id.textView12);
         fastest = (TextView) findViewById(R.id.fastgame);
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-        first.setText("1st Place:  " + sp.getInt("first", -1));
-        second.setText("2nd Place: "+sp.getInt("second", -1));
-        third.setText("3rd Place:  " + sp.getInt("third", -1));
-        games.setText("Total Games played: " + sp.getInt("games", -1));
-        String temp = (String) sp.getString("times", "");
+        first.setText(getString(R.string.firstplace) + sp.getInt("first", -1));
+        second.setText(getString(R.string.secondplace)+sp.getInt("second", -1));
+        third.setText(getString(R.string.thirdplace) + sp.getInt("third", -1));
+        games.setText(getString(R.string.totalgames) + sp.getInt("games", -1));
+        String temp = sp.getString("times", "");
         Log.i("tag",temp + "d");
         if(temp.equals("")){
             temp = "00:00";
         }
-        fastest.setText("Fastest Game played: " + temp);
+        fastest.setText(getString(R.string.fastestgame) + temp);
     }
     //Closes the window and returns to the start menu
     public void back(View view) {

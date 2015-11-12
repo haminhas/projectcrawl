@@ -87,7 +87,7 @@ public class GameActivity extends Activity {
         playerTwoLabelName.setText(playerTwoName);
         game.getPlayer1().setName(playerOneName);
         game.getPlayer2().setName(playerTwoName);
-        turn.setText("Turn 1");
+        turn.setText(R.string.turn1);
         turn.setTextColor(Color.GREEN);
     }
 
@@ -162,11 +162,10 @@ public class GameActivity extends Activity {
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
-        optionpane.setTitle("Go back?");
-        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all" +
-                "the progress of this game will be lost!").setCancelable(true)
-                .setPositiveButton("Yes", new GoToActivityListener(mainMenu))
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+        optionpane.setTitle(R.string.goback);
+        optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
+                .setPositiveButton(R.string.yes, new GoToActivityListener(mainMenu))
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }

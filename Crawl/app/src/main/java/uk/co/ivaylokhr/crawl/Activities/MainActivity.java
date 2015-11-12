@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 
         //starts a one player game
         public void onClickOnePlayer(View view){
-            if (buttonOne.getText().equals("1 player")) {
+            if (buttonOne.getText().equals(getString(R.string.oneplayer))) {
                 Intent intent = new Intent(this, AIGameActivity.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
@@ -66,11 +66,11 @@ public class MainActivity extends Activity {
         //starts a two player game
 
         public void onClickTwoPlayer(View view){
-            if (buttonTwo.getText().equals("2 player")) {
-                buttonOne.setText("Host");
-                buttonTwo.setText("Connect");
-                buttonThree.setText("Back");
-                buttonFour.setText("Share");
+            if (buttonTwo.getText().equals(getString(R.string.twoplayer))) {
+                buttonOne.setText(R.string.host);
+                buttonTwo.setText(R.string.connect);
+                buttonThree.setText(R.string.back);
+                buttonFour.setText(R.string.hotseat);
             }
             else {
                 Integer hosting = 0;
@@ -96,7 +96,7 @@ public class MainActivity extends Activity {
         }
 
         public void onClickHighScore(View view){
-            if(buttonFour.getText().equals("Statistics")) {
+            if(buttonFour.getText().equals(getString(R.string.statistics))) {
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
             }else{
@@ -106,14 +106,14 @@ public class MainActivity extends Activity {
         }
 
         public void onClickSettings(View view){
-            if(buttonThree.getText().equals("Settings")) {
+            if(buttonThree.getText().equals(getString(R.string.settings))) {
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
             }else{
-                buttonOne.setText("1 player");
-                buttonTwo.setText("2 player");
-                buttonThree.setText("Settings");
-                buttonFour.setText("Statistics");
+                buttonOne.setText(R.string.oneplayer);
+                buttonTwo.setText(R.string.twoplayer);
+                buttonThree.setText(R.string.settings);
+                buttonFour.setText(R.string.statistics);
             }
         }
         //TODO: Either use MenuItems or remove this.

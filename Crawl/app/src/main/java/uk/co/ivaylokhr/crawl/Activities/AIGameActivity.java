@@ -78,13 +78,13 @@ public class AIGameActivity extends Activity {
         //Displays Player 1 and Player 2
         String playerOneName = sp.getString("player1", "");
         if(playerOneName.equals("")){
-            playerOneName = "Player 1";
+            playerOneName = getString(R.string.player1);
         }
         playerOneLabelName.setText(playerOneName);
-        playerTwoLabelName.setText("Computer");
+        playerTwoLabelName.setText(R.string.computer);
         aiGame.getHumanPlayer().setName(playerOneName);
-        aiGame.getAIPlayer().setName("Computer");
-        turn.setText("Turn 1");
+        aiGame.getAIPlayer().setName( (String) playerTwoLabelName.getText());
+        turn.setText(R.string.turn1);
         turn.setTextColor(Color.GREEN);
     }
 
@@ -159,11 +159,10 @@ public class AIGameActivity extends Activity {
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
-        optionpane.setTitle("Go back?");
-        optionpane.setMessage("Are you sure you want to go back? This will take you to the main menu and all " +
-                "the progress of this game will be lost!").setCancelable(true)
-                .setPositiveButton("Yes", new GoToActivityListener(mainMenu))
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+        optionpane.setTitle(R.string.goback);
+        optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
+                .setPositiveButton(R.string.yes, new GoToActivityListener(mainMenu))
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
