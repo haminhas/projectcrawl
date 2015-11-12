@@ -1,9 +1,11 @@
-package uk.co.ivaylokhr.crawl;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import uk.co.ivaylokhr.crawl.R;
 
 public class Bluetooth extends AppCompatActivity {
 

@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
-    tools:context="uk.co.ivaylokhr.crawl.HighScores">
+    tools:context="uk.co.ivaylokhr.crawl.Activities.HighScores">
 
     <Button
         android:layout_width="0dp"
         android:layout_weight="0.07"
         android:layout_height="wrap_content"
-        android:text="Back"
+        android:text="@string/back"
         android:onClick="back"
         android:id="@+id/button4" />
 
@@ -38,7 +38,7 @@
             android:layout_weight="0.14"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="     HIGH SCORES"
+            android:text="@string/highscores"
             android:id="@+id/textView15" />
 
          <TextView
@@ -46,7 +46,7 @@
              android:layout_weight="0.06"
              android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="1st Place:"
+            android:text="@string/firstplace"
             android:id="@+id/textView6" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_weight="0.06"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="2nd Place:"
+            android:text="@string/secondplace"
             android:id="@+id/textView10" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_weight="0.11"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="3rd Place:"
+            android:text="@string/thirdplace"
             android:id="@+id/textView11" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_weight="0.06"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Total Games played:"
+            android:text="@string/totalgames"
             android:id="@+id/textView12" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_weight="0.06"
             android:layout_height="0dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Fastest Game Played:"
+            android:text="@string/fastestgame"
             android:id="@+id/fastgame" />
     </LinearLayout>
 

@@ -33,7 +33,7 @@
             android:layout_weight="0.11"
             android:text="" />
 
-        <uk.co.ivaylokhr.crawl.PlayerCup
+        <Button
             android:id="@+id/b15"
             android:layout_width="60dp"
             android:layout_height="0dp"
@@ -80,49 +80,49 @@
             android:layout_weight="0.20"
             android:orientation="horizontal">
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b14"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b13"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b9"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -144,49 +144,49 @@
             android:layout_weight="0.20"
             android:orientation="horizontal">
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b0"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@drawable/pocketbackground"/>
 
-            <uk.co.ivaylokhr.crawl.PocketCup
+            <Button
                 android:id="@+id/b6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
             android:layout_weight="0.11"
             android:text="" />
 
-        <uk.co.ivaylokhr.crawl.PlayerCup
+        <Button
             android:id="@+id/b7"
             android:layout_width="60dp"
             android:layout_height="0dp"

@@ -1,18 +1,17 @@
-package uk.co.ivaylokhr.crawl;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-public class HighScores extends AppCompatActivity {
+import uk.co.ivaylokhr.crawl.R;
+
+public class HighScores extends Activity {
     private TextView first;
     private TextView second;
     private TextView third;
@@ -31,16 +30,16 @@ public class HighScores extends AppCompatActivity {
         games = (TextView) findViewById(R.id.textView12);
         fastest = (TextView) findViewById(R.id.fastgame);
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
-        first.setText("1st Place:  " + sp.getInt("first", -1));
-        second.setText("2nd Place: "+sp.getInt("second", -1));
-        third.setText("3rd Place:  " + sp.getInt("third", -1));
-        games.setText("Total Games played: " + sp.getInt("games", -1));
-        String temp = (String) sp.getString("times", "");
+        first.setText(getString(R.string.firstplace) + sp.getInt("first", -1));
+        second.setText(getString(R.string.secondplace)+sp.getInt("second", -1));
+        third.setText(getString(R.string.thirdplace) + sp.getInt("third", -1));
+        games.setText(getString(R.string.totalgames) + sp.getInt("games", -1));
+        String temp = sp.getString("times", "");
         Log.i("tag",temp + "d");
         if(temp.equals("")){
             temp = "00:00";
         }
-        fastest.setText("Fastest Game played: " + temp);
+        fastest.setText(getString(R.string.fastestgame) + temp);
     }
     //Closes the window and returns to the start menu
     public void back(View view) {
@@ -67,5 +66,10 @@ public class HighScores extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 }

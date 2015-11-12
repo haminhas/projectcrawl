@@ -1,16 +1,16 @@
-package uk.co.ivaylokhr.crawl;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class Settings extends AppCompatActivity {
+import uk.co.ivaylokhr.crawl.R;
+
+public class Settings extends Activity {
     private  String player1;
     private String player2;
 
@@ -24,10 +24,10 @@ public class Settings extends AppCompatActivity {
         player1 = sp.getString("player1", "");
         player2 = sp.getString("player2", "");
         if (player1.equals("")){
-            player1 = "Player 1";
+            player1 = getString(R.string.player1);
         }
         if (player2.equals("")){
-            player2 = "Player 2";
+            player2 = getString(R.string.player2);
         }
         TextView one = (TextView) findViewById(R.id.editText);
         TextView two = (TextView) findViewById(R.id.editText2);
@@ -45,7 +45,7 @@ public class Settings extends AppCompatActivity {
         String playerr = ""+ two.getText();
         editor.putString("player1", player);
         editor.putString("player2", playerr);
-            editor.commit();
+        editor.commit();
         finish();
     }
 
@@ -75,4 +75,10 @@ public class Settings extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
 }

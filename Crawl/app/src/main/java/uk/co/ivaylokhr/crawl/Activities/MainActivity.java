@@ -1,9 +1,8 @@
-package uk.co.ivaylokhr.crawl;
+package uk.co.ivaylokhr.crawl.Activities;
 
     import android.app.Activity;
     import android.content.Intent;
     import android.content.SharedPreferences;
-    import android.support.v7.app.AppCompatActivity;
     import android.os.Bundle;
     import android.util.TypedValue;
     import android.view.Menu;
@@ -12,14 +11,17 @@ package uk.co.ivaylokhr.crawl;
     import android.widget.Button;
     import android.widget.TextView;
 
-    public class MainActivity extends AppCompatActivity {
-        int players;
+    import uk.co.ivaylokhr.crawl.R;
+
+public class MainActivity extends Activity {
+        private int players;
         public final static String EXTRA_MESSAGE = "uk.co.ivaylokhr.MESSAGE";
-        TextView textView;
-        public Button buttonOne;
-        public Button buttonTwo;
-        public Button buttonThree;
-        public Button buttonFour;
+        private TextView textView;
+        private Button buttonOne;
+        private Button buttonTwo;
+        private Button buttonThree;
+        private Button buttonFour;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -48,8 +50,8 @@ package uk.co.ivaylokhr.crawl;
 
         //starts a one player game
         public void onClickOnePlayer(View view){
-            if (buttonOne.getText().equals("1 player")) {
-                Intent intent = new Intent(this, AIGame.class);
+            if (buttonOne.getText().equals(getString(R.string.oneplayer))) {
+                Intent intent = new Intent(this, AIGameActivity.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
                 startActivity(intent);
@@ -64,11 +66,11 @@ package uk.co.ivaylokhr.crawl;
         //starts a two player game
 
         public void onClickTwoPlayer(View view){
-            if (buttonTwo.getText().equals("2 player")) {
-                buttonOne.setText("Host");
-                buttonTwo.setText("Connect");
-                buttonThree.setText("Back");
-                buttonFour.setText("Share");
+            if (buttonTwo.getText().equals(getString(R.string.twoplayer))) {
+                buttonOne.setText(R.string.host);
+                buttonTwo.setText(R.string.connect);
+                buttonThree.setText(R.string.back);
+                buttonFour.setText(R.string.hotseat);
             }
             else {
                 Integer hosting = 0;
@@ -94,24 +96,24 @@ package uk.co.ivaylokhr.crawl;
         }
 
         public void onClickHighScore(View view){
-            if(buttonFour.getText().equals("Statistics")) {
+            if(buttonFour.getText().equals(getString(R.string.statistics))) {
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
             }else{
-                    Intent intent = new Intent(this, Game.class);
+                    Intent intent = new Intent(this, GameActivity.class);
                     startActivity(intent);
             }
         }
 
         public void onClickSettings(View view){
-            if(buttonThree.getText().equals("Settings")) {
+            if(buttonThree.getText().equals(getString(R.string.settings))) {
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
             }else{
-                buttonOne.setText("1 player");
-                buttonTwo.setText("2 player");
-                buttonThree.setText("Settings");
-                buttonFour.setText("Statistics");
+                buttonOne.setText(R.string.oneplayer);
+                buttonTwo.setText(R.string.twoplayer);
+                buttonThree.setText(R.string.settings);
+                buttonFour.setText(R.string.statistics);
             }
         }
         //TODO: Either use MenuItems or remove this.
@@ -132,6 +134,8 @@ package uk.co.ivaylokhr.crawl;
 
         @Override
         public void onBackPressed(){
-            finish();
+            Intent goHome = new Intent(Intent.ACTION_MAIN);
+            goHome.addCategory(Intent.CATEGORY_HOME);
+            startActivity(goHome);
         }
     }
