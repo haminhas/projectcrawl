@@ -42,6 +42,8 @@ public class AIGame extends Game {
 
     public void setFirstHumanMove(int id){
         humanMoveID = id;
+        player1.setTurn(false);
+        ai.setTurn(true);
     }
 
     public int getFirstHumanMove(){
@@ -310,6 +312,8 @@ public class AIGame extends Game {
             }
             board.getCups()[nextCupID].addMarbles(1);
         }
+        ai.setTurn(false);
+        player1.setTurn(true);
         isFirstTurn = false;
     }
 

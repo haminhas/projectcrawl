@@ -101,6 +101,7 @@ public class AIGameActivity extends Activity {
     //Create the Settings button on click listener
     public void settings(){
         imgButton =(ImageButton)findViewById(R.id.imageButton);
+        final Intent mainMenu = new Intent(this, MainActivity.class);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,10 +121,9 @@ public class AIGameActivity extends Activity {
                 popupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
                 //Creates onClickListener that closes the aiGame and returns to the main menu
                 btnMain.setOnClickListener(new Button.OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
-                        back();
+                        startActivity(mainMenu);
                     }
                 });
                 //Creates onClickListener that closes the settings menu
@@ -267,6 +267,7 @@ public class AIGameActivity extends Activity {
                     playClickSound();
                     if(aiGame.isFirstTurn()){
                         aiGame.setFirstHumanMove(b.getId());
+                        swapEnabledButtonsOnTurnChange();
                         firstAIMove();
                     }
                     else{
@@ -311,6 +312,7 @@ public class AIGameActivity extends Activity {
                 aiGame.applyFirstTurnChanges(humanMove, aiMove);
                 activateAnimation(humanMove, 7);
                 activateAnimation(aiMove, 7);
+                swapEnabledButtonsOnTurnChange();
                 updateBoardView();
             }
         }, 1500);
