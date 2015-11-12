@@ -37,4 +37,6 @@
     <string name="cancel">Cancel</string>
     <string name="mainmenu">Main menu</string>
     <string name="continuestring">Continue</string>
+    <string name="sunka">Sunka</string>
+    <string name="name">Name</string>
 </resources>

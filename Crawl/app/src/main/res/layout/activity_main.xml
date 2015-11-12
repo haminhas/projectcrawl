@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Sunka"
+        android:text="@string/sunka"
         android:id="@+id/textView"
         android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
@@ -24,7 +24,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="1 player"
+        android:text="@string/oneplayer"
         android:id="@+id/button"
         android:onClick="onClickOnePlayer"
         android:layout_toLeftOf="@+id/textView"
@@ -34,7 +34,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Statistics"
+        android:text="@string/statistics"
         android:onClick="onClickHighScore"
         android:id="@+id/button2"
         android:layout_above="@+id/button3"
@@ -44,7 +44,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/settings"
         android:onClick="onClickSettings"
         android:id="@+id/button3"
         android:layout_alignParentBottom="true"
@@ -87,7 +87,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="2 player"
+        android:text="@string/twoplayer"
         android:onClick="onClickTwoPlayer"
         android:id="@+id/button9"
         android:layout_below="@+id/imageView"
