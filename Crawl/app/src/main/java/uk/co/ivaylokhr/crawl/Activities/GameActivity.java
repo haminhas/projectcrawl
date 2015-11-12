@@ -104,6 +104,7 @@ public class GameActivity extends Activity {
     //Create the Settings button on click listener
     private void settings(){
         imgButton =(ImageButton)findViewById(R.id.imageButton);
+        final Intent mainMenu = new Intent(this, MainActivity.class);
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,7 +127,7 @@ public class GameActivity extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        back();
+                        startActivity(mainMenu);
                     }
                 });
                 //Creates onClickListener that closes the settings menu
