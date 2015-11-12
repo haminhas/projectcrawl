@@ -54,8 +54,9 @@ public class Game {
             finalButtonID -= 15;
         }
         if(!isGameFinished()) {
-            checkForAnotherTurn(finalButtonID);
-            forceSwitch();
+            if(!giveAnotherTurn(finalButtonID)) {
+                forceSwitch();
+            }
         }
     }
 
@@ -63,13 +64,14 @@ public class Game {
      * Checks if the last marble landed on the current player's playerCup
      * @param buttonID
      */
-    private void checkForAnotherTurn(int buttonID){
+    private boolean giveAnotherTurn(int buttonID){
         if(player1.getTurn() && buttonID == 7){
-            forceSwitch();
+            return true;
         }
         if(player2.getTurn() && buttonID == 15){
-            forceSwitch();
+            return true;
         }
+        return false;
     }
 
     /**
