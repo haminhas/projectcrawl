@@ -372,8 +372,8 @@ public class AIGame extends Game {
         } else{
             results[0] = player1.getName();
             results[1] = String.valueOf(board.getPlayerCup1Marbles());
-            results[0] = "Computer";
-            results[1] = String.valueOf(board.getPlayerCup2Marbles());
+            results[2] = "Computer";
+            results[3] = String.valueOf(board.getPlayerCup2Marbles());
         }
         return results;
     }

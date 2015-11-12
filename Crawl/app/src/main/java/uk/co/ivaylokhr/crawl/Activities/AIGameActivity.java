@@ -353,7 +353,7 @@ public class AIGameActivity extends Activity {
             }
             if(!aiGame.isFirstTurn()) {
                 if (i == marbles - 1 && aiGame.getBoardCups()[nextCup].isEmpty()) {
-                    if (!aiGame.isPlayerOneTurn() && nextCup > 7) {
+                    if (aiGame.getAIPlayer().getTurn() && nextCup > 7) {
                         playZoomAnimation(buttons[14 - nextCup], i + 1);
                         playZoomAnimation(buttons[15], i + 1);
                     } else if (aiGame.getHumanPlayer().getTurn() && nextCup < 7) {
