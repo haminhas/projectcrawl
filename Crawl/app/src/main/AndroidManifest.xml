@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
         <activity
             android:name=".Activities.MainActivity"
             android:configChanges="orientation"
@@ -14,7 +14,6 @@
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,15 +31,18 @@
         </activity>
         <activity
             android:name=".Activities.HighScores"
-            android:label="@string/title_activity_high_scores" >
+            android:label="@string/title_activity_high_scores"
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".Activities.Bluetooth"
-            android:label="@string/title_activity_bluetooth" >
+            android:label="@string/title_activity_bluetooth"
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".Activities.Settings"
-            android:label="@string/title_activity_set" >
+            android:label="@string/title_activity_set"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 

@@ -39,14 +39,15 @@
             android:layout_height="0dp"
             android:layout_weight="0.2"
             android:layout_gravity="right"
-            android:background="@drawable/pocketbackground"/>
+            android:background="@drawable/pocketbackground"
+            android:textColor="#000000" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.24"
-            android:text="" />
+            android:text=""/>
 
 
     </LinearLayout>
@@ -78,56 +79,64 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.20"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:textColor="#000000">
 
             <Button
                 android:id="@+id/b14"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b13"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b9"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
         </LinearLayout>
 
@@ -149,49 +158,56 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
 
             <Button
                 android:id="@+id/b6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:background="@drawable/pocketbackground"/>
+                android:background="@drawable/pocketbackground"
+                android:textColor="#000000"/>
         </LinearLayout>
         <TextView
             android:id="@+id/player1"
@@ -232,14 +248,16 @@
             android:layout_width="60dp"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            android:background="@drawable/pocketbackground"/>
+            android:background="@drawable/pocketbackground"
+            android:textColor="#000000"/>
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="0.24"
-            android:text="" />
+            android:text=""
+            />
 
     </LinearLayout>
 
