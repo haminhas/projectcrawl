@@ -98,7 +98,6 @@ public class Game {
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
             forceSwitch();
-            checkAreThereMarblesInCups();
             applyFirstTurnChanges(firstID, secondID);
         }
     }
@@ -107,38 +106,34 @@ public class Game {
      * This method loops through the current player's half and determine if you can make a move
      * If there is no valid move, it switches the player to make a move
     */
-     private void checkAreThereMarblesInCups() {
-        if (player1.getTurn()) {
-            for (int i = 0; i < 7; i++) {
+     private boolean areThereValidMoves(Player player) {
+        int cupIndex = 0;
+
+        if(player.equals(player2)) {
+            cupIndex += 8;
+        }
+
+        if (player.getTurn()) {
+            for (int i = cupIndex; i < 7 + cupIndex; i++) {
                 // break if there is a valid move
                 if (board.getCups()[i].getMarbles() > 0) {
-                    return;
-                }
-            }
-        } else if (player2.getTurn()) {
-            for (int i = 8; i < 15; i++) {
-                //break if there is a valid move
-                if (board.getCups()[i].getMarbles() > 0) {
-                    return;
+                    return true;
                 }
             }
         }
-        // if it didn't find marbles in any current player's cup, switch the turn
-        forceSwitch();
+        return false;
     }
 
     /**
      * This forces the switch of turns.It is called when one player doesn't have valid moves
      */
      private void forceSwitch(){
-        if(player1.getTurn()){
+        if(player1.getTurn() && areThereValidMoves(player2)){
             player2.setTurn(true);
             player1.setTurn(false);
-            checkAreThereMarblesInCups();
-        } else {
+        } else if (player2.getTurn() && areThereValidMoves(player1)) {
             player1.setTurn(true);
             player2.setTurn(false);
-            checkAreThereMarblesInCups();
         }
     }
 
