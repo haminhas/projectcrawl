@@ -103,10 +103,12 @@ public class AIGame extends Game {
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         firstButton = id;
         marbles = marblesFromEmptiedCup;
-        //at this point please check if the cup in the array still has the marbles
         putMarblesInNextCups(id, marblesFromEmptiedCup);
+    }
 
-        finalButtonID = id + marblesFromEmptiedCup;
+    public void switchTurnsAfterAITurn(int id, int marblesFromEmptiedCup){
+        //at this point please check if the cup in the array still has the marbles
+        int finalButtonID = id + marblesFromEmptiedCup;
         if (finalButtonID > 15) {
             finalButtonID -= 15;
         }
@@ -350,10 +352,9 @@ public class AIGame extends Game {
         }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
             return board.getPlayerCup2Marbles();
         } else{
-            return 0;
+            return 49;
         }
     }
-
 
     public String[] getFinalResults() {
         String[] results = new String[4];
@@ -370,7 +371,9 @@ public class AIGame extends Game {
             results[1] = String.valueOf(board.getPlayerCup2Marbles());
         } else{
             results[0] = player1.getName();
-            results[2] = ai.getName();
+            results[1] = String.valueOf(board.getPlayerCup1Marbles());
+            results[0] = "Computer";
+            results[1] = String.valueOf(board.getPlayerCup2Marbles());
         }
         return results;
     }

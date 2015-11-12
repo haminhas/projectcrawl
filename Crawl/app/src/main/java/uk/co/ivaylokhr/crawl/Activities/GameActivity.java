@@ -272,7 +272,7 @@ public class GameActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                        activateAnimation(b.getId(), marbles);
+                    activateAnimation(b.getId(), marbles);
                     game.pressCup(b.getId());
                     playClickSound();
                     swapEnabledButtonsOnTurnChange();
@@ -310,13 +310,17 @@ public class GameActivity extends Activity {
                 nextCup += 1;
             }
             playZoomAnimation(buttons[nextCup], i);
-            if(i == marbles -1 && game.isPlayerOneTurn() && game.getBoardCups()[nextCup].isEmpty()){
-                playZoomAnimation(buttons[nextCup+((7-nextCup)*2)], i+1);
-                playZoomAnimation(buttons[7], i+1);
-            }
-            if(i == marbles -1 && !game.isPlayerOneTurn() && game.getBoardCups()[nextCup].isEmpty()){
-                playZoomAnimation(buttons[14-nextCup], i+1);
-                playZoomAnimation(buttons[15], i+1);
+            if(!game.isFirstTurn()){
+                if(i == marbles - 1 && game.getBoardCups()[nextCup].isEmpty()){
+                    if(game.isPlayerOneTurn() && nextCup < 7){
+                        playZoomAnimation(buttons[nextCup+((7-nextCup)*2)], i+1);
+                        playZoomAnimation(buttons[7], i+1);
+                    }
+                    else if(!game.isPlayerOneTurn() && nextCup > 7){
+                        playZoomAnimation(buttons[14-nextCup], i+1);
+                        playZoomAnimation(buttons[15], i+1);
+                    }
+                }
             }
             nextCup += 1;
             if (nextCup > 15){

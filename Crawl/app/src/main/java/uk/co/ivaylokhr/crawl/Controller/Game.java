@@ -288,7 +288,9 @@ public class Game {
             results[1] = String.valueOf(board.getPlayerCup2Marbles());
         } else{
             results[0] = player1.getName();
+            results[1] = String.valueOf(board.getPlayerCup1Marbles());
             results[2] = player2.getName();
+            results[3] = String.valueOf(board.getPlayerCup2Marbles());
         }
         return results;
     }
@@ -307,6 +309,10 @@ public class Game {
 
     public Cup[] getBoardCups(){
         return board.getCups();
+    }
+
+    public boolean isFirstTurn(){
+        return isFirstTurn;
     }
 
 }
