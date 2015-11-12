@@ -15,8 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import uk.co.ivaylokhr.crawl.Controller.AIGame;
+import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
@@ -71,7 +70,6 @@ public class AIGameActivity extends Activity {
         handler.postDelayed(updateTimer, 0);
         buttons = fillButtonsArray();
     }
-
 
     public void addPlayerNames(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
@@ -152,7 +150,6 @@ public class AIGameActivity extends Activity {
             timer.setText(time);
             handler.postDelayed(this, 0);
         }};
-
 
     //warn the player that going back will end his aiGame
     @Override
@@ -355,14 +352,14 @@ public class AIGameActivity extends Activity {
             if(!aiGame.isFirstTurn()) {
                 if (i == marbles - 1 && aiGame.getBoardCups()[nextCup].isEmpty()) {
                     if (aiGame.getAIPlayer().getTurn() && nextCup > 7) {
-                        playZoomAnimation(buttons[14 - nextCup], i + 1);
-                        playZoomAnimation(buttons[15], i + 1);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[14 - nextCup]), (i + 1) * 200);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[15]), (i + 1) * 200);
                     } else if (aiGame.getHumanPlayer().getTurn() && nextCup < 7) {
-                        playZoomAnimation(buttons[nextCup + ((7 - nextCup) * 2)], i + 1);
-                        playZoomAnimation(buttons[7], i + 1);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[nextCup + ((7 - nextCup) * 2)]), (i + 1) * 200);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[7]), (i + 1) * 200);
                     }
                 }
-                playZoomAnimation(buttons[nextCup], i);
+                handler.postDelayed(new AnimationRunnable(this, buttons[nextCup]), i * 200);
                 nextCup += 1;
                 if (nextCup > 15) {
                     nextCup = 0;
@@ -370,15 +367,6 @@ public class AIGameActivity extends Activity {
             }
         }
     }
-
-    //view is the object the animation needs to be aplied to
-    //index is the index in the queue if there needs to be chained with other animations
-    private void playZoomAnimation(View view, int index){
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.zoomanim);
-        animation.setStartOffset(200*index);
-        view.startAnimation(animation);
-    }
-
 
     private void playClickSound(){
         MediaPlayer media = MediaPlayer.create(this, R.raw.click);

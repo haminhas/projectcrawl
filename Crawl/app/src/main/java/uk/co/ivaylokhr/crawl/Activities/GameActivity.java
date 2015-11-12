@@ -14,16 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import uk.co.ivaylokhr.crawl.Model.Cup;
+import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
+import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
 
@@ -152,7 +151,7 @@ public class GameActivity extends Activity {
             long hours = totalTime/3600000;
             long minutes = (totalTime-hours*3600000)/60000;
             long seconds = (totalTime-hours*3600000-minutes*60000)/1000;
-            String time = String.format("%02d:%02d",minutes, seconds);
+            String time = String.format("%02d:%02d", minutes, seconds);
             timer.setText(time);
             handler.postDelayed(this, 0);
         }};
@@ -187,11 +186,6 @@ public class GameActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    //closes window and returns to main menu
-    public void back() {
-        finish();
     }
 
     //set the high score for the least time a game has taken to complete
@@ -274,7 +268,9 @@ public class GameActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                    activateAnimation(b.getId(), marbles);
+                    if(!game.isFirstTurn()){
+                        activateAnimation(b.getId(), marbles);
+                    }
                     game.pressCup(b.getId());
                     playClickSound();
                     swapEnabledButtonsOnTurnChange();
@@ -311,16 +307,17 @@ public class GameActivity extends Activity {
             if (nextCup == 7 && !game.isPlayerOneTurn()){
                 nextCup += 1;
             }
-            playZoomAnimation(buttons[nextCup], i);
+            Button toAnimate = buttons[nextCup];
+            handler.postDelayed(new AnimationRunnable(this, toAnimate), i*200);
             if(!game.isFirstTurn()){
                 if(i == marbles - 1 && game.getBoardCups()[nextCup].isEmpty()){
                     if(game.isPlayerOneTurn() && nextCup < 7){
-                        playZoomAnimation(buttons[nextCup+((7-nextCup)*2)], i+1);
-                        playZoomAnimation(buttons[7], i+1);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[nextCup+((7-nextCup)*2)]), (i+1)*200);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[7]), (i+1)*200);
                     }
                     else if(!game.isPlayerOneTurn() && nextCup > 7){
-                        playZoomAnimation(buttons[14-nextCup], i+1);
-                        playZoomAnimation(buttons[15], i+1);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[14-nextCup]), (i+1)*200);
+                        handler.postDelayed(new AnimationRunnable(this, buttons[15]), (i+1)*200);
                     }
                 }
             }
@@ -329,14 +326,6 @@ public class GameActivity extends Activity {
                 nextCup = 0;
             }
         }
-    }
-
-    //view is the object the animation needs to be aplied to
-    //index is the index in the queue if there needs to be chained with other animations
-    private void playZoomAnimation(View view, int index){
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.zoomanim);
-        animation.setStartOffset(200*index);
-        view.startAnimation(animation);
     }
 
     private void playClickSound(){
