@@ -352,6 +352,14 @@ public class AIGameActivity extends Activity {
                 nextCup += 1;
             }
             playZoomAnimation(buttons[nextCup], i);
+            if(i == marbles -1 && aiGame.isPlayerOneTurn() && aiGame.getBoardCups()[nextCup].isEmpty()){
+                playZoomAnimation(buttons[nextCup+((7-nextCup)*2)], i+1);
+                playZoomAnimation(buttons[7], i+1);
+            }
+            if(i == marbles -1 && !aiGame.isPlayerOneTurn() && aiGame.getBoardCups()[nextCup].isEmpty()){
+                playZoomAnimation(buttons[14-nextCup], i+1);
+                playZoomAnimation(buttons[15], i+1);
+            }
             nextCup += 1;
             if (nextCup > 15){
                 nextCup = 0;

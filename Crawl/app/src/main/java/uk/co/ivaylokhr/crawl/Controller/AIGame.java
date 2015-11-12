@@ -322,10 +322,7 @@ public class AIGame extends Game {
     }
 
     public boolean isPlayerOneTurn() {
-        if(player1.getTurn()) {
-            return true;
-        }
-        return false;
+        return player1.getTurn();
     }
 
     public boolean isGameFinished() {
