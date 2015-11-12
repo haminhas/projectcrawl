@@ -44,10 +44,12 @@ public class Game {
            firstTurnPlay(id);
             return;
         }
+
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         putMarblesInNextCups(id, marblesFromEmptiedCup);
         int finalButtonID = id + marblesFromEmptiedCup;
+
         if(finalButtonID > 15){
             finalButtonID -= 15;
         }
@@ -92,26 +94,10 @@ public class Game {
         }
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
-            switchTurns(firstPlayer);
-
+            forceSwitch();
+            checkAreThereMarblesInCups();
             applyFirstTurnChanges(firstID, secondID);
         }
-    }
-
-    /**
-     * switches turn to the player who is given as a parameter
-     */
-    private void switchTurns(Player player) {
-        if (player.equals(player2)) {
-            player1.setTurn(false);
-            player2.setTurn(true);
-        } else if (player.equals(player1)){
-            player1.setTurn(true);
-            player2.setTurn(false);
-        }
-        //checks if there is a valid method
-        //If not, change the turn to the other player
-        checkAreThereMarblesInCups();
     }
 
     /**
@@ -145,9 +131,13 @@ public class Game {
      */
      private void forceSwitch(){
         if(player1.getTurn()){
-            switchTurns(player2);
+            player2.setTurn(true);
+            player1.setTurn(false);
+            checkAreThereMarblesInCups();
         } else {
-            switchTurns(player1);
+            player1.setTurn(true);
+            player2.setTurn(false);
+            checkAreThereMarblesInCups();
         }
     }
 
@@ -158,7 +148,6 @@ public class Game {
     public boolean isPlayerOneTurn() {
         return player1.getTurn();
     }
-
 
     /**
      * @param idCurrentCup
@@ -213,7 +202,6 @@ public class Game {
         }//END OF FOR LOOP
     }
 
-
     /**
      *  This is called only in the first turn to update the board after both players made their moves
      * @param firstID
@@ -234,7 +222,6 @@ public class Game {
             board.getCups()[nextCupID].addMarbles(1);
         }
     }
-
 
     /**
      * checks if all the cups have been emptied
@@ -272,10 +259,11 @@ public class Game {
         }
     }
 
-
+    /**
+     * @return array with the 2 players and their respective scores
+     */
     public String[] getFinalResults() {
         String[] results = new String[4];
-        //checks who won
         if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
             results[0] = player1.getName();
             results[1] = String.valueOf(board.getPlayerCup1Marbles());
@@ -294,6 +282,8 @@ public class Game {
         }
         return results;
     }
+
+
 
     public Board getBoard(){
         return board;

@@ -7,7 +7,6 @@ public class Cup {
 
     public Cup() {
         marbles = 0;
-        //marbles = 7;
     }
 
     public int getMarbles(){
