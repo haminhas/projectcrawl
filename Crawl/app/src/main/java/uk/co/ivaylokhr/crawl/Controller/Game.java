@@ -42,7 +42,7 @@ public class Game {
     public void pressCup(int id) {
         if(isFirstTurn){
            firstTurnPlay(id);
-            return;
+           return;
         }
 
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
@@ -53,6 +53,7 @@ public class Game {
         if(finalButtonID > 15){
             finalButtonID -= 15;
         }
+
         if(!isGameFinished()) {
             if(!giveAnotherTurn(finalButtonID)) {
                 forceSwitch();
@@ -64,7 +65,7 @@ public class Game {
      * Checks if the last marble landed on the current player's playerCup
      * @param buttonID
      */
-    private boolean giveAnotherTurn(int buttonID){
+    public boolean giveAnotherTurn(int buttonID){
         if(player1.getTurn() && buttonID == 7){
             return true;
         }
