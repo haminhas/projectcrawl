@@ -251,10 +251,11 @@ public class AIGameActivity extends Activity {
 
     private void enableAllButtons() {
         for (int i = 0; i < 7; i++) {
-                buttons[i].setEnabled(true);
+            buttons[i].setEnabled(true);
         }
         for (int i = 7; i < 16; i++) {
             buttons[i].setEnabled(false);
+            buttons[i].setTextColor(Color.DKGRAY);
         }
     }
 
@@ -389,14 +390,17 @@ public class AIGameActivity extends Activity {
             for (int i = 0; i < 7; i++) {
                 if (aiGame.getBoardCups()[i].getMarbles() > 0){
                     buttons[i].setEnabled(true);
+                    buttons[i].setTextColor(Color.BLACK);
                 }
                 else{
                     buttons[i].setEnabled(false);
+                    buttons[i].setTextColor(Color.DKGRAY);
                 }
             }
         }else{
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.DKGRAY);
             }
         }
     }

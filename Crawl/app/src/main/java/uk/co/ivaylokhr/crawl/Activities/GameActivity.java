@@ -259,8 +259,10 @@ public class GameActivity extends Activity {
             //ignore the player cups
             if (i == 7 || i == 15) {
                 buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.DKGRAY);
             } else {
                 buttons[i].setEnabled(true);
+                buttons[i].setTextColor(Color.BLACK);
             }
         }
     }
@@ -347,23 +349,29 @@ public class GameActivity extends Activity {
             for (int i = 0; i < 7; i++) {
                 if(game.getBoardCups()[i].getMarbles() == 0) {
                     buttons[i].setEnabled(false);
+                    buttons[i].setTextColor(Color.DKGRAY);
                 } else {
                     buttons[i].setEnabled(true);
+                    buttons[i].setTextColor(Color.BLACK);
                 }
             }
             for (int i = 8; i < 15; i++) {
                 buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.DKGRAY);
             }
         }else{
             for (int i = 0; i < 7; i++) {
                 buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.DKGRAY);
             }
 
             for (int i = 8; i < 15; i++) {
                 if(game.getBoardCups()[i].getMarbles() == 0) {
                     buttons[i].setEnabled(false);
+                    buttons[i].setTextColor(Color.DKGRAY);
                 } else {
                     buttons[i].setEnabled(true);
+                    buttons[i].setTextColor(Color.BLACK);
                 }
             }
         }
