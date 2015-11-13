@@ -120,13 +120,13 @@ public class AIGame extends Game {
      */
     //should @Override if this methos goes public in Game
     public void applyFirstTurnChanges(int firstID, int secondID){
-        ((PocketCup)board.getCups()[firstID]).emptyCup();
-        for (int i = 1; i < 8; i++){
+        int humanMoveMarbles = ((PocketCup)board.getCups()[firstID]).emptyCup();
+        int aiMovieMarbles = ((PocketCup)board.getCups()[secondID]).emptyCup();
+        for (int i = 1; i < humanMoveMarbles + 1; i++){
             int nextCupID = i + firstID;
             board.getCups()[nextCupID].addMarbles(1);
         }
-        ((PocketCup)board.getCups()[secondID]).emptyCup();
-        for(int i = 1; i < 8; i++){
+        for(int i = 1; i < aiMovieMarbles + 1; i++){
             int nextCupID = i + secondID;
             if(nextCupID > 15){
                 nextCupID -= 16;

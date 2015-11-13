@@ -197,13 +197,13 @@ public class Game {
      * @param secondID
      */
     private void applyFirstTurnChanges(int firstID, int secondID){
-        ((PocketCup)board.getCups()[firstID]).emptyCup();
-        ((PocketCup)board.getCups()[secondID]).emptyCup();
-        for (int i = 1; i < 8; i++){
+        int firstCupMarbles = ((PocketCup)board.getCups()[firstID]).emptyCup();
+        int secondCupMarbles = ((PocketCup)board.getCups()[secondID]).emptyCup();
+        for (int i = 1; i < firstCupMarbles + 1; i++){
             int nextCupID = i + firstID;
             board.getCups()[nextCupID].addMarbles(1);
         }
-        for(int i = 1; i < 8; i++){
+        for(int i = 1; i < secondCupMarbles + 1; i++){
             int nextCupID = i + secondID;
             if(nextCupID > 15){
                 nextCupID -= 16;
