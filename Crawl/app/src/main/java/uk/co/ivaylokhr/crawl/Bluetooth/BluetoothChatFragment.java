@@ -267,8 +267,8 @@ public class BluetoothChatFragment extends Fragment {
                         case BluetoothChatService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             mConversationArrayAdapter.clear();
+                            ButtonPressed("start");
                             connect();
-                            ButtonPressed("newgame");
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
@@ -278,7 +278,7 @@ public class BluetoothChatFragment extends Fragment {
                             disconnect();
                         case BluetoothChatService.STATE_NONE:
                             setStatus(R.string.title_not_connected);
-                            setPlayerOne(false);
+                            ButtonPressed("no");
                             disconnect();
                             break;
                     }
@@ -326,6 +326,7 @@ public class BluetoothChatFragment extends Fragment {
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
                     connectDevice(data, true);
+                    ButtonPressed("yes");
                 }
                 break;
             case REQUEST_CONNECT_DEVICE_INSECURE:

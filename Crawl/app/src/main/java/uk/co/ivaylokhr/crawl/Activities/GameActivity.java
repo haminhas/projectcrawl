@@ -272,7 +272,12 @@ public class GameActivity extends AppCompatActivity {
                 if(bluetoothPressed.getText().equals("")){
                     return;
                 }
-                if(bluetoothPressed.getText().equals("newgame")){
+                if(bluetoothPressed.getText().equals("yes")){
+                    arePlayerOne = true;
+                    return;
+                }
+                if(bluetoothPressed.getText().equals("no")){
+                    arePlayerOne = false;
                     return;
                 }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
@@ -402,9 +407,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void swapEnabledButtonsOnTurnChange() {
+        Log.i("tag","che4");
         if(fragment.getState()){
+            Log.i("tag","che3");
             if (game.isPlayerOneTurn()) {
                 for (int i = 0; i < 7; i++) {
+                    Log.i("tag","che2");
                     if (game.getBoardCups()[i].getMarbles() == 0) {
                         buttons[i].setEnabled(false);
                         buttons[i].setTextColor(Color.DKGRAY);
@@ -421,6 +429,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             } else {
                 for (int i = 0; i < 7; i++) {
+                    Log.i("tag","che1");
                     buttons[i].setEnabled(false);
                     buttons[i].setTextColor(Color.DKGRAY);
                 }
