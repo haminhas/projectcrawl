@@ -439,7 +439,12 @@ public class AIGameActivity extends Activity {
 
     //This method edits the highscores after the aiGame
     public void updateScores() {
-        Integer score = aiGame.checkWinnerScore();
+        Integer score;
+        if(aiGame.checkWinner().equals(aiGame.getPlayer1())) {
+            score = aiGame.getBoard().getPlayerCup1Marbles();
+        } else {
+            score = aiGame.getBoard().getPlayerCup2Marbles();
+        }
         Integer one = Preferences.fromPreferences(this.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");

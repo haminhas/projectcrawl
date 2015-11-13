@@ -12,7 +12,7 @@ import uk.co.ivaylokhr.crawl.Model.PocketCup;
  */
 public class AIGame extends Game {
 
-    private Player ai;
+    private Player aiPlayer;
     private int firstButton;
     private int marbles;
     //first turn stff
@@ -21,8 +21,8 @@ public class AIGame extends Game {
         firstButton = 0;
         marbles = 0;
         player1 = new Player();
-        ai = new Player();
-        player2 = ai;
+        aiPlayer = new Player();
+        player2 = aiPlayer;
         board = new Board();
         isDraw = false;
         initialiseVariablesFirstTurn();
@@ -35,13 +35,13 @@ public class AIGame extends Game {
         isFirstTurn = true;
         firstID = -1;
         player1.setTurn(true);
-        ai.setTurn(false);
+        aiPlayer.setTurn(false);
     }
 
     public void setFirstHumanMove(int id){
         firstID = id;
         player1.setTurn(false);
-        ai.setTurn(true);
+        aiPlayer.setTurn(true);
     }
 
     public int generateFirstAIMove(){
@@ -133,15 +133,9 @@ public class AIGame extends Game {
             }
             board.getCups()[nextCupID].addMarbles(1);
         }
-        ai.setTurn(false);
+        aiPlayer.setTurn(false);
         player1.setTurn(true);
         isFirstTurn = false;
-    }
-
-    @Override
-    //always use the human score
-    public int checkWinnerScore() {
-        return board.getPlayerCup1Marbles();
     }
 
     public int returnMarbles(){
