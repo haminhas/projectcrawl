@@ -8,6 +8,8 @@ import android.test.TouchUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.jar.Manifest;
@@ -31,14 +33,15 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<Settings> {
         super(Settings.class);
     }
 
+    @Before
     protected void setUp() throws Exception {
         super.setUp();
         mActivity = this.getActivity();
         one = (EditText) mActivity.findViewById(R.id.editText);
         two = (EditText) mActivity.findViewById(R.id.editText2);
         save1 = (Button) mActivity.findViewById(R.id.button6);
-        s = mActivity.player1;
-        s2 = mActivity.player2;
+        s = mActivity.getPlayer1();
+        s2 = mActivity.getPlayer2();
         mMainIntent = new Intent(Intent.ACTION_MAIN);
 
     }
@@ -68,6 +71,8 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<Settings> {
         TouchUtils.clickView(this, cancel);
     }
 
+    @Ignore
+    @Test
     public void testCancel() {
         // register next activity that need to be monitored.
         Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);

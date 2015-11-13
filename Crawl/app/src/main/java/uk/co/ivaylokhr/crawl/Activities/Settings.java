@@ -11,8 +11,8 @@ import android.widget.TextView;
 import uk.co.ivaylokhr.crawl.R;
 
 public class Settings extends Activity {
-    public String player1;
-    public String player2;
+    private String player1;
+    private String player2;
 
     //create new window that lets you change the player names
     @Override
@@ -81,4 +81,11 @@ public class Settings extends Activity {
         finish();
     }
 
+    public String getPlayer1() {
+        return player1;
+    }
+
+    public String getPlayer2() {
+        return player2;
+    }
 }
