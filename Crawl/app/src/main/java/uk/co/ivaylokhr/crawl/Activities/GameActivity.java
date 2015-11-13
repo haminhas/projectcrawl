@@ -47,11 +47,23 @@ public class GameActivity extends AppCompatActivity {
     private TextView playerOneLabelName;
     private TextView bluetoothPressed;
     private TextView playerTwoLabelName;
-
+    private boolean arePlayerOne;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        bluetoothPressed = (TextView) findViewById(R.id.textView18);
+        initBluetooth();
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            fragment = new BluetoothChatFragment();
+            bluetoothHandler = fragment.returnHandler();
+            transaction.replace(R.id.sample_content_fragment, fragment);
+            fragment.addText(bluetoothPressed);
+            fragment.playerOneRetrieve(arePlayerOne);
+            arePlayerOne = false;
+            transaction.commit();
+        }
         initialiseGame();
         initializeButtons();
         increaseGamesPlayed();
@@ -60,15 +72,6 @@ public class GameActivity extends AppCompatActivity {
         updateView();
         settings();
 
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            fragment = new BluetoothChatFragment();
-            bluetoothHandler = fragment.returnHandler();
-            transaction.replace(R.id.sample_content_fragment, fragment);
-            transaction.commit();
-            fragment.addText(bluetoothPressed);
-        }
-        initBluetooth();
     }
 
     @Override
@@ -87,9 +90,9 @@ public class GameActivity extends AppCompatActivity {
 
     private void initialiseGame() {
         game = new Game();
+        arePlayerOne = false;
         turn = (TextView) findViewById(R.id.turn);
         timer = (TextView) findViewById(R.id.Timer);
-        bluetoothPressed = (TextView) new TextView(null);
         bluetoothPressed.setText("");
         playerOneLabelName = (TextView) findViewById(R.id.player1);
         playerTwoLabelName = (TextView) findViewById(R.id.player2);
@@ -269,6 +272,9 @@ public class GameActivity extends AppCompatActivity {
                 if(bluetoothPressed.getText().equals("")){
                     return;
                 }
+                if(bluetoothPressed.getText().equals("newgame")){
+                    return;
+                }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
         int marbles = game.getBoardCups()[b.getId()].getMarbles();
         if(!game.isFirstTurn()){
@@ -309,7 +315,9 @@ public class GameActivity extends AppCompatActivity {
                 buttons[i].setEnabled(true);
                 buttons[i].setTextColor(Color.BLACK);
             }
+
         }
+
     }
 
     //Initialize onClickListener and update the view of all the buttons on board
@@ -328,8 +336,8 @@ public class GameActivity extends AppCompatActivity {
                     playClickSound();
                     swapEnabledButtonsOnTurnChange();
                     updateBoardView();
-                    popUpGameFinished();
                     if(game.isGameFinished()){
+                        popUpGameFinished();
                         updateScores();
                     }
                 }
@@ -394,33 +402,70 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void swapEnabledButtonsOnTurnChange() {
-        if(game.getPlayer1().getTurn()){
-            for (int i = 0; i < 7; i++) {
-                if(game.getBoardCups()[i].getMarbles() == 0) {
+        if(fragment.getState()){
+            if (game.isPlayerOneTurn()) {
+                for (int i = 0; i < 7; i++) {
+                    if (game.getBoardCups()[i].getMarbles() == 0) {
+                        buttons[i].setEnabled(false);
+                        buttons[i].setTextColor(Color.DKGRAY);
+                    } else {
+                        if(arePlayerOne) {
+                            buttons[i].setEnabled(true);
+                        }
+                        buttons[i].setTextColor(Color.BLACK);
+                    }
+                }
+                for (int i = 8; i < 15; i++) {
                     buttons[i].setEnabled(false);
                     buttons[i].setTextColor(Color.DKGRAY);
-                } else {
-                    buttons[i].setEnabled(true);
-                    buttons[i].setTextColor(Color.BLACK);
+                }
+            } else {
+                for (int i = 0; i < 7; i++) {
+                    buttons[i].setEnabled(false);
+                    buttons[i].setTextColor(Color.DKGRAY);
+                }
+
+                for (int i = 8; i < 15; i++) {
+                    if (game.getBoardCups()[i].getMarbles() == 0) {
+                        buttons[i].setEnabled(false);
+                        buttons[i].setTextColor(Color.DKGRAY);
+                    } else {
+                        if(!arePlayerOne) {
+                            buttons[i].setEnabled(true);
+                        }
+                        buttons[i].setTextColor(Color.BLACK);
+                    }
                 }
             }
-            for (int i = 8; i < 15; i++) {
-                buttons[i].setEnabled(false);
-                buttons[i].setTextColor(Color.DKGRAY);
-            }
-        }else{
-            for (int i = 0; i < 7; i++) {
-                buttons[i].setEnabled(false);
-                buttons[i].setTextColor(Color.DKGRAY);
-            }
-
-            for (int i = 8; i < 15; i++) {
-                if(game.getBoardCups()[i].getMarbles() == 0) {
+        }else {
+            if (game.isPlayerOneTurn()) {
+                for (int i = 0; i < 7; i++) {
+                    if (game.getBoardCups()[i].getMarbles() == 0) {
+                        buttons[i].setEnabled(false);
+                        buttons[i].setTextColor(Color.DKGRAY);
+                    } else {
+                            buttons[i].setEnabled(true);
+                            buttons[i].setTextColor(Color.BLACK);
+                    }
+                }
+                for (int i = 8; i < 15; i++) {
                     buttons[i].setEnabled(false);
                     buttons[i].setTextColor(Color.DKGRAY);
-                } else {
-                    buttons[i].setEnabled(true);
-                    buttons[i].setTextColor(Color.BLACK);
+                }
+            } else {
+                for (int i = 0; i < 7; i++) {
+                    buttons[i].setEnabled(false);
+                    buttons[i].setTextColor(Color.DKGRAY);
+                }
+
+                for (int i = 8; i < 15; i++) {
+                    if (game.getBoardCups()[i].getMarbles() == 0) {
+                        buttons[i].setEnabled(false);
+                        buttons[i].setTextColor(Color.DKGRAY);
+                    } else {
+                        buttons[i].setEnabled(true);
+                        buttons[i].setTextColor(Color.BLACK);
+                    }
                 }
             }
         }
