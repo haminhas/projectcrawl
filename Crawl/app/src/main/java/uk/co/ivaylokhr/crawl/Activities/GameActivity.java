@@ -148,6 +148,8 @@ public class GameActivity extends AppCompatActivity {
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
+                Button btnConnect = (Button) popupView.findViewById(R.id.connect);
+                Button btnHost = (Button) popupView.findViewById(R.id.host);
                 popupWindow.setFocusable(true);
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -158,6 +160,20 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         startActivity(mainMenu);
+                    }
+                });
+                btnConnect.setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        fragment.connectBluetooth();
+                    }
+                });
+                btnHost.setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        fragment.discoverable();
                     }
                 });
                 //Creates onClickListener that closes the settings menu

@@ -400,6 +400,14 @@ public class BluetoothChatFragment extends Fragment {
         }
         return false;
     }
+    public void connectBluetooth(){
+        Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+        startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+    }
+    public void discoverable(){
+        // Ensure this device is discoverable by others
+        ensureDiscoverable();
+    }
 
 
     public void addText(TextView bluetoothPressed) {
