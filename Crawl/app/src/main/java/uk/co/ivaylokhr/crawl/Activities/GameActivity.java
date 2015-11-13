@@ -45,6 +45,7 @@ public class GameActivity extends AppCompatActivity {
     private android.os.Handler bluetoothHandler;
     private TextView turn;
     private TextView playerOneLabelName;
+    private TextView bluetoothPressed;
     private TextView playerTwoLabelName;
 
     @Override
@@ -65,7 +66,9 @@ public class GameActivity extends AppCompatActivity {
             bluetoothHandler = fragment.returnHandler();
             transaction.replace(R.id.sample_content_fragment, fragment);
             transaction.commit();
+            fragment.addText(bluetoothPressed);
         }
+        initBluetooth();
     }
 
     @Override
@@ -75,13 +78,19 @@ public class GameActivity extends AppCompatActivity {
         return true;
     }
 
-    public void sendMessage(View view){
-        fragment.sendMessage("test");
+    public void sendMessage(String cup){
+
+        if(fragment.getState()) {
+            fragment.sendMessage(cup);
+        }
     }
+
     private void initialiseGame() {
         game = new Game();
         turn = (TextView) findViewById(R.id.turn);
         timer = (TextView) findViewById(R.id.Timer);
+        bluetoothPressed = (TextView) new TextView(null);
+        bluetoothPressed.setText("");
         playerOneLabelName = (TextView) findViewById(R.id.player1);
         playerTwoLabelName = (TextView) findViewById(R.id.player2);
         startTime = System.currentTimeMillis();
@@ -253,6 +262,43 @@ public class GameActivity extends AppCompatActivity {
         return buttons;
     }
 
+    public void initBluetooth() {
+        bluetoothPressed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bluetoothPressed.getText().equals("")){
+                    return;
+                }
+        Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
+        int marbles = game.getBoardCups()[b.getId()].getMarbles();
+        if(!game.isFirstTurn()){
+            activateAnimation(b.getId(), marbles);
+        }
+        game.pressCup(b.getId());
+        playClickSound();
+        swapEnabledButtonsOnTurnChange();
+        updateBoardView();
+        if(game.isGameFinished()){
+            updateScores();
+            popUpGameFinished();
+        }
+            }
+        });
+    }
+
+
+    //This is for the dialog. It goes to the main menu if you say you want to
+    public class GoToActivityListener implements DialogInterface.OnClickListener{
+        private Intent activity;
+        public GoToActivityListener(Intent intent){
+            activity = intent;
+        }
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            startActivity(activity);
+        }
+    }
+
     private void enableAllButtons() {
         for (int i = 0; i < buttons.length; i++) {
             //ignore the player cups
@@ -277,17 +323,14 @@ public class GameActivity extends AppCompatActivity {
                         swapEnabledButtonsOnTurnChange();
                         updateBoardView();
                     }
-                    else{
-                        int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                        activateAnimation(b.getId(), marbles);
-                        game.pressCup(b.getId());
-                        playClickSound();
-                        swapEnabledButtonsOnTurnChange();
-                        updateBoardView();
-                        if(game.isGameFinished()){
-                            updateScores();
-                            popUpGameFinished();
-                        }
+                    game.pressCup(b.getId());
+                    sendMessage(String.valueOf(b.getId()));
+                    playClickSound();
+                    swapEnabledButtonsOnTurnChange();
+                    updateBoardView();
+                    popUpGameFinished();
+                    if(game.isGameFinished()){
+                        updateScores();
                     }
                 }
             });

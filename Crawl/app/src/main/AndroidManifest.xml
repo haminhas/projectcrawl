@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.co.ivaylokhr.crawl" >
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
@@ -16,6 +17,7 @@
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -42,14 +44,13 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".End"
+            android:name=".Activities.End"
             android:label="@string/title_activity_end" >
         </activity>
         <activity
-            android:name=".DeviceListActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/select_device"
-            android:theme="@android:style/Theme.Holo.Dialog"/>
+            android:name=".Bluetooth.DeviceListActivity"
+            android:label="@string/title_activity_device_list" >
+        </activity>
     </application>
 
 </manifest>
