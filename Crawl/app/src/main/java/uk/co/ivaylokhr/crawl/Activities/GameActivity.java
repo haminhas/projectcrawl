@@ -280,6 +280,10 @@ public class GameActivity extends AppCompatActivity {
                     arePlayerOne = false;
                     return;
                 }
+                if(bluetoothPressed.getText().equals("start")){
+                    startBluetooth();
+                    return;
+                }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
         int marbles = game.getBoardCups()[b.getId()].getMarbles();
         if(!game.isFirstTurn()){
@@ -294,9 +298,27 @@ public class GameActivity extends AppCompatActivity {
             popUpGameFinished();
         }
             }
+
+
         });
     }
 
+
+    private void startBluetooth() {
+        for (int i = 0; i < 7; i++) {
+            if(!arePlayerOne){
+                buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.BLACK);
+            }
+        }
+        for (int i = 8; i < 15; i++) {
+            if(arePlayerOne){
+                buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.BLACK);
+            }
+        }
+        startTime = System.currentTimeMillis();
+    }
 
     //This is for the dialog. It goes to the main menu if you say you want to
     public class GoToActivityListener implements DialogInterface.OnClickListener{
@@ -361,12 +383,22 @@ public class GameActivity extends AppCompatActivity {
             message = "Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3];
         }
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
-        Intent mainMenu = new Intent(this, MainActivity.class);
-        Intent newGame = new Intent(this, GameActivity.class);
         optionpane.setTitle("Game Finished");
-        optionpane.setMessage(message).setCancelable(false)
-                .setPositiveButton("Main Menu", new GoToActivityListener(this, mainMenu))
-                .setNegativeButton("Play Again", new GoToActivityListener(this, newGame));
+
+        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
+                .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+        optionpane.setNegativeButton("Play Again", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
+
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }
