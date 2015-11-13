@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import uk.co.ivaylokhr.crawl.Model.Board;
-import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Player;
 import uk.co.ivaylokhr.crawl.Model.PocketCup;
 
@@ -13,20 +12,19 @@ import uk.co.ivaylokhr.crawl.Model.PocketCup;
  */
 public class AIGame extends Game {
 
-    private Player player1, ai;
-    private Board board;
+    private Player aiPlayer;
     private int firstButton;
     private int marbles;
     //first turn stff
-    private boolean isFirstTurn;
-    private int humanMoveID;
 
     public AIGame() {
         firstButton = 0;
         marbles = 0;
         player1 = new Player();
-        ai = new Player();
+        aiPlayer = new Player();
+        player2 = aiPlayer;
         board = new Board();
+        isDraw = false;
         initialiseVariablesFirstTurn();
     }
 
@@ -35,19 +33,15 @@ public class AIGame extends Game {
      */
     private void initialiseVariablesFirstTurn(){
         isFirstTurn = true;
-        humanMoveID = -1;
+        firstID = -1;
         player1.setTurn(true);
-        ai.setTurn(false);
+        aiPlayer.setTurn(false);
     }
 
     public void setFirstHumanMove(int id){
-        humanMoveID = id;
+        firstID = id;
         player1.setTurn(false);
-        ai.setTurn(true);
-    }
-
-    public int getFirstHumanMove(){
-        return humanMoveID;
+        aiPlayer.setTurn(true);
     }
 
     public int generateFirstAIMove(){
@@ -56,37 +50,17 @@ public class AIGame extends Game {
         return aiMoveID;
     }
 
-    /**
-     * Action triggered when you press a Cup on the screen
-     * @param id
-     * @return
-     */
-    public void pressCup(int id) {
-        PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
-        int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
-        putMarblesInNextCups(id, marblesFromEmptiedCup);
-        int finalButtonID = id + marblesFromEmptiedCup;
-        if (finalButtonID > 15) {
-            finalButtonID -= 15;
-        }
-        if (!isGameFinished()) {
-            checkForAnotherTurn(finalButtonID);
-            forceSwitch();
-        }
-    }
-
     public void doMove(){
-        int finalButtonID =0;
         //get id of the pressed cup
-        ArrayList<PocketCup> temp = new ArrayList<>();
+        ArrayList<Integer> temp = new ArrayList<>();
         //Assuming ai player is at the top
         for (int i = 8; i < 15; i++) {
             if (!board.getCups()[i].isEmpty()) {
-                temp.add((PocketCup)board.getCups()[i]);
+                temp.add(i);
             }
         }
         if(temp.isEmpty()){
-            forceSwitch();
+            switchTurn();
             return;
         }
         int id;
@@ -96,7 +70,7 @@ public class AIGame extends Game {
             id = opposite();
         }else{
             Random rand = new Random();
-            id = rand.nextInt(6) + 8;
+            id = temp.get(rand.nextInt(temp.size()));
         }
         //empty cup
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
@@ -112,9 +86,8 @@ public class AIGame extends Game {
         if (finalButtonID > 15) {
             finalButtonID -= 15;
         }
-        if (!isGameFinished()) {
-            checkForAnotherTurn(finalButtonID);
-            forceSwitch();
+        if (!isGameFinished() && !giveAnotherTurn(finalButtonID)) {
+            switchTurn();
         }
     }
 
@@ -140,97 +113,29 @@ public class AIGame extends Game {
         return -1;
     }
 
-    private void checkForAnotherTurn(int another){
-        if(player1.getTurn() && another == 7){
-            forceSwitch();
-        }
-        if(ai.getTurn() && another == 15) {
-            forceSwitch();
-        }
-    }
-
-
     /**
-     * switches turn to the player who is given as a parameter
+     *  This is called only in the first turn to update the board after both players made their moves
+     * @param firstID
+     * @param secondID
      */
-    private void switchTurns(Player player) {
-        if (player.equals(ai)) {
-            player1.setTurn(false);
-            ai.setTurn(true);
-        } else if (player.equals(player1)){
-            player1.setTurn(true);
-            ai.setTurn(false);
+    //should @Override if this methos goes public in Game
+    public void applyFirstTurnChanges(int firstID, int secondID){
+        ((PocketCup)board.getCups()[firstID]).emptyCup();
+        for (int i = 1; i < 8; i++){
+            int nextCupID = i + firstID;
+            board.getCups()[nextCupID].addMarbles(1);
         }
-        //checks if there is a valid method
-        //If not, change the turn to the other player
-        checkAreThereMarblesInCups();
-    }
-
-    /**
-     * This method loops through the current player's half and determine if you can make a move
-     * If there is no valid move, it switches the player to make a move
-     */
-    private void checkAreThereMarblesInCups() {
-        if (player1.getTurn()) {
-            //loops through the half ot player 1
-            for (int i = 0; i < 7; i++) {
-                // break if there is a valid move
-                if (!((PocketCup) board.getCups()[i]).isEmpty()) {
-                    return;
-                }
+        ((PocketCup)board.getCups()[secondID]).emptyCup();
+        for(int i = 1; i < 8; i++){
+            int nextCupID = i + secondID;
+            if(nextCupID > 15){
+                nextCupID -= 16;
             }
-        } else if (ai.getTurn()) {
-            //loops through the half ot player 2
-            for (int i = 8; i < 15; i++) {
-                //break if there is a valid move
-                if (!((PocketCup) board.getCups()[i]).isEmpty()) {
-                    return;
-                }
-            }
+            board.getCups()[nextCupID].addMarbles(1);
         }
-        // if it didn't break, force the switch of turns
-        if(!isGameFinished()){
-            forceSwitch();
-        }
-    }
-
-    /**
-     * This forces the switch of turns.It is called when one player doesn't have valid moves
-     */
-    private void forceSwitch(){
-        if(player1.getTurn()){
-            switchTurns(ai);
-        } else {
-            switchTurns(player1);
-        }
-    }
-
-    /**
-     * decides which turn is next depending on the id of the final marblees that has been put
-     * @param finalButtonID
-     * @return
-     */
-    private boolean isPlayerOneTurn(int finalButtonID) {
-        boolean playerOneTurn = false;
-        if (player1.getTurn() && finalButtonID != 7) {
-            switchTurns(ai);
-        }
-        //if it landed on the player1 cup and is his turn
-        //we need this to make the button disabled
-        else if (player1.getTurn()) {
-            switchTurns(player1);
-        } else if (ai.getTurn() && finalButtonID != 15) {
-            switchTurns(player1);
-        }
-        //if it landed on the ai cup and is his turn
-        //we need this to make the button disabled
-        else if (ai.getTurn()) {
-            switchTurns(ai);
-        }
-        if(player1.getTurn()){
-            playerOneTurn = true;
-        }
-        return playerOneTurn;
+        aiPlayer.setTurn(false);
+        player1.setTurn(true);
+        isFirstTurn = false;
     }
 
     public int returnMarbles(){
@@ -241,157 +146,12 @@ public class AIGame extends Game {
         return firstButton;
     }
 
-    /**
-     * @param idCurrentCup
-     * @param marblesFromEmptiedCup
-     */
-    private void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
-        int cupNumber = idCurrentCup + 1;
-        for (int i = 0; i < marblesFromEmptiedCup; i++) {
-            //condition for when the cup is a playerCup
-            if (cupNumber == 7) {
-                if (player1.getTurn()) {
-                    board.getPlayerCup1().addMarbles(1);
-                    cupNumber++;
-                    continue;
-                }
-                cupNumber++;
-            } else if (cupNumber == 15) {
-                if (ai.getTurn()) {
-                    board.getPlayerCup2().addMarbles(1);
-                    cupNumber = 0;
-                    continue;
-                }
-                cupNumber = 0;
-            }
-            PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
-            //check at the last iteration if cup is empty
-            if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
-                PocketCup oppositeCup;
-                if (player1.getTurn() && cupNumber < 7) {
-                    oppositeCup = (PocketCup) board.getCups()[cupNumber + ((7 - cupNumber) * 2)];
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //take last marble from the cup alongside the opposite cup's one.
-                    nextPocketCup.addMarbles(-1);
-                    board.getPlayerCup1().addMarbles(oppositeCupNumbers + 1);
-                } else if (ai.getTurn() && cupNumber > 7 && cupNumber < 15) {
-                    oppositeCup = (PocketCup) board.getCups()[(14 - cupNumber)];
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //take last marble from the cup alongside the opposite cup's one.
-                    nextPocketCup.addMarbles(-1);
-                    board.getPlayerCup2().addMarbles(oppositeCupNumbers + 1);
-                }
-            }
-
-            nextPocketCup.addMarbles(1);
-
-            cupNumber++;
-            //stay in the range of 16 cups.
-            if (cupNumber > 15) {
-                cupNumber = 0;
-            }
-
-        }//END OF FOR LOOP
-    }
-
-
-    /**
-     *  This is called only in the first turn to update the board after both players made their moves
-     * @param firstID
-     * @param secondID
-     */
-    public void applyFirstTurnChanges(int firstID, int secondID){
-        ((PocketCup)board.getCups()[firstID]).emptyCup();
-        ((PocketCup)board.getCups()[secondID]).emptyCup();
-        for (int i = 1; i < 8; i++){
-            int nextCupID = i + firstID;
-            board.getCups()[nextCupID].addMarbles(1);
-        }
-        for(int i = 1; i < 8; i++){
-            int nextCupID = i + secondID;
-            if(nextCupID > 15){
-                nextCupID -= 16;
-            }
-            board.getCups()[nextCupID].addMarbles(1);
-        }
-        ai.setTurn(false);
-        player1.setTurn(true);
-        isFirstTurn = false;
-    }
-
-    public Board getBoard(){
-        return board;
-    }
-
-    public boolean isPlayerOneTurn() {
-        return player1.getTurn();
-    }
-
-    public boolean isGameFinished() {
-        //check if game is finished
-        for (int i = 0; i < board.getCups().length; i++) {
-            if (i != 7 && i != 15) {
-                PocketCup pocketCup = (PocketCup) board.getCups()[i];
-                if (!pocketCup.isEmpty()) {
-                    break;
-                }
-            }
-
-            if (i == 14) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
-    public int checkWinnerScore() {
-        //checks who won
-        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
-            return board.getPlayerCup1Marbles();
-        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
-            return board.getPlayerCup2Marbles();
-        } else{
-            return 49;
-        }
-    }
-
-    public String[] getFinalResults() {
-        String[] results = new String[4];
-        //checks who won
-        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
-            results[0] = player1.getName();
-            results[1] = String.valueOf(board.getPlayerCup1Marbles());
-            results[2] = "Computer";
-            results[3] = String.valueOf(board.getPlayerCup2Marbles());
-        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
-            results[2] = player1.getName();
-            results[3] = String.valueOf(board.getPlayerCup1Marbles());
-            results[0] = "Computer";
-            results[1] = String.valueOf(board.getPlayerCup2Marbles());
-        } else{
-            results[0] = player1.getName();
-            results[1] = String.valueOf(board.getPlayerCup1Marbles());
-            results[2] = "Computer";
-            results[3] = String.valueOf(board.getPlayerCup2Marbles());
-        }
-        return results;
+    public Player getHumanPlayer(){
+        return getPlayer1();
     }
 
     public Player getAIPlayer(){
-        return ai;
-    }
-
-    public Player getHumanPlayer(){
-        return player1;
-    }
-
-    public Cup[] getBoardCups(){
-        return board.getCups();
-    }
-
-    public boolean isFirstTurn(){
-        return isFirstTurn;
+        return getPlayer2();
     }
 
 }
