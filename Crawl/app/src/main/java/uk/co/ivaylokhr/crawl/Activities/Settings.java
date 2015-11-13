@@ -11,8 +11,8 @@ import android.widget.TextView;
 import uk.co.ivaylokhr.crawl.R;
 
 public class Settings extends Activity {
-    private  String player1;
-    private String player2;
+    public String player1;
+    public String player2;
 
     //create new window that lets you change the player names
     @Override
