@@ -404,7 +404,12 @@ public class GameActivity extends Activity {
 
     //This method edits the highscores after the game
     public void updateScores() {
-        Integer score = game.checkWinnerScore();
+        Integer score ;
+        if(game.checkWinner().equals(game.getPlayer1())) {
+            score = game.getBoard().getPlayerCup1Marbles();
+        } else {
+            score = game.getBoard().getPlayerCup2Marbles();
+        }
         Integer one = Preferences.fromPreferences(this.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");

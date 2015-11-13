@@ -19,7 +19,6 @@ public class GameTest {
 
 
 //    giveAnotherTurn()
-
     @Test
     public void giveAnotherTurnToPlayerOneTest() {
         game.getPlayer1().setTurn(true);
@@ -55,7 +54,6 @@ public class GameTest {
 
 
 //  areThereValidMoves()
-
     @Test
     public void noValidMovesForPlayer1Test() {
         game.getPlayer1().setTurn(true);
@@ -98,7 +96,6 @@ public class GameTest {
 
 
 //    switchTurn()
-
     @Test
     public void switchTurnPlayer1() {
         game.getPlayer1().setTurn(true);
@@ -126,20 +123,19 @@ public class GameTest {
     }
 
     
-//    checkWinnerScore()
-
+//    checkWinner()
     @Test
-    public void checkWinnerScorePlayer1Test() {
+    public void checkWinnerPlayer1Test() {
         game.getBoardCups()[7].addMarbles(60);
         game.getBoardCups()[15].addMarbles(38);
-        assertEquals(game.checkWinnerScore(), game.getBoardCups()[7].getMarbles());
+        assertEquals(game.checkWinner(), game.getPlayer1());
     }
 
     @Test
     public void checkWinnerScorePlayer2Test() {
         game.getBoardCups()[7].addMarbles(27);
         game.getBoardCups()[15].addMarbles(71);
-        assertEquals(game.checkWinnerScore(), game.getBoardCups()[15].getMarbles());
+        assertEquals(game.checkWinner(), game.getPlayer2());
     }
 
 
@@ -173,5 +169,29 @@ public class GameTest {
     }
 
 
+//    getFinalResults()
+    @Test
+    public void getFinalResultsWithPlayer1WinnerTest() {
+        game.getBoardCups()[7].addMarbles(72);
+        game.getBoardCups()[15].addMarbles(26);
+        String[] results = game.getFinalResults();
+
+        assertEquals(results[0], game.getPlayer1().getName());
+        assertEquals(results[1], Integer.toString(game.getBoard().getPlayerCup1().getMarbles()));
+        assertEquals(results[2], game.getPlayer2().getName());
+        assertEquals(results[3], Integer.toString(game.getBoard().getPlayerCup2().getMarbles()));
+    }
+
+    @Test
+    public void getFinalResultsWithPlayer2WinnerTest() {
+        game.getBoardCups()[7].addMarbles(10);
+        game.getBoardCups()[15].addMarbles(88);
+        String[] results = game.getFinalResults();
+
+        assertEquals(results[0], game.getPlayer2().getName());
+        assertEquals(results[1], Integer.toString(game.getBoard().getPlayerCup2().getMarbles()));
+        assertEquals(results[2], game.getPlayer1().getName());
+        assertEquals(results[3], Integer.toString(game.getBoard().getPlayerCup1().getMarbles()));
+    }
 
 }

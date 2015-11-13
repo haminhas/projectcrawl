@@ -48,6 +48,7 @@ public class Game {
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         putMarblesInNextCups(id, marblesFromEmptiedCup);
+
         int finalButtonID = id + marblesFromEmptiedCup;
 
         if(finalButtonID > 15){
@@ -106,7 +107,7 @@ public class Game {
      * This method loops through the current player's half and determine if you can make a move
      * If there is no valid move, it switches the player to make a move
     */
-     public boolean areThereValidMoves(Player player) {
+    public boolean areThereValidMoves(Player player) {
         int cupIndex = 0;
 
         if(player.equals(player2)) {
@@ -126,7 +127,7 @@ public class Game {
     /**
      * This forces the switch of turns.It is called when one player doesn't have valid moves
      */
-     public void switchTurn(){
+    public void switchTurn(){
         if(player1.getTurn() && areThereValidMoves(player2)){
             player2.setTurn(true);
             player1.setTurn(false);
@@ -135,7 +136,7 @@ public class Game {
             player2.setTurn(false);
         }
     }
-    
+
     /**
      * @param idCurrentCup
      * @param marblesFromEmptiedCup
@@ -218,17 +219,11 @@ public class Game {
         return (!areThereValidMoves(player1) && !areThereValidMoves(player2));
     }
 
-    /**
-     * @return the number of marbles in the winner playerCup
-     */
-    public int checkWinnerScore() {
-        //checks who won
-        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
-            return board.getPlayerCup1Marbles();
-        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
-            return board.getPlayerCup2Marbles();
-        } else{
-            return 0;
+    public Player checkWinner() {
+        if(board.getPlayerCup1Marbles() >= board.getPlayerCup2Marbles()) {
+            return player1;
+        }else {
+            return player2;
         }
     }
 
@@ -236,23 +231,24 @@ public class Game {
      * @return array with the 2 players and their respective scores
      */
     public String[] getFinalResults() {
-        String[] results = new String[4];
-        if(board.getPlayerCup1Marbles() > board.getPlayerCup2Marbles()) {
-            results[0] = player1.getName();
-            results[1] = String.valueOf(board.getPlayerCup1Marbles());
-            results[2] = player2.getName();
-            results[3] = String.valueOf(board.getPlayerCup2Marbles());
-        }else if(board.getPlayerCup1Marbles() < board.getPlayerCup2Marbles()) {
-            results[2] = player1.getName();
-            results[3] = String.valueOf(board.getPlayerCup1Marbles());
-            results[0] = player2.getName();
-            results[1] = String.valueOf(board.getPlayerCup2Marbles());
-        } else{
-            results[0] = player1.getName();
-            results[1] = String.valueOf(board.getPlayerCup1Marbles());
-            results[2] = player2.getName();
-            results[3] = String.valueOf(board.getPlayerCup2Marbles());
+        String winner ;
+        int winnerScore ;
+        String loser ;
+        int loserScore ;
+
+        if(checkWinner().equals(player1)) {
+            winner = player1.getName();
+            winnerScore = board.getPlayerCup1Marbles();
+            loser = player2.getName();
+            loserScore = board.getPlayerCup2Marbles();
+        } else {
+            winner = player2.getName();
+            winnerScore  = board.getPlayerCup2Marbles();
+            loser = player1.getName();
+            loserScore = board.getPlayerCup1Marbles();
         }
+
+        String[] results = {winner, Integer.toString(winnerScore), loser, Integer.toString(loserScore)};
         return results;
     }
 
