@@ -112,7 +112,7 @@ public class Game {
         if(player.equals(player2)) {
             cupIndex += 8;
         }
-         
+
         for (int i = cupIndex; i < 7 + cupIndex; i++) {
             // break if there is a valid move
             if (board.getCups()[i].getMarbles() > 0) {
@@ -135,15 +135,7 @@ public class Game {
             player2.setTurn(false);
         }
     }
-
-    /**
-     *
-     * @return boolean if PlayerOne is the current player
-     */
-    public boolean isPlayerOneTurn() {
-        return player1.getTurn();
-    }
-
+    
     /**
      * @param idCurrentCup
      * @param marblesFromEmptiedCup

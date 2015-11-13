@@ -301,21 +301,21 @@ public class GameActivity extends Activity {
     private void activateAnimation(int idCurrentCup, int marbles) {
         int nextCup = idCurrentCup + 1;
         for (int i = 0; i < marbles; i++) {
-            if (nextCup == 15 && game.isPlayerOneTurn()){
+            if (nextCup == 15 && game.getPlayer1().getTurn()){
                 nextCup = 0;
             }
-            if (nextCup == 7 && !game.isPlayerOneTurn()){
+            if (nextCup == 7 && game.getPlayer2().getTurn()){
                 nextCup += 1;
             }
             Button toAnimate = buttons[nextCup];
             handler.postDelayed(new AnimationRunnable(this, toAnimate), i*200);
             if(!game.isFirstTurn()){
                 if(i == marbles - 1 && game.getBoardCups()[nextCup].isEmpty()){
-                    if(game.isPlayerOneTurn() && nextCup < 7){
+                    if(game.getPlayer1().getTurn() && nextCup < 7){
                         handler.postDelayed(new AnimationRunnable(this, buttons[nextCup+((7-nextCup)*2)]), (i+1)*200);
                         handler.postDelayed(new AnimationRunnable(this, buttons[7]), (i+1)*200);
                     }
-                    else if(!game.isPlayerOneTurn() && nextCup > 7){
+                    else if(game.getPlayer2().getTurn() && nextCup > 7){
                         handler.postDelayed(new AnimationRunnable(this, buttons[14-nextCup]), (i+1)*200);
                         handler.postDelayed(new AnimationRunnable(this, buttons[15]), (i+1)*200);
                     }
@@ -334,7 +334,7 @@ public class GameActivity extends Activity {
     }
 
     private void swapEnabledButtonsOnTurnChange() {
-        if(game.isPlayerOneTurn()){
+        if(game.getPlayer1().getTurn()){
             for (int i = 0; i < 7; i++) {
                 if(game.getBoardCups()[i].getMarbles() == 0) {
                     buttons[i].setEnabled(false);
@@ -389,7 +389,7 @@ public class GameActivity extends Activity {
     //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
     private void updateTurnText(){
         String turnText = "";
-        if(game.isPlayerOneTurn()) {
+        if(game.getPlayer1().getTurn()) {
             turnText = (String) playerOneLabelName.getText();
             playerOneLabelName.setTextColor(Color.GREEN);
             playerTwoLabelName.setTextColor(Color.BLACK);
