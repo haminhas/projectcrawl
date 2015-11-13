@@ -215,21 +215,7 @@ public class Game {
      * @return boolean if the game is finished
      */
     public boolean isGameFinished() {
-        //check if game is finished
-        for (int i = 0; i < board.getCups().length; i++) {
-            if (i != 7 && i != 15) {
-                PocketCup pocketCup = (PocketCup) board.getCups()[i];
-                if (!pocketCup.isEmpty()) {
-                    break;
-                }
-            }
-
-            if (i == 14) {
-                return true;
-            }
-
-        }
-        return false;
+        return (areThereValidMoves(player1) && areThereValidMoves(player2));
     }
 
     /**
