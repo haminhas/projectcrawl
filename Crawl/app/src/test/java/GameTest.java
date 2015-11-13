@@ -57,6 +57,7 @@ public class GameTest {
 
     @Test
     public void noValidMovesForPlayer1Test() {
+        game.getPlayer1().setTurn(true);
         //empty player1's cups
         for(int i=0; i<7; i++) {
             game.getBoardCups()[i].addMarbles(-7);
@@ -66,6 +67,7 @@ public class GameTest {
 
     @Test
     public void noValidMovesForPlayer2Test() {
+        game.getPlayer2().setTurn(true);
         for(int i=8; i<15; i++) {
             game.getBoardCups()[i].addMarbles(-7);
         }
@@ -74,6 +76,7 @@ public class GameTest {
 
     @Test
     public void validMovesForPlayer1Test() {
+        game.getPlayer1().setTurn(true);
         //empty player1's cups
         for(int i=0; i<7; i++) {
             game.getBoardCups()[i].addMarbles(-7);
@@ -84,6 +87,7 @@ public class GameTest {
 
     @Test
     public void validMovesForPlayer2Test() {
+        game.getPlayer2().setTurn(true);
         for(int i=8; i<15; i++) {
             game.getBoardCups()[i].addMarbles(-7);
         }
@@ -93,7 +97,6 @@ public class GameTest {
 
 
 //    switchTurn()
-    @Ignore
     @Test
     public void switchTurnPlayer1() {
         game.getPlayer1().setTurn(true);
@@ -107,7 +110,6 @@ public class GameTest {
         assertTrue(game.getPlayer2().getTurn());
     }
 
-    @Ignore
     @Test
     public void switchTurnPlayer2() {
         game.getPlayer1().setTurn(false);

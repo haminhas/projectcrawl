@@ -56,7 +56,7 @@ public class Game {
 
         if(!isGameFinished()) {
             if(!giveAnotherTurn(finalButtonID)) {
-                forceSwitch();
+                switchTurn();
             }
         }
     }
@@ -97,7 +97,7 @@ public class Game {
         }
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
-            forceSwitch();
+            switchTurn();
             applyFirstTurnChanges(firstID, secondID);
         }
     }
@@ -106,28 +106,27 @@ public class Game {
      * This method loops through the current player's half and determine if you can make a move
      * If there is no valid move, it switches the player to make a move
     */
-     private boolean areThereValidMoves(Player player) {
+     public boolean areThereValidMoves(Player player) {
         int cupIndex = 0;
 
         if(player.equals(player2)) {
             cupIndex += 8;
         }
-
-        if (player.getTurn()) {
-            for (int i = cupIndex; i < 7 + cupIndex; i++) {
-                // break if there is a valid move
-                if (board.getCups()[i].getMarbles() > 0) {
-                    return true;
-                }
+         
+        for (int i = cupIndex; i < 7 + cupIndex; i++) {
+            // break if there is a valid move
+            if (board.getCups()[i].getMarbles() > 0) {
+                return true;
             }
         }
+
         return false;
     }
 
     /**
      * This forces the switch of turns.It is called when one player doesn't have valid moves
      */
-     private void forceSwitch(){
+     public void switchTurn(){
         if(player1.getTurn() && areThereValidMoves(player2)){
             player2.setTurn(true);
             player1.setTurn(false);
