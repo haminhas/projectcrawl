@@ -9,6 +9,9 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +22,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import uk.co.ivaylokhr.crawl.Bluetooth.BluetoothChatFragment;
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
 import uk.co.ivaylokhr.crawl.Controller.GoToActivityListener;
@@ -27,7 +32,7 @@ import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
 
-public class GameActivity extends Activity {
+public class GameActivity extends AppCompatActivity {
 
     private Button[] buttons;
     private Game game ;
@@ -36,6 +41,8 @@ public class GameActivity extends Activity {
     private long startTime;
     private long timeCounter=0;
     private Handler handler = new Handler();
+    private BluetoothChatFragment fragment;
+    private android.os.Handler bluetoothHandler;
     private TextView turn;
     private TextView playerOneLabelName;
     private TextView playerTwoLabelName;
@@ -51,6 +58,14 @@ public class GameActivity extends Activity {
         addPlayerNames();
         updateView();
         settings();
+
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            fragment = new BluetoothChatFragment();
+            bluetoothHandler = fragment.returnHandler();
+            transaction.replace(R.id.sample_content_fragment, fragment);
+            transaction.commit();
+        }
     }
 
     @Override
@@ -60,6 +75,9 @@ public class GameActivity extends Activity {
         return true;
     }
 
+    public void sendMessage(View view){
+        fragment.sendMessage("test");
+    }
     private void initialiseGame() {
         game = new Game();
         turn = (TextView) findViewById(R.id.turn);
@@ -157,7 +175,6 @@ public class GameActivity extends Activity {
             handler.postDelayed(this, 0);
         }};
 
-
     //warn the player that going back will end his game
     @Override
     public void onBackPressed() {
@@ -224,8 +241,8 @@ public class GameActivity extends Activity {
                 R.id.b12, R.id.b13, R.id.b14, R.id.b15};
 
         for(int i=0; i<ids.length; i++) {
-                buttons[i] = (Button) findViewById(ids[i]);
-                buttons[i].setId(i);
+            buttons[i] = (Button) findViewById(ids[i]);
+            buttons[i].setId(i);
         }
 
         return buttons;
@@ -428,4 +445,5 @@ public class GameActivity extends Activity {
         Preferences.toPreferences(this.getBaseContext(), two, "second", "your_prefs");
         Preferences.toPreferences(this.getBaseContext(), three, "third", "your_prefs");
     }
+
 }

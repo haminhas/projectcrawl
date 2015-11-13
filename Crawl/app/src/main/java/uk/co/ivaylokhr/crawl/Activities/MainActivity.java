@@ -50,34 +50,17 @@ public class MainActivity extends Activity {
 
         //starts a one player game
         public void onClickOnePlayer(View view){
-            if (buttonOne.getText().equals(getString(R.string.oneplayer))) {
                 Intent intent = new Intent(this, AIGameActivity.class);
                 players = 1;
                 intent.putExtra(EXTRA_MESSAGE, players);
                 startActivity(intent);
-            }else {
-                Integer hosting = 1;
-                Intent intent = new Intent(this, Bluetooth.class);
-                intent.putExtra(EXTRA_MESSAGE, hosting);
-                startActivity(intent);
-            }
         }
 
         //starts a two player game
 
         public void onClickTwoPlayer(View view){
-            if (buttonTwo.getText().equals(getString(R.string.twoplayer))) {
-                buttonOne.setText(R.string.host);
-                buttonTwo.setText(R.string.connect);
-                buttonThree.setText(R.string.back);
-                buttonFour.setText(R.string.hotseat);
-            }
-            else {
-                Integer hosting = 0;
-                Intent intent = new Intent(this, Bluetooth.class);
-                intent.putExtra(EXTRA_MESSAGE, hosting);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
         }
 
         //Initialise the high scores.
@@ -96,25 +79,13 @@ public class MainActivity extends Activity {
         }
 
         public void onClickHighScore(View view){
-            if(buttonFour.getText().equals(getString(R.string.statistics))) {
                 Intent intent = new Intent(this, HighScores.class);
                 startActivity(intent);
-            }else{
-                    Intent intent = new Intent(this, GameActivity.class);
-                    startActivity(intent);
-            }
         }
 
         public void onClickSettings(View view){
-            if(buttonThree.getText().equals(getString(R.string.settings))) {
                 Intent intent = new Intent(this, Settings.class);
                 startActivity(intent);
-            }else{
-                buttonOne.setText(R.string.oneplayer);
-                buttonTwo.setText(R.string.twoplayer);
-                buttonThree.setText(R.string.settings);
-                buttonFour.setText(R.string.statistics);
-            }
         }
         //TODO: Either use MenuItems or remove this.
         @Override
