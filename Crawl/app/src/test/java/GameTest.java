@@ -19,6 +19,7 @@ public class GameTest {
 
 
 //    giveAnotherTurn()
+
     @Test
     public void giveAnotherTurnToPlayerOneTest() {
         game.getPlayer1().setTurn(true);
@@ -97,6 +98,7 @@ public class GameTest {
 
 
 //    switchTurn()
+
     @Test
     public void switchTurnPlayer1() {
         game.getPlayer1().setTurn(true);
@@ -139,5 +141,37 @@ public class GameTest {
         game.getBoardCups()[15].addMarbles(71);
         assertEquals(game.checkWinnerScore(), game.getBoardCups()[15].getMarbles());
     }
+
+
+//    isGameFinished()
+    @Test
+    public void isGamFinishedPassTest() {
+        for(int i=0; i<15; i++) {
+            game.getBoardCups()[i].addMarbles(-7);
+        }
+        assertTrue(game.isGameFinished());
+    }
+
+    @Test
+    public void isNotGameFinishedPlayer1Test() {
+        for(int i=0; i<15; i++) {
+            game.getBoardCups()[i].addMarbles(-7);
+        }
+        //player 1 valid move
+        game.getBoardCups()[5].addMarbles(2);
+        assertFalse(game.isGameFinished());
+    }
+
+    @Test
+    public void isNotGameFinishedPlayer3Test() {
+        for(int i=0; i<15; i++) {
+            game.getBoardCups()[i].addMarbles(-7);
+        }
+        //player 2 valid move
+        game.getBoardCups()[10].addMarbles(3);
+        assertFalse(game.isGameFinished());
+    }
+
+
 
 }

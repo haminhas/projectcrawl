@@ -215,7 +215,7 @@ public class Game {
      * @return boolean if the game is finished
      */
     public boolean isGameFinished() {
-        return (areThereValidMoves(player1) && areThereValidMoves(player2));
+        return (!areThereValidMoves(player1) && !areThereValidMoves(player2));
     }
 
     /**
