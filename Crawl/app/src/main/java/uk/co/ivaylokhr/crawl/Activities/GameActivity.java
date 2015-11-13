@@ -267,17 +267,22 @@ public class GameActivity extends Activity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                    if(!game.isFirstTurn()){
-                        activateAnimation(b.getId(), marbles);
+                    if (game.isFirstTurn()){
+                        game.firstTurnPlay(b.getId());
+                        swapEnabledButtonsOnTurnChange();
+                        updateBoardView();
                     }
-                    game.pressCup(b.getId());
-                    playClickSound();
-                    swapEnabledButtonsOnTurnChange();
-                    updateBoardView();
-                    if(game.isGameFinished()){
-                        updateScores();
-                        popUpGameFinished();
+                    else{
+                        int marbles = game.getBoardCups()[b.getId()].getMarbles();
+                        activateAnimation(b.getId(), marbles);
+                        game.pressCup(b.getId());
+                        playClickSound();
+                        swapEnabledButtonsOnTurnChange();
+                        updateBoardView();
+                        if(game.isGameFinished()){
+                            updateScores();
+                            popUpGameFinished();
+                        }
                     }
                 }
             });
@@ -287,11 +292,18 @@ public class GameActivity extends Activity {
 
     private void popUpGameFinished() {
         String[] finalResults = game.getFinalResults();
+        String message;
+        if(game.isDraw()){
+            message = "Draw!\n" + finalResults[0] + ": " + finalResults[1] + "\n" + finalResults[2] + ": " + finalResults[3];
+        }
+        else{
+            message = "Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3];
+        }
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         Intent newGame = new Intent(this, GameActivity.class);
         optionpane.setTitle("Game Finished");
-        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
+        optionpane.setMessage(message).setCancelable(false)
                 .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
                 .setNegativeButton("Play Again", new GoToActivityListener(newGame));
         AlertDialog alertDialog = optionpane.create();

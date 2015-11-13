@@ -7,18 +7,22 @@ import uk.co.ivaylokhr.crawl.Model.Player;
 import uk.co.ivaylokhr.crawl.Model.PocketCup;
 
 public class Game {
-    private Player player1, player2;
-    private Board board;
+
+    protected Player player1, player2;
+    protected Board board;
+    protected boolean isFirstTurn;
+    protected int firstID;
+    protected boolean firstHasPlayed;
+    protected boolean isDraw;
     //first turn stuff
-    private Player firstPlayer;
-    private int firstID, secondID;
-    private boolean firstHasPlayed, secondHasPlayed;
-    private boolean isFirstTurn;
+    private int secondID;
+    private boolean secondHasPlayed;
 
     public Game() {
         player1 = new Player();
         player2 = new Player();
         board = new Board();
+        isDraw = false;
         initialiseVariablesFirstTurn();
     }
 
@@ -29,7 +33,6 @@ public class Game {
         player1.setTurn(false);
         player2.setTurn(false);
         //The player who will have the first play
-        firstPlayer = null;
         firstID = -1; secondID = -1;
         firstHasPlayed = false; secondHasPlayed = false;
         isFirstTurn = true;
@@ -41,10 +44,8 @@ public class Game {
      */
     public void pressCup(int id) {
         if(isFirstTurn){
-           firstTurnPlay(id);
-           return;
+            firstTurnPlay(id);
         }
-
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
         putMarblesInNextCups(id, marblesFromEmptiedCup);
@@ -80,17 +81,15 @@ public class Game {
      * the logic behind the first turn, where the players do the turn together
      * after both players make their moves, the one that clicked first is first to go
      */
-    private void firstTurnPlay(int id) {
+    public void firstTurnPlay(int id) {
         if (id < 7) {
             if (!secondHasPlayed) {
-                firstPlayer = player1;
                 player2.setTurn(true);
             }
             firstID = id;
             firstHasPlayed = true;
         } else {
             if (!firstHasPlayed) {
-                firstPlayer = player2;
                 player1.setTurn(true);
             }
             secondID = id;
@@ -98,7 +97,6 @@ public class Game {
         }
         if (firstHasPlayed && secondHasPlayed) {
             isFirstTurn = false;
-            switchTurn();
             applyFirstTurnChanges(firstID, secondID);
         }
     }
@@ -141,7 +139,7 @@ public class Game {
      * @param idCurrentCup
      * @param marblesFromEmptiedCup
      */
-    private void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+    protected void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
             //condition for when the cup is a playerCup
@@ -209,6 +207,7 @@ public class Game {
             }
             board.getCups()[nextCupID].addMarbles(1);
         }
+        switchTurn();
     }
 
     /**
@@ -252,7 +251,9 @@ public class Game {
         return results;
     }
 
-
+    public boolean isDraw(){
+        return isDraw;
+    }
 
     public Board getBoard(){
         return board;
@@ -272,6 +273,10 @@ public class Game {
 
     public boolean isFirstTurn(){
         return isFirstTurn;
+    }
+
+    public int getFirstMoveID(){
+        return firstID;
     }
 
 }

@@ -278,7 +278,7 @@ public class AIGameActivity extends Activity {
                             updateScores();
                             popUpGameFinished();
                         }
-                        if(!aiGame.isPlayerOneTurn()){
+                        if(aiGame.getAIPlayer().getTurn()){
                             aiMove(marbles);
                         }
                     }
@@ -289,11 +289,18 @@ public class AIGameActivity extends Activity {
 
     private void popUpGameFinished() {
         String[] finalResults = aiGame.getFinalResults();
+        String message;
+        if(aiGame.isDraw()){
+            message = "Draw!\n" + finalResults[0] + ": " + finalResults[1] + "\n" + finalResults[2] + ": " + finalResults[3];
+        }
+        else{
+            message = "Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3];
+        }
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         Intent newAIGame = new Intent(this, AIGameActivity.class);
         optionpane.setTitle("Game Finished");
-        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
+        optionpane.setMessage(message).setCancelable(false)
                 .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
                 .setNegativeButton("Play Again", new GoToActivityListener(newAIGame));
         AlertDialog alertDialog = optionpane.create();
@@ -305,7 +312,7 @@ public class AIGameActivity extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int humanMove = aiGame.getFirstHumanMove();
+                int humanMove = aiGame.getFirstMoveID();
                 int aiMove = aiGame.generateFirstAIMove();
                 aiGame.applyFirstTurnChanges(humanMove, aiMove);
                 activateAnimation(humanMove, 7);
@@ -321,7 +328,7 @@ public class AIGameActivity extends Activity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("tag", "test1");
+                    Log.i("tag", "AIMOVE");
                     aiGame.doMove();
                     activateAnimation(aiGame.returnFirstButton(), aiGame.returnMarbles());
                     aiGame.switchTurnsAfterAITurn(aiGame.returnFirstButton(), aiGame.returnMarbles());
@@ -332,7 +339,7 @@ public class AIGameActivity extends Activity {
                         updateScores();
                         popUpGameFinished();
                     }
-                    if(!aiGame.isPlayerOneTurn()){
+                    if(aiGame.getAIPlayer().getTurn()){
                         aiMove(aiGame.returnMarbles());
                     }
                 }
@@ -374,7 +381,7 @@ public class AIGameActivity extends Activity {
     }
 
     public void swapEnabledButtonsOnTurnChange() {
-        if(aiGame.isPlayerOneTurn()){
+        if(aiGame.getHumanPlayer().getTurn()){
             for (int i = 0; i < 7; i++) {
                 if (aiGame.getBoardCups()[i].getMarbles() > 0){
                     buttons[i].setEnabled(true);
@@ -417,7 +424,7 @@ public class AIGameActivity extends Activity {
     //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
     private void updateTurnText(){
         String turnText = "";
-        if(aiGame.isPlayerOneTurn()) {
+        if(aiGame.getHumanPlayer().getTurn()) {
             turnText = (String) playerOneLabelName.getText();
             playerOneLabelName.setTextColor(Color.GREEN);
             playerTwoLabelName.setTextColor(Color.BLACK);
