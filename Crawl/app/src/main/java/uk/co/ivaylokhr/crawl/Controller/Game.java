@@ -56,10 +56,8 @@ public class Game {
             finalButtonID -= 15;
         }
 
-        if(!isGameFinished()) {
-            if(!giveAnotherTurn(finalButtonID)) {
-                switchTurn();
-            }
+        if(!isGameFinished() && !giveAnotherTurn(finalButtonID)) {
+            switchTurn();
         }
     }
 
@@ -68,10 +66,10 @@ public class Game {
      * @param buttonID
      */
     public boolean giveAnotherTurn(int buttonID){
-        if(player1.getTurn() && buttonID == 7){
+        if(player1.getTurn() && buttonID == 7 && areThereValidMoves(player1)){
             return true;
         }
-        if(player2.getTurn() && buttonID == 15){
+        if(player2.getTurn() && buttonID == 15 && areThereValidMoves(player2)){
             return true;
         }
         return false;
@@ -161,20 +159,7 @@ public class Game {
             PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
             //check at the last iteration if cup is empty
             if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
-                PocketCup oppositeCup;
-                if (player1.getTurn() && cupNumber < 7) {
-                    oppositeCup = (PocketCup) board.getCups()[cupNumber + ((7 - cupNumber) * 2)];
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //take last marble from the cup alongside the opposite cup's one.
-                    nextPocketCup.addMarbles(-1);
-                    board.getPlayerCup1().addMarbles(oppositeCupNumbers + 1);
-                } else if (player2.getTurn() && cupNumber > 7 && cupNumber < 15) {
-                    oppositeCup = (PocketCup) board.getCups()[(14 - cupNumber)];
-                    int oppositeCupNumbers = oppositeCup.emptyCup();
-                    //take last marble from the cup alongside the opposite cup's one.
-                    nextPocketCup.addMarbles(-1);
-                    board.getPlayerCup2().addMarbles(oppositeCupNumbers + 1);
-                }
+                stealOppositeCup(cupNumber);
             }
 
             nextPocketCup.addMarbles(1);
@@ -186,6 +171,24 @@ public class Game {
             }
 
         }//END OF FOR LOOP
+    }
+
+    public void stealOppositeCup(int cupNumber) {
+        PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
+        PocketCup oppositeCup;
+        if (player1.getTurn() && cupNumber < 7) {
+            oppositeCup = (PocketCup) board.getCups()[cupNumber + ((7 - cupNumber) * 2)];
+            int oppositeCupNumbers = oppositeCup.emptyCup();
+            //take last marble from the cup alongside the opposite cup's one.
+            nextPocketCup.addMarbles(-1);
+            board.getPlayerCup1().addMarbles(oppositeCupNumbers + 1);
+        } else if (player2.getTurn() && cupNumber > 7 && cupNumber < 15) {
+            oppositeCup = (PocketCup) board.getCups()[(14 - cupNumber)];
+            int oppositeCupNumbers = oppositeCup.emptyCup();
+            //take last marble from the cup alongside the opposite cup's one.
+            nextPocketCup.addMarbles(-1);
+            board.getPlayerCup2().addMarbles(oppositeCupNumbers + 1);
+        }
     }
 
     /**

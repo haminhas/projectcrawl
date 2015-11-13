@@ -37,6 +37,7 @@ public class GameTest {
     public void giveAnotherTurnPlayerOneFailTest() {
         game.getPlayer1().setTurn(true);
         game.getPlayer2().setTurn(false);
+        //fail if marble does not land in PlayerCup
         for(int i = 0; i <= 15 ; i++) {
             if(i == 7) { continue ; }
             assertFalse(game.giveAnotherTurn(i));
@@ -47,6 +48,7 @@ public class GameTest {
     public void giveAnotherTurnPlayerTwoFailTest() {
         game.getPlayer1().setTurn(false);
         game.getPlayer2().setTurn(true);
+        //fail if marble does not land in PlayerCup
         for (int i = 0; i < 15 ; i++) {
             assertFalse(game.giveAnotherTurn(i));
         }
@@ -193,5 +195,8 @@ public class GameTest {
         assertEquals(results[2], game.getPlayer1().getName());
         assertEquals(results[3], Integer.toString(game.getBoard().getPlayerCup1().getMarbles()));
     }
+
+
+//  putMarbleInNextCup()
 
 }
