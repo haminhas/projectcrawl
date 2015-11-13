@@ -123,4 +123,21 @@ public class GameTest {
         assertFalse(game.getPlayer2().getTurn());
     }
 
+    
+//    checkWinnerScore()
+
+    @Test
+    public void checkWinnerScorePlayer1Test() {
+        game.getBoardCups()[7].addMarbles(60);
+        game.getBoardCups()[15].addMarbles(38);
+        assertEquals(game.checkWinnerScore(), game.getBoardCups()[7].getMarbles());
+    }
+
+    @Test
+    public void checkWinnerScorePlayer2Test() {
+        game.getBoardCups()[7].addMarbles(27);
+        game.getBoardCups()[15].addMarbles(71);
+        assertEquals(game.checkWinnerScore(), game.getBoardCups()[15].getMarbles());
+    }
+
 }
