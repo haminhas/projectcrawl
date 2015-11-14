@@ -260,6 +260,10 @@ public class Game {
         return board.getCups();
     }
 
+    public void setIsFirstTurn(boolean b) {
+        this.isFirstTurn = b;
+    }
+
     public boolean isFirstTurn(){
         return isFirstTurn;
     }
