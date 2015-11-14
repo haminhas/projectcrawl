@@ -67,6 +67,7 @@ public class GameActivity extends AppCompatActivity {
             transaction.commit();
         }
         initialiseGame();
+        arePlayerOne = false;
         buttons = fillButtonsArray();
         initializeButtons();
         increaseGamesPlayed();
@@ -85,7 +86,6 @@ public class GameActivity extends AppCompatActivity {
 
     private void initialiseGame() {
         game = new Game();
-        arePlayerOne = false;
         turn = (TextView) findViewById(R.id.turn);
         timer = (TextView) findViewById(R.id.Timer);
         bluetoothPressed.setText("");
@@ -281,10 +281,12 @@ public class GameActivity extends AppCompatActivity {
                 }
                 if(bluetoothPressed.getText().equals("yes")){
                     arePlayerOne = true;
+                    startNewGame();
                     return;
                 }
                 if(bluetoothPressed.getText().equals("no")){
                     arePlayerOne = false;
+                    startNewGame();
                     return;
                 }
                 if(bluetoothPressed.getText().equals("start")){
@@ -428,11 +430,14 @@ public class GameActivity extends AppCompatActivity {
     private void startNewGame() {
         //starts a new game that will stay bluetooth connected
         initialiseGame();
-        initializeButtons();
         increaseGamesPlayed();
         addPlayerNames(false);
         enableAllButtons();
         updateView();
+        if(fragment.getState()) {
+            startName();
+        }
+        startBluetooth();
         playerTwoLabelName.setTextColor(Color.BLACK);
         playerOneLabelName.setTextColor(Color.BLACK);
     }
