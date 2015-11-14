@@ -269,6 +269,7 @@ public class GameActivity extends AppCompatActivity {
         return buttons;
     }
 
+
     public void initBluetooth() {
         bluetoothPressed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,10 +289,12 @@ public class GameActivity extends AppCompatActivity {
                     startBluetooth();
                     return;
                 }
-                if(bluetoothPressed.getText().subSequence(0,3).equals("name")){
-                    int length = bluetoothPressed.getText().length() - 1;
-                    startName((String) bluetoothPressed.getText().subSequence(4, length));
-                    return;
+                if(bluetoothPressed.getText().length() > 3) {
+                    if (bluetoothPressed.getText().subSequence(0, 4).equals("name")) {
+                        int length = bluetoothPressed.getText().length() - 1;
+                        startName((String) bluetoothPressed.getText().subSequence(4, length));
+                        return;
+                    }
                 }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
         int marbles = game.getBoardCups()[b.getId()].getMarbles();
@@ -332,7 +335,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         startTime = System.currentTimeMillis();
-        sendMessage("name"+game.getPlayer1().getName());
+        sendMessage("name" + game.getPlayer1().getName());
     }
 
     //This is for the dialog. It goes to the main menu if you say you want to

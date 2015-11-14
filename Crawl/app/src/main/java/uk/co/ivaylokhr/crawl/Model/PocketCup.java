@@ -4,7 +4,7 @@ package uk.co.ivaylokhr.crawl.Model;
 public class PocketCup extends Cup {
 
     public PocketCup() {
-        marbles = 1;
+        marbles = 7;
     }
 
     public int emptyCup(){
