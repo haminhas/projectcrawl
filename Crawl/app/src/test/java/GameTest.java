@@ -1,22 +1,20 @@
-import android.util.Log;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import static junit.framework.Assert.*;
 
 import uk.co.ivaylokhr.crawl.Controller.Game;
-import uk.co.ivaylokhr.crawl.Model.Player;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 public class GameTest {
 
-    Game game ;
+    Game game;
 
     @Before
     public void setUp() {
         game = new Game();
     }
-
 
 //    giveAnotherTurn()
     @Test
@@ -338,6 +336,106 @@ public class GameTest {
         assertEquals(game.getBoardCups()[5].getMarbles(), 8);
         assertEquals(game.getBoardCups()[6].getMarbles(), 11);
         assertEquals(game.getBoardCups()[7].getMarbles(), 0);
+    }
 
+    @Test
+    public void assureItsNoOnesTurnAtStart(){
+        assertFalse(game.getPlayer1().getTurn());
+        assertFalse(game.getPlayer2().getTurn());
+    }
+
+    @Test
+    public void player1PressCupOnStart(){
+        int firstTurnID = 2;
+        int secondTurnID = 11;
+
+        int[] marblesArray = new int[16];
+
+        for (int i = 0; i < 16; i++){
+            int marbles;
+            if(i == firstTurnID || i == secondTurnID){
+                marbles = 0;
+            }
+            else{
+                marbles = game.getBoardCups()[i].getMarbles();
+            }
+            marblesArray[i] = marbles;
+        }
+
+        game.firstTurnPlay(firstTurnID);
+        int marblesFromFirstCup = game.getBoardCups()[firstTurnID].getMarbles();
+
+        assertFalse(game.getPlayer1().getTurn());
+        assertTrue(game.getPlayer2().getTurn());
+
+        game.firstTurnPlay(secondTurnID);
+        int marblesFromSecondCup = game.getBoardCups()[secondTurnID].getMarbles();
+
+        assertTrue(game.getPlayer1().getTurn());
+        assertFalse(game.getPlayer2().getTurn());
+
+
+        for (int i = 1; i <= marblesFromFirstCup; i++){
+            int nextID = firstTurnID + i;
+            if(nextID > 15){
+                nextID -= 15;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+        }
+
+        for (int i = 1; i <= marblesFromSecondCup; i++){
+            int nextID = firstTurnID + i;
+            if(nextID > 15){
+                nextID -= 15;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+        }
+    }
+
+    @Test
+    public void player2PressCupOnStart(){
+        int firstTurnID = 11;
+        int secondTurnID = 2;
+
+        int[] marblesArray = new int[16];
+
+        for (int i = 0; i < 16; i++){
+            int marbles;
+            if(i == firstTurnID || i == secondTurnID){
+                marbles = 0;
+            }
+            else{
+                marbles = game.getBoardCups()[i].getMarbles();
+            }
+            marblesArray[i] = marbles;
+        }
+
+        game.firstTurnPlay(firstTurnID);
+        int marblesFromFirstCup = game.getBoardCups()[firstTurnID].getMarbles();
+
+        assertTrue(game.getPlayer1().getTurn());
+        assertFalse(game.getPlayer2().getTurn());
+
+        game.firstTurnPlay(secondTurnID);
+        int marblesFromSecondCup = game.getBoardCups()[secondTurnID].getMarbles();
+
+        assertFalse(game.getPlayer1().getTurn());
+        assertTrue(game.getPlayer2().getTurn());
+
+        for (int i = 1; i <= marblesFromFirstCup; i++){
+            int nextID = firstTurnID + i;
+            if(nextID > 15){
+                nextID -= 15;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+        }
+
+        for (int i = 1; i <= marblesFromSecondCup; i++){
+            int nextID = firstTurnID + i;
+            if(nextID > 15){
+                nextID -= 15;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+        }
     }
 }
