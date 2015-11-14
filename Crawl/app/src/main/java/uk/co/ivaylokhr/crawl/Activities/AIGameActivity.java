@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import uk.co.ivaylokhr.crawl.Controller.AIGame;
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
+import uk.co.ivaylokhr.crawl.Controller.GoToActivityListener;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
@@ -158,7 +159,7 @@ public class AIGameActivity extends Activity {
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
         optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
-                .setPositiveButton(R.string.yes, new GoToActivityListener(mainMenu))
+                .setPositiveButton(R.string.yes, new GoToActivityListener(this, mainMenu))
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -182,13 +183,12 @@ public class AIGameActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    //closes window and returns to main menu
     public void back() {
         finish();
     }
 
     //set the high score for the least time a aiGame has taken to complete
-    public void setShortedPlayedTime(){
+    public void setShortestPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         String temp = sp.getString("times", "");
@@ -233,18 +233,6 @@ public class AIGameActivity extends Activity {
     public Button[] getButtons(){
         return buttons;
     }
-
-    public class GoToActivityListener implements DialogInterface.OnClickListener{
-        private Intent activity;
-        public GoToActivityListener(Intent intent){
-            activity = intent;
-        }
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            startActivity(activity);
-        }
-    }
-
 
     private void enableAllButtons() {
         for (int i = 0; i < 7; i++) {
@@ -301,8 +289,8 @@ public class AIGameActivity extends Activity {
         Intent newAIGame = new Intent(this, AIGameActivity.class);
         optionpane.setTitle("Game Finished");
         optionpane.setMessage(message).setCancelable(false)
-                .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
-                .setNegativeButton("Play Again", new GoToActivityListener(newAIGame));
+                .setPositiveButton("Main Menu", new GoToActivityListener(this, mainMenu))
+                .setNegativeButton("Play Again", new GoToActivityListener(this, newAIGame));
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }
@@ -448,7 +436,7 @@ public class AIGameActivity extends Activity {
         Integer one = Preferences.fromPreferences(this.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");
-        this.setShortedPlayedTime();
+        this.setShortestPlayedTime();
         if (score > one) {
             three = two;
             two = one;

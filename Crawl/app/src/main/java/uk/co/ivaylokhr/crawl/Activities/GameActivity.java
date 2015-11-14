@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
+import uk.co.ivaylokhr.crawl.Controller.GoToActivityListener;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
@@ -164,7 +165,7 @@ public class GameActivity extends Activity {
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
         optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
-                .setPositiveButton(R.string.yes, new GoToActivityListener(mainMenu))
+                .setPositiveButton(R.string.yes, new GoToActivityListener(this, mainMenu))
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -235,19 +236,6 @@ public class GameActivity extends Activity {
         return buttons;
     }
 
-    //This is for the dialog. It goes to the main menu if you say you want to
-    public class GoToActivityListener implements DialogInterface.OnClickListener{
-        private Intent activity;
-        public GoToActivityListener(Intent intent){
-            activity = intent;
-        }
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            startActivity(activity);
-        }
-    }
-
-
     private void enableAllButtons() {
         for (int i = 0; i < buttons.length; i++) {
             //ignore the player cups
@@ -304,8 +292,8 @@ public class GameActivity extends Activity {
         Intent newGame = new Intent(this, GameActivity.class);
         optionpane.setTitle("Game Finished");
         optionpane.setMessage(message).setCancelable(false)
-                .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
-                .setNegativeButton("Play Again", new GoToActivityListener(newGame));
+                .setPositiveButton("Main Menu", new GoToActivityListener(this, mainMenu))
+                .setNegativeButton("Play Again", new GoToActivityListener(this, newGame));
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }

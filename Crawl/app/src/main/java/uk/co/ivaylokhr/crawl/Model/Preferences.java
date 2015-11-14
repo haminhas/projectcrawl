@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+public class Preferences {
 
     //Sends a integer "value" with a key "key" to be stored in the pKey
-public class Preferences {
     public static void toPreferences(Context context, Integer value, String key, String pKey) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(pKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
