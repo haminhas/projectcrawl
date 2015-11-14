@@ -49,7 +49,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         Log.i("tag","SetUp");
     }
 
-
     @Test
     public void testActivityExists() {
         assertNotNull(activity);
