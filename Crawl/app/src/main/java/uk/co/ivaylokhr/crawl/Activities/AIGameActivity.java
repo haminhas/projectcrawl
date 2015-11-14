@@ -117,7 +117,6 @@ public class AIGameActivity extends Activity {
                 Button btnConnect = (Button) popupView.findViewById(R.id.connect);
                 Button btnHost = (Button) popupView.findViewById(R.id.host);
                 btnConnect.setVisibility(View.GONE);
-                btnHost.setVisibility(View.GONE);
                 popupWindow.setFocusable(true);
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -162,13 +161,18 @@ public class AIGameActivity extends Activity {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
-        optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
-                .setPositiveButton(R.string.yes, new GoToActivityListener(this, mainMenu))
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+        optionpane.setMessage(R.string.gobackmessage).setCancelable(true);
+        optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        optionpane.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
 
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
@@ -292,9 +296,18 @@ public class AIGameActivity extends Activity {
         Intent mainMenu = new Intent(this, MainActivity.class);
         Intent newAIGame = new Intent(this, AIGameActivity.class);
         optionpane.setTitle("Game Finished");
-        optionpane.setMessage(message).setCancelable(false)
-                .setPositiveButton("Main Menu", new GoToActivityListener(this, mainMenu))
-                .setNegativeButton("Play Again", new GoToActivityListener(this, newAIGame));
+        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false);
+        optionpane.setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        optionpane.setNegativeButton("Play Again", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                recreate();
+            }
+        });
+
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }
@@ -392,6 +405,7 @@ public class AIGameActivity extends Activity {
         }
     }
 
+    //updates the board view
     public void updateView() {
         Cup[] cups = aiGame.getBoardCups();
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,

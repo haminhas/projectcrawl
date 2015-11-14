@@ -44,10 +44,6 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".Activities.End"
-            android:label="@string/title_activity_end" >
-        </activity>
-        <activity
             android:name=".Bluetooth.DeviceListActivity"
             android:label="@string/title_activity_device_list" >
         </activity>

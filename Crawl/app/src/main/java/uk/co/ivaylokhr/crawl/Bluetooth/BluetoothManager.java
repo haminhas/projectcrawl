@@ -36,9 +36,9 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothChatService {
+public class BluetoothManager {
     // Debugging
-    private static final String TAG = "BluetoothChatService";
+    private static final String TAG = "BluetoothManager";
 
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
@@ -72,7 +72,7 @@ public class BluetoothChatService {
      * @param context The UI Activity Context
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothChatService(Context context, Handler handler) {
+    public BluetoothManager(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
@@ -257,7 +257,7 @@ public class BluetoothChatService {
         mHandler.sendMessage(msg);
 
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+        BluetoothManager.this.start();
     }
 
     /**
@@ -272,7 +272,7 @@ public class BluetoothChatService {
         mHandler.sendMessage(msg);
 
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+        BluetoothManager.this.start();
     }
 
 
@@ -320,7 +320,7 @@ public class BluetoothChatService {
 
                 // If a connection was accepted
                 if (socket != null) {
-                    synchronized (BluetoothChatService.this) {
+                    synchronized (BluetoothManager.this) {
                         switch (mState) {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
@@ -403,7 +403,7 @@ public class BluetoothChatService {
             }
 
             // Reset the ConnectThread because we're done
-            synchronized (BluetoothChatService.this) {
+            synchronized (BluetoothManager.this) {
                 mConnectThread = null;
             }
 
@@ -458,7 +458,7 @@ public class BluetoothChatService {
             } catch (IOException e) {
                 connectionLost();
                 // Start the service over to restart listening mode
-                BluetoothChatService.this.start();
+                BluetoothManager.this.start();
                 break;
             }
         }

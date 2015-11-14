@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,33 +55,27 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         bluetoothPressed = (TextView) findViewById(R.id.textView18);
         initBluetooth();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             fragment = new BluetoothChatFragment();
             bluetoothHandler = fragment.returnHandler();
             transaction.replace(R.id.sample_content_fragment, fragment);
             fragment.addText(bluetoothPressed);
-            fragment.playerOneRetrieve(arePlayerOne);
             arePlayerOne = false;
             transaction.commit();
         }
         initialiseGame();
+        buttons = fillButtonsArray();
         initializeButtons();
         increaseGamesPlayed();
         enableAllButtons();
-        addPlayerNames();
+        addPlayerNames(true);
         updateView();
         settings();
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     public void sendMessage(String cup){
 
         if(fragment.getState()) {
@@ -98,11 +93,10 @@ public class GameActivity extends AppCompatActivity {
         playerTwoLabelName = (TextView) findViewById(R.id.player2);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        buttons = fillButtonsArray();
     }
 
 
-    private void addPlayerNames(){
+    private void addPlayerNames(boolean firstGame){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
         String playerOneName = sp.getString("player1", "");
@@ -113,8 +107,10 @@ public class GameActivity extends AppCompatActivity {
         if(playerTwoName.equals("")){
             playerTwoName = "Player 2";
         }
-        playerOneLabelName.setText(playerOneName);
-        playerTwoLabelName.setText(playerTwoName);
+        if(firstGame = true) {
+            playerOneLabelName.setText(playerOneName);
+            playerTwoLabelName.setText(playerTwoName);
+        }
         game.getPlayer1().setName(playerOneName);
         game.getPlayer2().setName(playerTwoName);
         turn.setText(R.string.turn1);
@@ -167,6 +163,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         fragment.connectBluetooth();
+                        popupWindow.dismiss();
                     }
                 });
                 btnHost.setOnClickListener(new Button.OnClickListener() {
@@ -174,6 +171,7 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         fragment.discoverable();
+                        popupWindow.dismiss();
                     }
                 });
                 //Creates onClickListener that closes the settings menu
@@ -209,29 +207,19 @@ public class GameActivity extends AppCompatActivity {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
-        optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
-                .setPositiveButton(R.string.yes, new GoToActivityListener(this, mainMenu))
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
 
-        AlertDialog alertDialog = optionpane.create();
-        alertDialog.show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        optionpane.setMessage(R.string.gobackmessage).setCancelable(true);
+        optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        optionpane.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
     }
 
     //set the high score for the least time a game has taken to complete
@@ -288,7 +276,7 @@ public class GameActivity extends AppCompatActivity {
                 if(bluetoothPressed.getText().equals("")){
                     return;
                 }
-                if(bluetoothPressed.getText().equals("yes")){
+                if(bluetoothPressed.getText().equals(" ")){
                     arePlayerOne = true;
                     return;
                 }
@@ -298,6 +286,11 @@ public class GameActivity extends AppCompatActivity {
                 }
                 if(bluetoothPressed.getText().equals("start")){
                     startBluetooth();
+                    return;
+                }
+                if(bluetoothPressed.getText().subSequence(0,3).equals("name")){
+                    int length = bluetoothPressed.getText().length() - 1;
+                    startName((String) bluetoothPressed.getText().subSequence(4, length));
                     return;
                 }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
@@ -319,6 +312,11 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    private void startName(String bluetoothName) {
+        game.getPlayer2().setName(bluetoothName);
+        playerTwoLabelName.setText(bluetoothName);
+    }
+
 
     private void startBluetooth() {
         for (int i = 0; i < 7; i++) {
@@ -334,6 +332,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         startTime = System.currentTimeMillis();
+        sendMessage("name"+game.getPlayer1().getName());
     }
 
     //This is for the dialog. It goes to the main menu if you say you want to
@@ -409,14 +408,24 @@ public class GameActivity extends AppCompatActivity {
                 });
         optionpane.setNegativeButton("Play Again", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+                startNewGame();
             }
         });
 
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
+    }
+
+    private void startNewGame() {
+        //starts a new game that will stay bluetooth connected
+        initialiseGame();
+        initializeButtons();
+        increaseGamesPlayed();
+        addPlayerNames(false);
+        enableAllButtons();
+        updateView();
+        playerTwoLabelName.setTextColor(Color.BLACK);
+        playerOneLabelName.setTextColor(Color.BLACK);
     }
 
     private void activateAnimation(int idCurrentCup, int marbles) {
