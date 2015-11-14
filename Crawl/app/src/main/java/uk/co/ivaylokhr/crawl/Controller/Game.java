@@ -45,6 +45,7 @@ public class Game {
     public void pressCup(int id) {
         if(isFirstTurn){
             firstTurnPlay(id);
+            return;
         }
         PocketCup pressedPocketCup = (PocketCup) board.getCups()[id];
         int marblesFromEmptiedCup = pressedPocketCup.emptyCup();
@@ -56,7 +57,10 @@ public class Game {
             finalButtonID -= 15;
         }
 
-        if(!isGameFinished() && !giveAnotherTurn(finalButtonID)) {
+        if(!isGameFinished()) {
+            if(giveAnotherTurn(finalButtonID)){
+                switchTurn();
+            }
             switchTurn();
         }
     }

@@ -212,6 +212,7 @@ public class GameActivity extends AppCompatActivity {
         optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                sendMessage("reset");
                 finish();
             }
         });
@@ -300,6 +301,10 @@ public class GameActivity extends AppCompatActivity {
                     startName();
                     return;
                 }
+                if(bluetoothPressed.getText().equals("reset")){
+                    startNewGame();
+                    return;
+                }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
         int marbles = game.getBoardCups()[b.getId()].getMarbles();
         if(!game.isFirstTurn()){
@@ -379,16 +384,15 @@ public class GameActivity extends AppCompatActivity {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (game.isFirstTurn()){
-                        game.firstTurnPlay(b.getId());
+                    int marbles = game.getBoardCups()[b.getId()].getMarbles();
+                    game.pressCup(b.getId());
+                    sendMessage(String.valueOf(b.getId()));
+                    if(!game.isFirstTurn()) {
+                        activateAnimation(b.getId(), marbles);
+                        playClickSound();
                         swapEnabledButtonsOnTurnChange();
                         updateBoardView();
                     }
-                    game.pressCup(b.getId());
-                    sendMessage(String.valueOf(b.getId()));
-                    playClickSound();
-                    swapEnabledButtonsOnTurnChange();
-                    updateBoardView();
                     if(game.isGameFinished()){
                         popUpGameFinished();
                         updateScores();
@@ -436,8 +440,8 @@ public class GameActivity extends AppCompatActivity {
         updateView();
         if(fragment.getState()) {
             startName();
+            startBluetooth();
         }
-        startBluetooth();
         playerTwoLabelName.setTextColor(Color.BLACK);
         playerOneLabelName.setTextColor(Color.BLACK);
     }
@@ -459,7 +463,7 @@ public class GameActivity extends AppCompatActivity {
                         handler.postDelayed(new AnimationRunnable(this, buttons[nextCup+((7-nextCup)*2)]), (i+1)*200);
                         handler.postDelayed(new AnimationRunnable(this, buttons[7]), (i+1)*200);
                     }
-                    else if(game.getPlayer2().getTurn() && nextCup > 7){
+                    else if(game.getPlayer2().getTurn() && nextCup > 7 && nextCup < 15){
                         handler.postDelayed(new AnimationRunnable(this, buttons[14-nextCup]), (i+1)*200);
                         handler.postDelayed(new AnimationRunnable(this, buttons[15]), (i+1)*200);
                     }

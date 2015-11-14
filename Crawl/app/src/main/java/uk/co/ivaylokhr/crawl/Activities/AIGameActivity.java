@@ -117,6 +117,7 @@ public class AIGameActivity extends Activity {
                 Button btnConnect = (Button) popupView.findViewById(R.id.connect);
                 Button btnHost = (Button) popupView.findViewById(R.id.host);
                 btnConnect.setVisibility(View.GONE);
+                btnHost.setVisibility(View.GONE);
                 popupWindow.setFocusable(true);
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
