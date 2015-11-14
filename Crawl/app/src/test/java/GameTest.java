@@ -248,8 +248,7 @@ public class GameTest {
         int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
         game.getBoardCups()[idPressedCup].addMarbles(-16);
         game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
-
-
+        
         assertEquals(game.getBoardCups()[idPressedCup].getMarbles(), 1);
         assertEquals(game.getBoardCups()[idPressedCup + 1].getMarbles(), 6);
         assertEquals(game.getBoardCups()[idPressedCup + 2].getMarbles(), 2);
@@ -266,6 +265,79 @@ public class GameTest {
         assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+1].getMarbles(), 11);
         assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+2].getMarbles(), 21);
         assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+3].getMarbles(), 5);
+
+    }
+
+    @Test
+    public void putMarbleInNextCupPlayer2() {
+        game.getPlayer1().setTurn(true);
+        game.getPlayer2().setTurn(false);
+
+        game.getBoardCups()[9].addMarbles(-5);
+        game.getBoardCups()[10].addMarbles(8);
+        game.getBoardCups()[11].addMarbles(2);
+        game.getBoardCups()[12].addMarbles(11);
+        game.getBoardCups()[13].addMarbles(-2);
+        game.getBoardCups()[14].addMarbles(4);
+
+        int idPressedCup = 8;
+        game.getBoardCups()[idPressedCup].addMarbles(-1);
+        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
+
+        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+
+        assertEquals(game.getBoardCups()[idPressedCup+1].getMarbles(), 3);
+        assertEquals(game.getBoardCups()[idPressedCup+2].getMarbles(), 16);
+        assertEquals(game.getBoardCups()[idPressedCup+3].getMarbles(), 10);
+        assertEquals(game.getBoardCups()[idPressedCup+4].getMarbles(), 19);
+        assertEquals(game.getBoardCups()[idPressedCup+5].getMarbles(), 6);
+        assertEquals(game.getBoardCups()[idPressedCup+6].getMarbles(), 12);
+
+    }
+
+    @Test
+    public void putMarbleInNextCupJumpOppositePlayerCupPlayer2() {
+        game.getPlayer1().setTurn(false);
+        game.getPlayer2().setTurn(true);
+
+        game.getBoardCups()[9].addMarbles(4);
+        game.getBoardCups()[10].addMarbles(-4);
+        game.getBoardCups()[11].addMarbles(8);
+        game.getBoardCups()[12].addMarbles(3);
+        game.getBoardCups()[13].addMarbles(1);
+        game.getBoardCups()[14].addMarbles(0);
+        game.getBoardCups()[15].addMarbles(2);
+        game.getBoardCups()[0].addMarbles(-6);
+        game.getBoardCups()[1].addMarbles(2);
+        game.getBoardCups()[2].addMarbles(11);
+        game.getBoardCups()[3].addMarbles(9);
+        game.getBoardCups()[4].addMarbles(-1);
+        game.getBoardCups()[5].addMarbles(0);
+        game.getBoardCups()[6].addMarbles(3);
+        game.getBoardCups()[7].addMarbles(0);
+
+        int idPressedCup = 8;
+        game.getBoardCups()[idPressedCup].addMarbles(9); //7 + 9 = 16 full circle
+        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
+        game.getBoardCups()[idPressedCup].addMarbles(-16);
+        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+
+        assertEquals(game.getBoardCups()[8].getMarbles(), 1);
+        assertEquals(game.getBoardCups()[9].getMarbles(), 13);
+        assertEquals(game.getBoardCups()[10].getMarbles(), 4);
+        assertEquals(game.getBoardCups()[11].getMarbles(), 16);
+        assertEquals(game.getBoardCups()[12].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[13].getMarbles(), 9);
+        assertEquals(game.getBoardCups()[14].getMarbles(), 8);
+        assertEquals(game.getBoardCups()[15].getMarbles(), 3);
+        assertEquals(game.getBoardCups()[0].getMarbles(), 2);
+        assertEquals(game.getBoardCups()[1].getMarbles(), 10);
+        assertEquals(game.getBoardCups()[2].getMarbles(), 19);
+        assertEquals(game.getBoardCups()[3].getMarbles(), 17);
+        assertEquals(game.getBoardCups()[4].getMarbles(), 7);
+        assertEquals(game.getBoardCups()[5].getMarbles(), 8);
+        assertEquals(game.getBoardCups()[6].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[7].getMarbles(), 0);
 
     }
 }
