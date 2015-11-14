@@ -291,7 +291,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 if(bluetoothPressed.getText().length() > 3) {
                     if (bluetoothPressed.getText().subSequence(0, 4).equals("name")) {
-                        int length = bluetoothPressed.getText().length() - 1;
+                        int length = bluetoothPressed.getText().length();
                         startName((String) bluetoothPressed.getText().subSequence(4, length));
                         return;
                     }
@@ -316,8 +316,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void startName(String bluetoothName) {
-        game.getPlayer2().setName(bluetoothName);
-        playerTwoLabelName.setText(bluetoothName);
+        if(arePlayerOne) {
+            game.getPlayer2().setName(bluetoothName);
+            playerTwoLabelName.setText(bluetoothName);
+        }else{
+            game.getPlayer1().setName(bluetoothName);
+            playerOneLabelName.setText(bluetoothName);
+        }
     }
 
 
