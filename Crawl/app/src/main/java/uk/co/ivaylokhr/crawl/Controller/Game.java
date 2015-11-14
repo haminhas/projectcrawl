@@ -137,40 +137,26 @@ public class Game {
      * @param idCurrentCup
      * @param marblesFromEmptiedCup
      */
-    protected void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
-            //condition for when the cup is a playerCup
-            if (cupNumber == 7) {
-                if (player1.getTurn()) {
-                    board.getPlayerCup1().addMarbles(1);
-                    cupNumber++;
-                    continue;
-                }
+            if (cupNumber == 7 && player2.getTurn()) {
                 cupNumber++;
-            } else if (cupNumber == 15) {
-                if (player2.getTurn()) {
-                    board.getPlayerCup2().addMarbles(1);
-                    cupNumber = 0;
-                    continue;
-                }
+            } else if (cupNumber == 15 && player1.getTurn()) {
                 cupNumber = 0;
             }
-            PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
+            Cup nextPocketCup = board.getCups()[cupNumber];
             //check at the last iteration if cup is empty
             if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
                 stealOppositeCup(cupNumber);
             }
-
             nextPocketCup.addMarbles(1);
-
             cupNumber++;
             //stay in the range of 16 cups.
             if (cupNumber > 15) {
                 cupNumber = 0;
             }
-
-        }//END OF FOR LOOP
+        }
     }
 
     public void stealOppositeCup(int cupNumber) {

@@ -198,5 +198,16 @@ public class GameTest {
 
 
 //  putMarbleInNextCup()
+    @Test
+    public void putMarbleInNextCupPlayer1() {
+        game.getPlayer1().setTurn(true);
+        game.getPlayer2().setTurn(false);
 
+        int idPressedCup = 0;
+        int marblesFromPressedCup = 5;
+
+        game.putMarblesInNextCups(0, 5);
+
+        assertEquals(game.getBoardCups()[idPressedCup+1], 8);
+    }
 }
