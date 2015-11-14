@@ -16,110 +16,70 @@ public class GameTest {
         game = new Game();
     }
 
-//    giveAnotherTurn()
-    @Test
-    public void giveAnotherTurnToPlayerOneTest() {
+    private void switchToPlayer1(){
         game.getPlayer1().setTurn(true);
         game.getPlayer2().setTurn(false);
-        assertTrue(game.giveAnotherTurn(7));
+        game.setIsFirstTurn(false);
     }
 
-    @Test
-    public void giveAnotherTurnToPlayerTwoTest() {
+    private void switchToPlayer2(){
         game.getPlayer1().setTurn(false);
         game.getPlayer2().setTurn(true);
-        assertTrue(game.giveAnotherTurn(15));
+        game.setIsFirstTurn(false);
+    }
+
+    private void assertPlayer1Turn() {
+        assertTrue(game.getPlayer1().getTurn());
+        assertFalse(game.getPlayer2().getTurn());
+    }
+
+    private void assertPlayer2Turn(){
+        assertTrue(game.getPlayer2().getTurn());
+        assertFalse(game.getPlayer1().getTurn());
+    }
+
+    //giveAnother Turn through pressCup
+    @Test
+    public void giveAnotherTurnToPlayerOneTest(){
+        switchToPlayer1();
+        game.pressCup(0);
+        assertPlayer1Turn();
     }
 
     @Test
-    public void giveAnotherTurnPlayerOneFailTest() {
-        game.getPlayer1().setTurn(true);
-        game.getPlayer2().setTurn(false);
-        //fail if marble does not land in PlayerCup
-        for(int i = 0; i <= 15 ; i++) {
-            if(i == 7) { continue ; }
-            assertFalse(game.giveAnotherTurn(i));
-        }
+    public void giveAnotherTurnToPlayerTwoTest(){
+        switchToPlayer2();
+        game.pressCup(8);
+        assertPlayer2Turn();
     }
 
-    @Test
-    public void giveAnotherTurnPlayerTwoFailTest() {
-        game.getPlayer1().setTurn(false);
-        game.getPlayer2().setTurn(true);
-        //fail if marble does not land in PlayerCup
-        for (int i = 0; i < 15 ; i++) {
-            assertFalse(game.giveAnotherTurn(i));
-        }
-    }
-
-
-//  areThereValidMoves()
+//  areThereValidMoves() through first Cup
     @Test
     public void noValidMovesForPlayer1Test() {
-        game.getPlayer1().setTurn(true);
-        //empty player1's cups
+        switchToPlayer1();
+
         for(int i=0; i<7; i++) {
+            game.getBoardCups()[i].addMarbles(-6);
+        }
+        for (int i =8; i < 15; i++){
             game.getBoardCups()[i].addMarbles(-7);
         }
-        assertFalse(game.areThereValidMoves(game.getPlayer1()));
+        game.pressCup(3);
+        assertPlayer1Turn();
     }
 
     @Test
     public void noValidMovesForPlayer2Test() {
-        game.getPlayer2().setTurn(true);
-        for(int i=8; i<15; i++) {
-            game.getBoardCups()[i].addMarbles(-7);
-        }
-        assertFalse(game.areThereValidMoves(game.getPlayer2()));
-    }
+        switchToPlayer2();
 
-    @Test
-    public void validMovesForPlayer1Test() {
-        game.getPlayer1().setTurn(true);
-        //empty player1's cups
         for(int i=0; i<7; i++) {
             game.getBoardCups()[i].addMarbles(-7);
         }
-        game.getBoardCups()[5].addMarbles(2);
-        assertTrue(game.areThereValidMoves(game.getPlayer1()));
-    }
-
-    @Test
-    public void validMovesForPlayer2Test() {
-        game.getPlayer2().setTurn(true);
-        for(int i=8; i<15; i++) {
-            game.getBoardCups()[i].addMarbles(-7);
+        for (int i =8; i < 15; i++){
+            game.getBoardCups()[i].addMarbles(-6);
         }
-        game.getBoardCups()[9].addMarbles(1);
-        assertTrue(game.areThereValidMoves(game.getPlayer2()));
-    }
-
-
-//    switchTurn()
-    @Test
-    public void switchTurnPlayer1() {
-        game.getPlayer1().setTurn(true);
-        game.getPlayer2().setTurn(false);
-        assertEquals(game.getBoardCups()[10].getMarbles(), 7);
-
-        assertTrue(game.areThereValidMoves(game.getPlayer2()));
-
-        game.switchTurn();
-        assertFalse(game.getPlayer1().getTurn());
-        assertTrue(game.getPlayer2().getTurn());
-    }
-
-    @Test
-    public void switchTurnPlayer2() {
-        game.getPlayer1().setTurn(false);
-        game.getPlayer2().setTurn(true);
-        assertEquals(game.getBoardCups()[3].getMarbles(), 7);
-
-        assertTrue(game.areThereValidMoves(game.getPlayer1()));
-
-        game.switchTurn();
-        assertTrue(game.getPlayer1().getTurn());
-        assertFalse(game.getPlayer2().getTurn());
+        game.pressCup(10);
+        assertPlayer2Turn();
     }
 
     
@@ -168,6 +128,23 @@ public class GameTest {
         assertFalse(game.isGameFinished());
     }
 
+    @Test
+    public void switchPlayersFrom1To2(){
+        switchToPlayer1();
+        assertPlayer1Turn();
+        game.pressCup(3);
+        assertPlayer2Turn();
+    }
+
+    @Test
+    public void switchPlayersFrom2To1(){
+        switchToPlayer2();
+        assertPlayer2Turn();
+        game.pressCup(10);
+        assertTrue(game.getPlayer1().getTurn());
+        assertPlayer1Turn();
+    }
+
 
 //    getFinalResults()
     @Test
@@ -195,11 +172,10 @@ public class GameTest {
     }
 
 
-//  putMarbleInNextCup()
+//  putMarbleInNextCup() through pressCup
     @Test
     public void putMarbleInNextCupPlayer1Test() {
-        game.getPlayer1().setTurn(true);
-        game.getPlayer2().setTurn(false);
+        switchToPlayer1();
 
         game.getBoardCups()[1].addMarbles(-3);
         game.getBoardCups()[2].addMarbles(-6);
@@ -209,9 +185,8 @@ public class GameTest {
 
         int idPressedCup = 0;
         game.getBoardCups()[idPressedCup].addMarbles(-2);
-        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
 
-        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+        game.pressCup(idPressedCup);
 
         assertEquals(game.getBoardCups()[idPressedCup + 1].getMarbles(), 5);
         assertEquals(game.getBoardCups()[idPressedCup+2].getMarbles(), 2);
@@ -222,8 +197,7 @@ public class GameTest {
 
     @Test
     public void putMarbleInNextCupJumpOppositePlayerCupPlayer1Test() {
-        game.getPlayer1().setTurn(true);
-        game.getPlayer2().setTurn(false);
+        switchToPlayer1();
 
         game.getBoardCups()[5].addMarbles(-3);
         game.getBoardCups()[6].addMarbles(-6);
@@ -243,33 +217,30 @@ public class GameTest {
 
         int idPressedCup = 4;
         game.getBoardCups()[idPressedCup].addMarbles(9); //7 + 9 = 16 full circle
-        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
-        game.getBoardCups()[idPressedCup].addMarbles(-16);
-        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+        game.pressCup(idPressedCup);
 
-        assertEquals(game.getBoardCups()[idPressedCup].getMarbles(), 1);
-        assertEquals(game.getBoardCups()[idPressedCup + 1].getMarbles(), 6);
-        assertEquals(game.getBoardCups()[idPressedCup + 2].getMarbles(), 2);
-        assertEquals(game.getBoardCups()[idPressedCup+3].getMarbles(), 4);
-        assertEquals(game.getBoardCups()[idPressedCup+4].getMarbles(), 11);
-        assertEquals(game.getBoardCups()[idPressedCup+5].getMarbles(), 16);
-        assertEquals(game.getBoardCups()[idPressedCup+6].getMarbles(), 13);
-        assertEquals(game.getBoardCups()[idPressedCup+7].getMarbles(), 11);
-        assertEquals(game.getBoardCups()[idPressedCup+8].getMarbles(), 15);
-        assertEquals(game.getBoardCups()[idPressedCup+9].getMarbles(), 20);
-        assertEquals(game.getBoardCups()[idPressedCup+10].getMarbles(), 9);
-        assertEquals(game.getBoardCups()[idPressedCup+11].getMarbles(), 0);
-        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup].getMarbles(), 12);
-        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+1].getMarbles(), 11);
-        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+2].getMarbles(), 21);
-        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+3].getMarbles(), 5);
+        assertEquals(game.getBoardCups()[4].getMarbles(), 1);
+        assertEquals(game.getBoardCups()[5].getMarbles(), 6);
+        assertEquals(game.getBoardCups()[6].getMarbles(), 2);
+        assertEquals(game.getBoardCups()[7].getMarbles(), 4);
+        assertEquals(game.getBoardCups()[8].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[9].getMarbles(), 16);
+        assertEquals(game.getBoardCups()[10].getMarbles(), 13);
+        assertEquals(game.getBoardCups()[11].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[12].getMarbles(), 15);
+        assertEquals(game.getBoardCups()[13].getMarbles(), 20);
+        assertEquals(game.getBoardCups()[14].getMarbles(), 9);
+        assertEquals(game.getBoardCups()[15].getMarbles(), 0);
+        assertEquals(game.getBoardCups()[0].getMarbles(), 12);
+        assertEquals(game.getBoardCups()[1].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[2].getMarbles(), 21);
+        assertEquals(game.getBoardCups()[3].getMarbles(), 5);
 
     }
 
     @Test
     public void putMarbleInNextCupPlayer2Test() {
-        game.getPlayer1().setTurn(true);
-        game.getPlayer2().setTurn(false);
+        switchToPlayer2();
 
         game.getBoardCups()[9].addMarbles(-5);
         game.getBoardCups()[10].addMarbles(8);
@@ -280,23 +251,20 @@ public class GameTest {
 
         int idPressedCup = 8;
         game.getBoardCups()[idPressedCup].addMarbles(-1);
-        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
 
-        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+        game.pressCup(idPressedCup);
 
-        assertEquals(game.getBoardCups()[idPressedCup+1].getMarbles(), 3);
+        assertEquals(game.getBoardCups()[idPressedCup + 1].getMarbles(), 3);
         assertEquals(game.getBoardCups()[idPressedCup+2].getMarbles(), 16);
         assertEquals(game.getBoardCups()[idPressedCup+3].getMarbles(), 10);
         assertEquals(game.getBoardCups()[idPressedCup+4].getMarbles(), 19);
         assertEquals(game.getBoardCups()[idPressedCup+5].getMarbles(), 6);
         assertEquals(game.getBoardCups()[idPressedCup+6].getMarbles(), 12);
-
     }
 
     @Test
     public void putMarbleInNextCupJumpOppositePlayerCupPlayer2Test() {
-        game.getPlayer1().setTurn(false);
-        game.getPlayer2().setTurn(true);
+        switchToPlayer2();
 
         game.getBoardCups()[9].addMarbles(4);
         game.getBoardCups()[10].addMarbles(-4);
@@ -316,9 +284,7 @@ public class GameTest {
 
         int idPressedCup = 8;
         game.getBoardCups()[idPressedCup].addMarbles(9); //7 + 9 = 16 full circle
-        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
-        game.getBoardCups()[idPressedCup].addMarbles(-16);
-        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+        game.pressCup(idPressedCup);
 
         assertEquals(game.getBoardCups()[8].getMarbles(), 1);
         assertEquals(game.getBoardCups()[9].getMarbles(), 13);
@@ -342,8 +308,7 @@ public class GameTest {
 // pressCup()
     @Test
     public void PressCupPlayer1Test() {
-        game.getPlayer1().setTurn(true);
-        game.getPlayer2().setTurn(false);
+        switchToPlayer1();
         game.setIsFirstTurn(false);
         int currentCupID = 2;
         int marblesFromPressedCup = game.getBoardCups()[currentCupID].getMarbles();
@@ -364,7 +329,7 @@ public class GameTest {
         assertEquals(game.getBoardCups()[2].getMarbles(), 0);
 
         //check if the marbles have been added successfully to the next cups
-        assertEquals(game.getBoardCups()[3].getMarbles(), currentMarblesInCups[0]+1);
+        assertEquals(game.getBoardCups()[3].getMarbles(), currentMarblesInCups[0] + 1);
         assertEquals(game.getBoardCups()[4].getMarbles(), currentMarblesInCups[1]+1);
         assertEquals(game.getBoardCups()[5].getMarbles(), currentMarblesInCups[2]+1);
         assertEquals(game.getBoardCups()[6].getMarbles(), currentMarblesInCups[3]+1);
@@ -375,8 +340,7 @@ public class GameTest {
 
     @Test
     public void PressCupPlayer2Test() {
-        game.getPlayer1().setTurn(false);
-        game.getPlayer2().setTurn(true);
+        switchToPlayer2();
         game.setIsFirstTurn(false);
         int currentCupID = 10;
         int marblesFromPressedCup = game.getBoardCups()[currentCupID].getMarbles();

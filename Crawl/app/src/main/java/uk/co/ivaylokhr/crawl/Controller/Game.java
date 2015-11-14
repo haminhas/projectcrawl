@@ -65,7 +65,7 @@ public class Game {
      * Checks if the last marble landed on the current player's playerCup
      * @param buttonID
      */
-    public boolean giveAnotherTurn(int buttonID){
+    protected boolean giveAnotherTurn(int buttonID){
         if(player1.getTurn() && buttonID == 7 && areThereValidMoves(player1)){
             return true;
         }
@@ -103,7 +103,7 @@ public class Game {
      * This method loops through the current player's half and determine if you can make a move
      * If there is no valid move, it switches the player to make a move
     */
-    public boolean areThereValidMoves(Player player) {
+    protected boolean areThereValidMoves(Player player) {
         int cupIndex = 0;
 
         if(player.equals(player2)) {
@@ -123,7 +123,7 @@ public class Game {
     /**
      * This forces the switch of turns.It is called when one player doesn't have valid moves
      */
-    public void switchTurn(){
+    protected void switchTurn(){
         if(player1.getTurn() && areThereValidMoves(player2)){
             player2.setTurn(true);
             player1.setTurn(false);
@@ -137,7 +137,7 @@ public class Game {
      * @param idCurrentCup
      * @param marblesFromEmptiedCup
      */
-    public void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
+    protected void putMarblesInNextCups(int idCurrentCup, int marblesFromEmptiedCup) {
         int cupNumber = idCurrentCup + 1;
         for (int i = 0; i < marblesFromEmptiedCup; i++) {
             if (cupNumber == 7 && player2.getTurn()) {
@@ -147,7 +147,7 @@ public class Game {
             }
             Cup nextPocketCup = board.getCups()[cupNumber];
             //check at the last iteration if cup is empty
-            if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty()) {
+            if ((i == marblesFromEmptiedCup - 1) && nextPocketCup.isEmpty() && cupNumber != 7 && cupNumber != 15) {
                 stealOppositeCup(cupNumber);
             }
             nextPocketCup.addMarbles(1);
@@ -159,7 +159,7 @@ public class Game {
         }
     }
 
-    public void stealOppositeCup(int cupNumber) {
+    protected void stealOppositeCup(int cupNumber) {
         PocketCup nextPocketCup = (PocketCup) board.getCups()[cupNumber];
         PocketCup oppositeCup;
         if (player1.getTurn() && cupNumber < 7) {
