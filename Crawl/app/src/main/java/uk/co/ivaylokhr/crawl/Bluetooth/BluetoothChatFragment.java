@@ -309,9 +309,13 @@ public class BluetoothChatFragment extends Fragment {
 
     //takes the message that has been sent and puts it in a textfield that can then be read from the GameActivity class
     public void ButtonPressed(String readMessage) {
-        text.setText("");
-        text.setText(readMessage);
-        text.performClick();
+        try {
+            text.setText("");
+            text.setText(readMessage);
+            text.performClick();
+        }catch( Exception e){
+
+        }
     }
 
     //detects when a bluetooth link is completed and acts accordingly
