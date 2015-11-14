@@ -634,6 +634,9 @@ public class GameActivity extends AppCompatActivity {
         for (int i = 0; i < cups.length; i++) {
             int marbles = cups[i].getMarbles();
             buttons[i].setText(String.valueOf(marbles));
+            if(i == 7 || i == 15){
+                continue;
+            }
             if (marbles <= 7) {
                 buttons[i].setBackgroundResource(backgrounds[marbles]);
             } else {
