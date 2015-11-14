@@ -203,11 +203,69 @@ public class GameTest {
         game.getPlayer1().setTurn(true);
         game.getPlayer2().setTurn(false);
 
+        game.getBoardCups()[1].addMarbles(-3);
+        game.getBoardCups()[2].addMarbles(-6);
+        game.getBoardCups()[3].addMarbles(-5);
+        game.getBoardCups()[4].addMarbles(3);
+        game.getBoardCups()[5].addMarbles(8);
+
         int idPressedCup = 0;
-        int marblesFromPressedCup = 5;
+        game.getBoardCups()[idPressedCup].addMarbles(-2);
+        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
 
-        game.putMarblesInNextCups(0, 5);
+        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
 
-        assertEquals(game.getBoardCups()[idPressedCup+1], 8);
+        assertEquals(game.getBoardCups()[idPressedCup + 1].getMarbles(), 5);
+        assertEquals(game.getBoardCups()[idPressedCup+2].getMarbles(), 2);
+        assertEquals(game.getBoardCups()[idPressedCup+3].getMarbles(), 3);
+        assertEquals(game.getBoardCups()[idPressedCup+4].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[idPressedCup+5].getMarbles(), 16);
+    }
+
+    @Test
+    public void putMarbleInNextCupJumpOppositePlayerCupPlayer1() {
+        game.getPlayer1().setTurn(true);
+        game.getPlayer2().setTurn(false);
+
+        game.getBoardCups()[5].addMarbles(-3);
+        game.getBoardCups()[6].addMarbles(-6);
+        game.getBoardCups()[7].addMarbles(3);
+        game.getBoardCups()[8].addMarbles(3);
+        game.getBoardCups()[9].addMarbles(8);
+        game.getBoardCups()[10].addMarbles(5);
+        game.getBoardCups()[11].addMarbles(3);
+        game.getBoardCups()[12].addMarbles(7);
+        game.getBoardCups()[13].addMarbles(12);
+        game.getBoardCups()[14].addMarbles(1);
+        game.getBoardCups()[15].addMarbles(0);
+        game.getBoardCups()[0].addMarbles(4);
+        game.getBoardCups()[1].addMarbles(3);
+        game.getBoardCups()[2].addMarbles(13);
+        game.getBoardCups()[3].addMarbles(-3);
+
+        int idPressedCup = 4;
+        game.getBoardCups()[idPressedCup].addMarbles(9); //7 + 9 = 16 full circle
+        int marblesFromPressedCup = game.getBoardCups()[idPressedCup].getMarbles();
+        game.getBoardCups()[idPressedCup].addMarbles(-16);
+        game.putMarblesInNextCups(idPressedCup, marblesFromPressedCup);
+
+
+        assertEquals(game.getBoardCups()[idPressedCup].getMarbles(), 1);
+        assertEquals(game.getBoardCups()[idPressedCup + 1].getMarbles(), 6);
+        assertEquals(game.getBoardCups()[idPressedCup + 2].getMarbles(), 2);
+        assertEquals(game.getBoardCups()[idPressedCup+3].getMarbles(), 4);
+        assertEquals(game.getBoardCups()[idPressedCup+4].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[idPressedCup+5].getMarbles(), 16);
+        assertEquals(game.getBoardCups()[idPressedCup+6].getMarbles(), 13);
+        assertEquals(game.getBoardCups()[idPressedCup+7].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[idPressedCup+8].getMarbles(), 15);
+        assertEquals(game.getBoardCups()[idPressedCup+9].getMarbles(), 20);
+        assertEquals(game.getBoardCups()[idPressedCup+10].getMarbles(), 9);
+        assertEquals(game.getBoardCups()[idPressedCup+11].getMarbles(), 0);
+        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup].getMarbles(), 12);
+        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+1].getMarbles(), 11);
+        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+2].getMarbles(), 21);
+        assertEquals(game.getBoardCups()[idPressedCup-idPressedCup+3].getMarbles(), 5);
+
     }
 }
