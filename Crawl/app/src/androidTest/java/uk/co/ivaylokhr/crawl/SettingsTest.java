@@ -21,13 +21,13 @@ import uk.co.ivaylokhr.crawl.Activities.Settings;
  * Created by Hassan on 13/11/2015.
  */
 public class SettingsTest extends ActivityInstrumentationTestCase2<Settings> {
-    private Settings mActivity;
+    private Settings settings;
     private EditText one;
     private EditText two;
     private Button save1;
     private String s;
     private String s2;
-    private Intent mMainIntent;
+    private Button cancel;
 
     public SettingsTest() {
         super(Settings.class);
@@ -36,14 +36,13 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<Settings> {
     @Before
     protected void setUp() throws Exception {
         super.setUp();
-        mActivity = this.getActivity();
-        one = (EditText) mActivity.findViewById(R.id.editText);
-        two = (EditText) mActivity.findViewById(R.id.editText2);
-        save1 = (Button) mActivity.findViewById(R.id.button6);
-        s = mActivity.getPlayer1();
-        s2 = mActivity.getPlayer2();
-        mMainIntent = new Intent(Intent.ACTION_MAIN);
-
+        settings = getActivity();
+        one = (EditText) settings.findViewById(R.id.editText);
+        two = (EditText) settings.findViewById(R.id.editText2);
+        save1 = (Button) settings.findViewById(R.id.button6);
+        s = settings.getPlayer1();
+        s2 = settings.getPlayer2();
+        cancel = (Button) settings.findViewById(R.id.button5);
     }
     @Test
     public void testPreconditions() {
@@ -67,23 +66,20 @@ public class SettingsTest extends ActivityInstrumentationTestCase2<Settings> {
     }
 
     public void testOpenNextActivity(){
-        Button cancel = (Button) mActivity.findViewById(R.id.button5);
+        Button cancel = (Button) settings.findViewById(R.id.button5);
         TouchUtils.clickView(this, cancel);
     }
 
-    @Ignore
     @Test
-    public void testCancel() {
-        // register next activity that need to be monitored.
+    public void testCancelClick() {
         Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
-        Button cancel = (Button) mActivity.findViewById(R.id.button5);
-        TouchUtils.clickView(this, cancel);
-        //Watch for the timeout
-        //example values 5000 if in ms, or 5 if it's in seconds.
-        MainActivity nextActivity = (MainActivity) getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 10000);
-        // next activity is opened and captured.
-        assertEquals(MainActivity.class, nextActivity);
-        assertNotNull(nextActivity);
-        nextActivity.finish();
+        settings.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                cancel.performClick();
+            }
+        });
+        MainActivity nextActivity = (MainActivity) getInstrumentation().waitForMonitorWithTimeout(activityMonitor,5000);
+        assertNull(nextActivity);
     }
 }
