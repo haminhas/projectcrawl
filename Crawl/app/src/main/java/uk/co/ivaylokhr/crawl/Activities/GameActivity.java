@@ -481,7 +481,7 @@ public class GameActivity extends AppCompatActivity {
         Log.i("tag","che4");
         if(fragment.getState()){
             Log.i("tag","che3");
-            if (game.isPlayerOneTurn()) {
+            if (game.getPlayer1().getTurn()) {
                 for (int i = 0; i < 7; i++) {
                     Log.i("tag","che2");
                     if (game.getBoardCups()[i].getMarbles() == 0) {
@@ -518,7 +518,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }else {
-            if (game.isPlayerOneTurn()) {
+            if (game.getPlayer1().getTurn()) {
                 for (int i = 0; i < 7; i++) {
                     if (game.getBoardCups()[i].getMarbles() == 0) {
                         buttons[i].setEnabled(false);
