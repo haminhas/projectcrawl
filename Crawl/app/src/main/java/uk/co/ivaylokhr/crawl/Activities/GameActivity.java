@@ -220,6 +220,8 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
+        AlertDialog alertDialog = optionpane.create();
+        alertDialog.show();
     }
 
     //set the high score for the least time a game has taken to complete
@@ -277,7 +279,7 @@ public class GameActivity extends AppCompatActivity {
                 if(bluetoothPressed.getText().equals("")){
                     return;
                 }
-                if(bluetoothPressed.getText().equals(" ")){
+                if(bluetoothPressed.getText().equals("yes")){
                     arePlayerOne = true;
                     return;
                 }
@@ -287,14 +289,14 @@ public class GameActivity extends AppCompatActivity {
                 }
                 if(bluetoothPressed.getText().equals("start")){
                     startBluetooth();
+                    startName();
+                    sendMessage("go");
                     return;
                 }
-                if(bluetoothPressed.getText().length() > 3) {
-                    if (bluetoothPressed.getText().subSequence(0, 4).equals("name")) {
-                        int length = bluetoothPressed.getText().length();
-                        startName((String) bluetoothPressed.getText().subSequence(4, length));
-                        return;
-                    }
+                if(bluetoothPressed.getText().equals("go")){
+                    startBluetooth();
+                    startName();
+                    return;
                 }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
         int marbles = game.getBoardCups()[b.getId()].getMarbles();
@@ -315,13 +317,13 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    private void startName(String bluetoothName) {
+    private void startName() {
         if(arePlayerOne) {
-            game.getPlayer2().setName(bluetoothName);
-            playerTwoLabelName.setText(bluetoothName);
+            game.getPlayer2().setName("Opponent");
+            playerTwoLabelName.setText("Opponent");
         }else{
-            game.getPlayer1().setName(bluetoothName);
-            playerOneLabelName.setText(bluetoothName);
+            game.getPlayer1().setName("Opponent");
+            playerOneLabelName.setText("Opponent");
         }
     }
 
@@ -340,7 +342,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         startTime = System.currentTimeMillis();
-        sendMessage("name" + game.getPlayer1().getName());
     }
 
     //This is for the dialog. It goes to the main menu if you say you want to
