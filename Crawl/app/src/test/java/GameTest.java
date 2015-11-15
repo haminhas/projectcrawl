@@ -391,12 +391,7 @@ public class GameTest {
 
         for (int i = 0; i < 16; i++){
             int marbles;
-            if(i == firstTurnID || i == secondTurnID){
-                marbles = 0;
-            }
-            else{
-                marbles = game.getBoardCups()[i].getMarbles();
-            }
+            marbles = game.getBoardCups()[i].getMarbles();
             marblesArray[i] = marbles;
         }
 
@@ -405,6 +400,13 @@ public class GameTest {
 
         assertFalse(game.getPlayer1().getTurn());
         assertTrue(game.getPlayer2().getTurn());
+
+        for (int i = 0; i < 15; i++){
+            assertEquals(game.getBoardCups()[i].getMarbles(),marblesArray[i]);
+        }
+
+        marblesArray[firstTurnID] = 0;
+        marblesArray[secondTurnID] = 0;
 
         game.firstTurnPlay(secondTurnID);
         int marblesFromSecondCup = game.getBoardCups()[secondTurnID].getMarbles();
@@ -447,12 +449,7 @@ public class GameTest {
 
         for (int i = 0; i < 16; i++){
             int marbles;
-            if(i == firstTurnID || i == secondTurnID){
-                marbles = 0;
-            }
-            else{
-                marbles = game.getBoardCups()[i].getMarbles();
-            }
+            marbles = game.getBoardCups()[i].getMarbles();
             marblesArray[i] = marbles;
         }
 
@@ -461,6 +458,13 @@ public class GameTest {
 
         assertTrue(game.getPlayer1().getTurn());
         assertFalse(game.getPlayer2().getTurn());
+
+        for (int i = 0; i < 15; i++){
+            assertEquals(game.getBoardCups()[i].getMarbles(),marblesArray[i]);
+        }
+
+        marblesArray[firstTurnID] = 0;
+        marblesArray[secondTurnID] = 0;
 
         game.firstTurnPlay(secondTurnID);
         int marblesFromSecondCup = game.getBoardCups()[secondTurnID].getMarbles();
@@ -475,7 +479,7 @@ public class GameTest {
                 change = 2;
             }
             if(nextID > 15){
-                nextID -= 15;
+                nextID -= 16;
             }
             assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
