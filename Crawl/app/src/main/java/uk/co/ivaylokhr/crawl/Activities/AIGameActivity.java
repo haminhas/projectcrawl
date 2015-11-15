@@ -20,7 +20,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import uk.co.ivaylokhr.crawl.Controller.AIGame;
-import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;

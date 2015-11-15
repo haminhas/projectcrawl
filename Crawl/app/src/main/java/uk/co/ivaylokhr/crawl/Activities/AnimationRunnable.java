@@ -1,4 +1,4 @@
-package uk.co.ivaylokhr.crawl.Controller;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.content.Context;
 import android.view.animation.Animation;

@@ -22,7 +22,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import uk.co.ivaylokhr.crawl.Controller.BluetoothController;
-import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
