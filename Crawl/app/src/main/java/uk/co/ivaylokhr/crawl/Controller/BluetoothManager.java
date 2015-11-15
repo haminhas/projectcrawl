@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.co.ivaylokhr.crawl.Bluetooth;
+package uk.co.ivaylokhr.crawl.Controller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+
+import uk.co.ivaylokhr.crawl.Model.Constants;
 
 /**
  * This class does all the work for setting up and managing Bluetooth

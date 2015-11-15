@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.co.ivaylokhr.crawl.Bluetooth;
+package uk.co.ivaylokhr.crawl.Controller;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -36,6 +36,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import uk.co.ivaylokhr.crawl.Activities.DeviceListActivity;
+import uk.co.ivaylokhr.crawl.Model.Constants;
 import uk.co.ivaylokhr.crawl.R;
 
 

@@ -21,7 +21,7 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import uk.co.ivaylokhr.crawl.Bluetooth.BluetoothController;
+import uk.co.ivaylokhr.crawl.Controller.BluetoothController;
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
 import uk.co.ivaylokhr.crawl.Model.Cup;
@@ -555,75 +555,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-//    private void swapEnabledButtonsOnTurnChange() {
-//        if(controller.getState()){
-//            if (game.getPlayer1().getTurn()) {
-//                for (int i = 0; i < 7; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                        if(arePlayerOne) {
-//                            buttons[i].setEnabled(true);
-//                        }
-//                        buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//                for (int i = 8; i < 15; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//            } else {
-//                for (int i = 0; i < 7; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//
-//                for (int i = 8; i < 15; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                        if(!arePlayerOne) {
-//                            buttons[i].setEnabled(true);
-//                        }
-//                        buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//            }
-//        }else {
-//            if (game.getPlayer1().getTurn()) {
-//                for (int i = 0; i < 7; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                            buttons[i].setEnabled(true);
-//                            buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//                for (int i = 8; i < 15; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//            } else {
-//                for (int i = 0; i < 7; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//
-//                for (int i = 8; i < 15; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                        buttons[i].setEnabled(true);
-//                        buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     //updates the cups information when ever a cup is pressed
     public void updateView() {

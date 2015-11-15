@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package uk.co.ivaylokhr.crawl.Bluetooth;
+package uk.co.ivaylokhr.crawl.Activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
