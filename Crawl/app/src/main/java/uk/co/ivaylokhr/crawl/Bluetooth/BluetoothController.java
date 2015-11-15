@@ -94,7 +94,6 @@ public class BluetoothController extends Fragment {
         if (mBluetoothAdapter == null) {
             FragmentActivity activity = getActivity();
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-            activity.finish();
         }
     }
 
@@ -355,7 +354,6 @@ public class BluetoothController extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving,
                             Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
                 }
         }
     }
