@@ -352,7 +352,7 @@ public class BluetoothController extends Fragment {
                     // Bluetooth is now enabled, so set up a chat session
                     setupChat();
                 } else {
-                    Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving,
+                    Toast.makeText(getActivity(), R.string.bt_not_enabled,
                             Toast.LENGTH_SHORT).show();
                 }
         }
