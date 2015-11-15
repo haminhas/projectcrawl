@@ -413,15 +413,15 @@ public class GameActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                    game.pressCup(b.getId());
-                    sendMessage(String.valueOf(b.getId()));
                     //checks if a game is in its first turn and acts accordingly
                     if(!game.isFirstTurn()) {
                         activateAnimation(b.getId(), marbles);
                         playClickSound();
-                        swapEnabledButtonsOnTurnChange();
-                        updateBoardView();
                     }
+                    game.pressCup(b.getId());
+                    sendMessage(String.valueOf(b.getId()));
+                    swapEnabledButtonsOnTurnChange();
+                    updateBoardView();
                     //checks if a game is finished and acts accordingly
                     if(game.isGameFinished()){
                         popUpGameFinished();
