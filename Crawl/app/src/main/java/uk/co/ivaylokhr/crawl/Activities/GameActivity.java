@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -68,6 +67,7 @@ public class GameActivity extends AppCompatActivity {
 
         //calls all the background methods that set up the game
         buttons = fillButtonsArray();
+        arePlayerOne = false;
         initialiseGame();
         initializeButtons();
         increaseGamesPlayed();
@@ -98,7 +98,6 @@ public class GameActivity extends AppCompatActivity {
         playerTwoLabelName = (TextView) findViewById(R.id.player2);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        arePlayerOne = false;
     }
 
     /**

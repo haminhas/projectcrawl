@@ -166,7 +166,6 @@ public class AIGameActivity extends Activity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
-        Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
         optionpane.setMessage(R.string.gobackmessage).setCancelable(true);
         optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
