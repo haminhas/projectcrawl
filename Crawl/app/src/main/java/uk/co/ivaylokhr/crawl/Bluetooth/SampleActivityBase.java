@@ -26,6 +26,9 @@ public class SampleActivityBase extends FragmentActivity {
 
     public static final String TAG = "SampleActivityBase";
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

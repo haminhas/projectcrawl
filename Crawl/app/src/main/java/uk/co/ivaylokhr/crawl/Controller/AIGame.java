@@ -15,8 +15,8 @@ public class AIGame extends Game {
     private Player aiPlayer;
     private int firstButton;
     private int marbles;
-    //first turn stff
 
+    //first turn set up
     public AIGame() {
         firstButton = 0;
         marbles = 0;
@@ -38,12 +38,18 @@ public class AIGame extends Game {
         aiPlayer.setTurn(false);
     }
 
+    /**
+     * @param id
+     */
     public void setFirstHumanMove(int id){
         firstID = id;
         player1.setTurn(false);
         aiPlayer.setTurn(true);
     }
 
+    /**
+     * @return aiMoveID
+     */
     public int generateFirstAIMove(){
         Random rand = new Random();
         int aiMoveID = rand.nextInt(6) + 8;
@@ -80,6 +86,11 @@ public class AIGame extends Game {
         putMarblesInNextCups(id, marblesFromEmptiedCup);
     }
 
+    /**
+     * decide turn after the AI has played
+     * @param id
+     * @param marblesFromEmptiedCup
+     */
     public void switchTurnsAfterAITurn(int id, int marblesFromEmptiedCup){
         //at this point please check if the cup in the array still has the marbles
         int finalButtonID = id + marblesFromEmptiedCup;
@@ -91,6 +102,10 @@ public class AIGame extends Game {
         }
     }
 
+    /**
+     * checks to see if there is an cup that can be stolen
+     * @return i
+     */
     private int opposite() {
         for(int i = 8; i < 15;i++){
             int op = (board.getCups()[i].getMarbles() + i)%16;
@@ -104,6 +119,10 @@ public class AIGame extends Game {
         return -1;
     }
 
+    /**
+     *checks to see if the AI gets another turn
+     * @return
+     */
     private int extraTurn(){
         for(int i = 14; i > 7;i--){
             if((board.getCups()[i].getMarbles() + i)%15 == 0){
@@ -138,18 +157,28 @@ public class AIGame extends Game {
         isFirstTurn = false;
     }
 
+    /**
+     * @return marbles
+     */
     public int returnMarbles(){
         return marbles;
     }
 
+    /**
+     * @return firstButton
+     */
     public int returnFirstButton(){
         return firstButton;
     }
-
+    /**
+     * @return player1
+     */
     public Player getHumanPlayer(){
         return getPlayer1();
     }
-
+    /**
+     * @return player2
+     */
     public Player getAIPlayer(){
         return getPlayer2();
     }

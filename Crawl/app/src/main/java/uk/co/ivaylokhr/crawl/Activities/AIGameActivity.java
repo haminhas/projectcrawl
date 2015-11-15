@@ -9,10 +9,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 
 import uk.co.ivaylokhr.crawl.Controller.AIGame;
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
-import uk.co.ivaylokhr.crawl.Controller.GoToActivityListener;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
