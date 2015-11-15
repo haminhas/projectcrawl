@@ -67,6 +67,7 @@ public class GameActivity extends AppCompatActivity {
         }
 
         //calls all the background methods that set up the game
+        buttons = fillButtonsArray();
         initialiseGame();
         initializeButtons();
         increaseGamesPlayed();
@@ -98,7 +99,6 @@ public class GameActivity extends AppCompatActivity {
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
         arePlayerOne = false;
-        buttons = fillButtonsArray();
     }
 
     /**
