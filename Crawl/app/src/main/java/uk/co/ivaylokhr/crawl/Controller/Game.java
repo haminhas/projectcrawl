@@ -18,6 +18,9 @@ public class Game {
     private int secondID;
     private boolean secondHasPlayed;
 
+    /**
+     * Initiates a two player game.
+     */
     public Game() {
         player1 = new Player();
         player2 = new Player();
@@ -40,7 +43,7 @@ public class Game {
 
     /**
      * Action triggered when you press a Cup on the screen
-     * @param id
+     * @param id the ID of the pressed cup
      */
     public void pressCup(int id) {
         if(isFirstTurn){
@@ -80,8 +83,9 @@ public class Game {
     }
 
     /**
-     * the logic behind the first turn, where the players do the turn together
+     * PressCup method only for the first turn of the game.
      * after both players make their moves, the one that clicked first is first to go
+     * @param id the id of the pressed cup
      */
     public void firstTurnPlay(int id) {
         if (id < 7) {
@@ -204,13 +208,19 @@ public class Game {
     }
 
     /**
-     * checks if all the cups have been emptied
+     * Checks if the game has finished
      * @return boolean if the game is finished
      */
     public boolean isGameFinished() {
         return (!areThereValidMoves(player1) && !areThereValidMoves(player2));
     }
 
+    /**
+     * Checks which of the two players is the winner.
+     * If the game is a draw, the returned player is Player 1 (the one that plays on the botoom part of the screen).
+     * @see Player
+     * @return the winner of the game.
+    */
     public Player checkWinner() {
         if(board.getPlayerCup1Marbles() >= board.getPlayerCup2Marbles()) {
             return player1;
@@ -220,6 +230,8 @@ public class Game {
     }
 
     /**
+     * Returns the names of both of the players and their score as an array. The order of the elements is: The winner's name,
+     * his score, other player's name and finally the other player's name.
      * @return array with the 2 players and their respective scores
      */
     public String[] getFinalResults() {
