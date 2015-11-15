@@ -337,7 +337,8 @@ public class AIGameActivity extends Activity {
      * @param marbles
      */
     private void aiMove(int marbles) {
-        //forces the AI to wait until the previous animation is completed
+        if(!aiGame.isGameFinished()){
+            //forces the AI to wait until the previous animation is completed
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -357,7 +358,7 @@ public class AIGameActivity extends Activity {
                     }
                 }
             }, (marbles * 250)+1000);
-
+        }
         }
 
     /**
