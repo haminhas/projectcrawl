@@ -11,10 +11,13 @@ import android.widget.TextView;
 import uk.co.ivaylokhr.crawl.R;
 
 public class Settings extends Activity {
-    private  String player1;
+    private String player1;
     private String player2;
 
-    //create new window that lets you change the player names
+    /**
+     * create new window that lets you change the player names
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,50 +38,48 @@ public class Settings extends Activity {
         two.setText(player2);
     }
 
-    //return to start screen and save the new player names
+    /**
+     * return to start screen and save the new player names
+     * @param view
+     */
     public void save(View view){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         TextView one = (TextView) findViewById(R.id.editText);
         TextView two = (TextView) findViewById(R.id.editText2);
-        String player = ""+ one.getText();
-        String playerr = ""+ two.getText();
-        editor.putString("player1", player);
-        editor.putString("player2", playerr);
+        String playerone = ""+ one.getText();
+        String playertwo = ""+ two.getText();
+        editor.putString("player1", playerone);
+        editor.putString("player2", playertwo);
         editor.commit();
         finish();
     }
 
-    //return to start screen without saving
+    /**
+     * return to start screen without saving
+     * @param view
+     */
     public void cancel(View view){
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_set, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    //returns to Maain Menu on back pressed
     @Override
     public void onBackPressed(){
         finish();
     }
 
+    /**
+     * @return Player1
+     */
+    public String getPlayer1() {
+        return player1;
+    }
+
+    /**
+     * @return Player2
+     */
+    public String getPlayer2() {
+        return player2;
+    }
 }

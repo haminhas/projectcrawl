@@ -9,10 +9,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
@@ -40,6 +38,10 @@ public class AIGameActivity extends Activity {
     private TextView playerOneLabelName;
     private TextView playerTwoLabelName;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,7 @@ public class AIGameActivity extends Activity {
         return true;
     }
 
+    //initialises the game and creates the AIGame class
     public void initialiseGame() {
         aiGame = new AIGame();
         turn = (TextView) findViewById(R.id.turn);
@@ -71,6 +74,8 @@ public class AIGameActivity extends Activity {
         buttons = fillButtonsArray();
     }
 
+
+    //retrieves player names from the Shared Preferences and sets the player names
     public void addPlayerNames(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
@@ -111,8 +116,14 @@ public class AIGameActivity extends Activity {
                         popupView,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
+                //Creates 4 buttons objects linked to the buttons on the settings menu
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
+                Button btnConnect = (Button) popupView.findViewById(R.id.connect);
+                Button btnHost = (Button) popupView.findViewById(R.id.host);
+                //Hides the Connect and Host button so the can't be pressed
+                btnConnect.setVisibility(View.GONE);
+                btnHost.setVisibility(View.GONE);
                 popupWindow.setFocusable(true);
                 popupWindow.update();
                 popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -151,44 +162,36 @@ public class AIGameActivity extends Activity {
             handler.postDelayed(this, 0);
         }};
 
-    //warn the player that going back will end his aiGame
+    //warn the player that going back will end his game
     @Override
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
-        optionpane.setMessage(R.string.gobackmessage).setCancelable(true)
-                .setPositiveButton(R.string.yes, new GoToActivityListener(mainMenu))
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+        optionpane.setMessage(R.string.gobackmessage).setCancelable(true);
+        optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        optionpane.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
 
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
-    //closes window and returns to main menu
     public void back() {
         finish();
     }
 
     //set the high score for the least time a aiGame has taken to complete
-    public void setShortedPlayedTime(){
+    public void setShortestPlayedTime(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         String temp = sp.getString("times", "");
@@ -213,7 +216,10 @@ public class AIGameActivity extends Activity {
         editor.commit();
     }
 
-    //fills the array with Player Cups and Pocket Cups and sets there ids
+    /**
+     *fills the array with Player Cups and Pocket Cups and sets there ids
+     * @return Button Array
+     */
     public Button[] fillButtonsArray(){
         buttons = new Button[16];
 
@@ -229,23 +235,15 @@ public class AIGameActivity extends Activity {
         return buttons;
     }
 
-    //returns cups
+    /**
+     * returns Buttons
+     * @return Button Array
+     */
     public Button[] getButtons(){
         return buttons;
     }
 
-    public class GoToActivityListener implements DialogInterface.OnClickListener{
-        private Intent activity;
-        public GoToActivityListener(Intent intent){
-            activity = intent;
-        }
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            startActivity(activity);
-        }
-    }
-
-
+    //enables all buttons on game start
     private void enableAllButtons() {
         for (int i = 0; i < 7; i++) {
             buttons[i].setEnabled(true);
@@ -278,7 +276,8 @@ public class AIGameActivity extends Activity {
                             updateScores();
                             popUpGameFinished();
                         }
-                        if(!aiGame.isPlayerOneTurn()){
+                        //if AIs turn it will call the aiMove method
+                        if(aiGame.getAIPlayer().getTurn()){
                             aiMove(marbles);
                         }
                     }
@@ -287,25 +286,43 @@ public class AIGameActivity extends Activity {
         }
     }
 
+    //games end screen
     private void popUpGameFinished() {
         String[] finalResults = aiGame.getFinalResults();
+        String message;
+        if(aiGame.isDraw()){
+            message = "Draw!\n" + finalResults[0] + ": " + finalResults[1] + "\n" + finalResults[2] + ": " + finalResults[3];
+        }
+        else{
+            message = "Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3];
+        }
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         Intent newAIGame = new Intent(this, AIGameActivity.class);
         optionpane.setTitle("Game Finished");
-        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
-                .setPositiveButton("Main Menu", new GoToActivityListener(mainMenu))
-                .setNegativeButton("Play Again", new GoToActivityListener(newAIGame));
+        optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false);
+        optionpane.setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        optionpane.setNegativeButton("Play Again", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                recreate();
+            }
+        });
+
         AlertDialog alertDialog = optionpane.create();
         alertDialog.show();
     }
 
+    //decides the AI's first move
     private void firstAIMove(){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int humanMove = aiGame.getFirstHumanMove();
+                int humanMove = aiGame.getFirstMoveID();
                 int aiMove = aiGame.generateFirstAIMove();
                 aiGame.applyFirstTurnChanges(humanMove, aiMove);
                 activateAnimation(humanMove, 7);
@@ -316,12 +333,16 @@ public class AIGameActivity extends Activity {
         }, 1500);
     }
 
+    /**
+     * AI logic which decides which move he should make
+     * @param marbles
+     */
     private void aiMove(int marbles) {
+        //forces the AI to wait until the previous animation is completed
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("tag", "test1");
                     aiGame.doMove();
                     activateAnimation(aiGame.returnFirstButton(), aiGame.returnMarbles());
                     aiGame.switchTurnsAfterAITurn(aiGame.returnFirstButton(), aiGame.returnMarbles());
@@ -332,7 +353,7 @@ public class AIGameActivity extends Activity {
                         updateScores();
                         popUpGameFinished();
                     }
-                    if(!aiGame.isPlayerOneTurn()){
+                    if(aiGame.getAIPlayer().getTurn()){
                         aiMove(aiGame.returnMarbles());
                     }
                 }
@@ -340,6 +361,11 @@ public class AIGameActivity extends Activity {
 
         }
 
+    /**
+     *activate the animation so there is a visual feedback in the game
+     * @param idCurrentCup
+     * @param marbles
+     */
     public void activateAnimation(int idCurrentCup, int marbles) {
         int nextCup = idCurrentCup + 1;
         for (int i = 0; i < marbles; i++) {
@@ -368,13 +394,15 @@ public class AIGameActivity extends Activity {
         }
     }
 
+    //plays sound when ever a button is pressed
     private void playClickSound(){
         MediaPlayer media = MediaPlayer.create(this, R.raw.click);
         media.start();
     }
 
+    //enable or disable buttons on the board depending on whose turn it is
     public void swapEnabledButtonsOnTurnChange() {
-        if(aiGame.isPlayerOneTurn()){
+        if(aiGame.getHumanPlayer().getTurn()){
             for (int i = 0; i < 7; i++) {
                 if (aiGame.getBoardCups()[i].getMarbles() > 0){
                     buttons[i].setEnabled(true);
@@ -393,6 +421,7 @@ public class AIGameActivity extends Activity {
         }
     }
 
+    //updates the board view
     public void updateView() {
         Cup[] cups = aiGame.getBoardCups();
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,
@@ -417,7 +446,7 @@ public class AIGameActivity extends Activity {
     //update Ivaylo's textview on the top of the screen, it might be removed if you feel like it
     private void updateTurnText(){
         String turnText = "";
-        if(aiGame.isPlayerOneTurn()) {
+        if(aiGame.getHumanPlayer().getTurn()) {
             turnText = (String) playerOneLabelName.getText();
             playerOneLabelName.setTextColor(Color.GREEN);
             playerTwoLabelName.setTextColor(Color.BLACK);
@@ -432,11 +461,16 @@ public class AIGameActivity extends Activity {
 
     //This method edits the highscores after the aiGame
     public void updateScores() {
-        Integer score = aiGame.checkWinnerScore();
+        Integer score;
+        if(aiGame.checkWinner().equals(aiGame.getPlayer1())) {
+            score = aiGame.getBoard().getPlayerCup1Marbles();
+        } else {
+            score = aiGame.getBoard().getPlayerCup2Marbles();
+        }
         Integer one = Preferences.fromPreferences(this.getBaseContext(), -1, "first", "your_prefs");
         Integer two = Preferences.fromPreferences(this.getBaseContext(), -1, "second", "your_prefs");
         Integer three = Preferences.fromPreferences(this.getBaseContext(), -1, "third", "your_prefs");
-        this.setShortedPlayedTime();
+        this.setShortestPlayedTime();
         if (score > one) {
             three = two;
             two = one;
