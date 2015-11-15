@@ -159,7 +159,7 @@ public class DeviceListActivity extends Activity {
         // Request discover from BluetoothAdapter
         mBtAdapter.startDiscovery();
     }
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+
     /**
      * The on-click listener for all devices in the ListViews
      */

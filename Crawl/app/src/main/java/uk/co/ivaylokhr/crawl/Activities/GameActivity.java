@@ -14,8 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
@@ -23,12 +21,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import uk.co.ivaylokhr.crawl.Bluetooth.BluetoothChatFragment;
+import uk.co.ivaylokhr.crawl.Bluetooth.BluetoothController;
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
-import uk.co.ivaylokhr.crawl.Controller.GoToActivityListener;
 import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Preferences;
 import uk.co.ivaylokhr.crawl.R;
@@ -42,13 +38,16 @@ public class GameActivity extends AppCompatActivity {
     private long startTime;
     private long timeCounter=0;
     private Handler handler = new Handler();
-    private BluetoothChatFragment fragment;
-    private android.os.Handler bluetoothHandler;
+    private BluetoothController controller;
     private TextView turn;
     private TextView playerOneLabelName;
     private TextView bluetoothPressed;
     private TextView playerTwoLabelName;
     private boolean arePlayerOne;
+
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,18 +56,18 @@ public class GameActivity extends AppCompatActivity {
         initBluetooth();
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+        //Creates the Bluetooth Controller
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            fragment = new BluetoothChatFragment();
-            bluetoothHandler = fragment.returnHandler();
-            transaction.replace(R.id.sample_content_fragment, fragment);
-            fragment.addText(bluetoothPressed);
+            controller = new BluetoothController();
+            transaction.replace(R.id.sample_content_fragment, controller);
+            controller.addText(bluetoothPressed);
             arePlayerOne = false;
             transaction.commit();
         }
+
+        //calls all the background methods that set up the game
         initialiseGame();
-        arePlayerOne = false;
-        buttons = fillButtonsArray();
         initializeButtons();
         increaseGamesPlayed();
         enableAllButtons();
@@ -77,13 +76,18 @@ public class GameActivity extends AppCompatActivity {
         settings();
 
     }
-    public void sendMessage(String cup){
 
-        if(fragment.getState()) {
-            fragment.sendMessage(cup);
+    /**
+     * send a String via bluetooth to another device
+     * @param cup
+     */
+    public void sendMessage(String cup){
+        if(controller.getState()) {
+            controller.sendMessage(cup);
         }
     }
 
+    //creates the game class, starts the timer along with and creates the button array
     private void initialiseGame() {
         game = new Game();
         turn = (TextView) findViewById(R.id.turn);
@@ -93,9 +97,14 @@ public class GameActivity extends AppCompatActivity {
         playerTwoLabelName = (TextView) findViewById(R.id.player2);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
+        arePlayerOne = false;
+        buttons = fillButtonsArray();
     }
 
-
+    /**
+     * retrieves the player names from the Shared Preferences and put them on the board and sets the initial turn Textview
+     * @param firstGame
+     */
     private void addPlayerNames(boolean firstGame){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
@@ -142,6 +151,7 @@ public class GameActivity extends AppCompatActivity {
                         popupView,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
+                //Creates 4 buttons objects linked to the buttons on the settings menu
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
                 Button btnConnect = (Button) popupView.findViewById(R.id.connect);
@@ -158,19 +168,21 @@ public class GameActivity extends AppCompatActivity {
                         startActivity(mainMenu);
                     }
                 });
+                //Creates onClickListener that allows you to search for other devices;
                 btnConnect.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        fragment.connectBluetooth();
+                        controller.connectBluetooth();
                         popupWindow.dismiss();
                     }
                 });
+                //Creates onClickListener that makes the device discoverable
                 btnHost.setOnClickListener(new Button.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        fragment.discoverable();
+                        controller.discoverable();
                         popupWindow.dismiss();
                     }
                 });
@@ -199,7 +211,8 @@ public class GameActivity extends AppCompatActivity {
             String time = String.format("%02d:%02d", minutes, seconds);
             timer.setText(time);
             handler.postDelayed(this, 0);
-        }};
+        }
+    };
 
     //warn the player that going back will end his game
     @Override
@@ -207,7 +220,6 @@ public class GameActivity extends AppCompatActivity {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
-
         optionpane.setMessage(R.string.gobackmessage).setCancelable(true);
         optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
@@ -238,6 +250,7 @@ public class GameActivity extends AppCompatActivity {
         int two = temp.charAt(3)*10+temp.charAt(4);
         int three =time.charAt(0)*10+time.charAt(1);
         int four = time.charAt(3)*10+time.charAt(4);
+        //checks if where your score lies in the rankings
         if(three < one) {
             editor.putString("times", time);
             editor.commit();
@@ -251,7 +264,10 @@ public class GameActivity extends AppCompatActivity {
         editor.commit();
     }
 
-    //fills the array with Player Cups and Pocket Cups and sets there ids
+    /**
+     *fills the array with Player Cups and Pocket Cups and sets there ids
+     * @return Button Array
+     */
     private Button[] fillButtonsArray(){
         buttons = new Button[16];
 
@@ -267,46 +283,56 @@ public class GameActivity extends AppCompatActivity {
         return buttons;
     }
 
-    //returns cups
+    /**
+     *returns Buttons
+     * @return Button Array
+     */
     public Button[] getButtons(){
         return buttons;
     }
 
-
+    //Listens for a message and when it comes in changes it changes the board accordingly
     public void initBluetooth() {
         bluetoothPressed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //does nothing in case of an empty message
                 if(bluetoothPressed.getText().equals("")){
                     return;
                 }
+                //Sets the player as player 1 and starts a new game
                 if(bluetoothPressed.getText().equals("yes")){
                     arePlayerOne = true;
                     startNewGame();
                     return;
                 }
+                //Sets the player as player 2 and starts a new game
                 if(bluetoothPressed.getText().equals("no")){
                     arePlayerOne = false;
                     startNewGame();
                     return;
                 }
+                //does starts the game and tells the other device to start as well
                 if(bluetoothPressed.getText().equals("start")){
                     startBluetooth();
                     startName();
                     sendMessage("go");
                     return;
                 }
+                //starts the first game when the bluetooth device connects
                 if(bluetoothPressed.getText().equals("go")){
                     startBluetooth();
                     startName();
                     return;
                 }
+                //resets the board to its initial state
                 if(bluetoothPressed.getText().equals("reset")){
                     startNewGame();
                     return;
                 }
         Button b = buttons[Integer.parseInt(String.valueOf(bluetoothPressed.getText()))];
         int marbles = game.getBoardCups()[b.getId()].getMarbles();
+        //checks if it is the first turn and acts accordingly
         if(!game.isFirstTurn()){
             activateAnimation(b.getId(), marbles);
         }
@@ -314,6 +340,7 @@ public class GameActivity extends AppCompatActivity {
         playClickSound();
         swapEnabledButtonsOnTurnChange();
         updateBoardView();
+        //checks if a game is finished and acts accordingly
         if(game.isGameFinished()){
             updateScores();
             popUpGameFinished();
@@ -324,6 +351,7 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    //sets the opponents name when playing over bluetooth
     private void startName() {
         if(arePlayerOne) {
             game.getPlayer2().setName("Opponent");
@@ -334,7 +362,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-
+    //initialises the buttons at the game start
     private void startBluetooth() {
         for (int i = 0; i < 7; i++) {
             if(!arePlayerOne){
@@ -363,6 +391,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    //enables all buttons on game start
     private void enableAllButtons() {
         for (int i = 0; i < buttons.length; i++) {
             //ignore the player cups
@@ -387,12 +416,14 @@ public class GameActivity extends AppCompatActivity {
                     int marbles = game.getBoardCups()[b.getId()].getMarbles();
                     game.pressCup(b.getId());
                     sendMessage(String.valueOf(b.getId()));
+                    //checks if a game is in its first turn and acts accordingly
                     if(!game.isFirstTurn()) {
                         activateAnimation(b.getId(), marbles);
                         playClickSound();
                         swapEnabledButtonsOnTurnChange();
                         updateBoardView();
                     }
+                    //checks if a game is finished and acts accordingly
                     if(game.isGameFinished()){
                         popUpGameFinished();
                         updateScores();
@@ -403,6 +434,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    //this is the games end screen and is a pop up
     private void popUpGameFinished() {
         String[] finalResults = game.getFinalResults();
         String message;
@@ -414,13 +446,14 @@ public class GameActivity extends AppCompatActivity {
         }
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
         optionpane.setTitle("Game Finished");
-
+        //Main Menu button
         optionpane.setMessage("Winner: " + finalResults[0] + ": " + finalResults[1] + "\nLoser: " + finalResults[2] + ": " + finalResults[3] ).setCancelable(false)
                 .setPositiveButton("Main Menu", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
                     }
                 });
+        //Play Again button
         optionpane.setNegativeButton("Play Again", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 startNewGame();
@@ -438,7 +471,7 @@ public class GameActivity extends AppCompatActivity {
         addPlayerNames(false);
         enableAllButtons();
         updateView();
-        if(fragment.getState()) {
+        if(controller.getState()) {
             startName();
             startBluetooth();
         }
@@ -446,6 +479,11 @@ public class GameActivity extends AppCompatActivity {
         playerOneLabelName.setTextColor(Color.BLACK);
     }
 
+    /**
+     * activate the animation so there is a visual feedback in the game
+     * @param idCurrentCup
+     * @param marbles
+     */
     private void activateAnimation(int idCurrentCup, int marbles) {
         int nextCup = idCurrentCup + 1;
         for (int i = 0; i < marbles; i++) {
@@ -476,85 +514,119 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    //play a click sound when a cup is pressed
     private void playClickSound(){
         MediaPlayer media = MediaPlayer.create(this, R.raw.click);
         media.start();
     }
 
+    //set the buttons to either enabled or disabled depending on whose turn it is
     private void swapEnabledButtonsOnTurnChange() {
-        Log.i("tag","che4");
-        if(fragment.getState()){
-            Log.i("tag","che3");
-            if (game.getPlayer1().getTurn()) {
-                for (int i = 0; i < 7; i++) {
-                    Log.i("tag","che2");
-                    if (game.getBoardCups()[i].getMarbles() == 0) {
-                        buttons[i].setEnabled(false);
-                        buttons[i].setTextColor(Color.DKGRAY);
-                    } else {
-                        if(arePlayerOne) {
-                            buttons[i].setEnabled(true);
-                        }
-                        buttons[i].setTextColor(Color.BLACK);
-                    }
-                }
-                for (int i = 8; i < 15; i++) {
+        if (game.getPlayer1().getTurn()) {
+            for (int i = 0; i < 7; i++) {
+                if (game.getBoardCups()[i].getMarbles() == 0) {
                     buttons[i].setEnabled(false);
                     buttons[i].setTextColor(Color.DKGRAY);
-                }
-            } else {
-                for (int i = 0; i < 7; i++) {
-                    Log.i("tag","che1");
-                    buttons[i].setEnabled(false);
-                    buttons[i].setTextColor(Color.DKGRAY);
-                }
-
-                for (int i = 8; i < 15; i++) {
-                    if (game.getBoardCups()[i].getMarbles() == 0) {
-                        buttons[i].setEnabled(false);
-                        buttons[i].setTextColor(Color.DKGRAY);
-                    } else {
-                        if(!arePlayerOne) {
-                            buttons[i].setEnabled(true);
-                        }
-                        buttons[i].setTextColor(Color.BLACK);
+                } else {
+                    if (!(!arePlayerOne && controller.getState())) {
+                        buttons[i].setEnabled(true);
                     }
+                    buttons[i].setTextColor(Color.BLACK);
                 }
             }
-        }else {
-            if (game.getPlayer1().getTurn()) {
-                for (int i = 0; i < 7; i++) {
-                    if (game.getBoardCups()[i].getMarbles() == 0) {
-                        buttons[i].setEnabled(false);
-                        buttons[i].setTextColor(Color.DKGRAY);
-                    } else {
-                            buttons[i].setEnabled(true);
-                            buttons[i].setTextColor(Color.BLACK);
-                    }
-                }
-                for (int i = 8; i < 15; i++) {
+            for (int i = 8; i < 15; i++) {
+                buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.DKGRAY);
+            }
+        } else {
+            for (int i = 0; i < 7; i++) {
+                buttons[i].setEnabled(false);
+                buttons[i].setTextColor(Color.DKGRAY);
+            }
+            for (int i = 8; i < 15; i++) {
+                if (game.getBoardCups()[i].getMarbles() == 0) {
                     buttons[i].setEnabled(false);
                     buttons[i].setTextColor(Color.DKGRAY);
-                }
-            } else {
-                for (int i = 0; i < 7; i++) {
-                    buttons[i].setEnabled(false);
-                    buttons[i].setTextColor(Color.DKGRAY);
-                }
-
-                for (int i = 8; i < 15; i++) {
-                    if (game.getBoardCups()[i].getMarbles() == 0) {
-                        buttons[i].setEnabled(false);
-                        buttons[i].setTextColor(Color.DKGRAY);
-                    } else {
+                } else {
+                    if (!(arePlayerOne && controller.getState())) {
                         buttons[i].setEnabled(true);
-                        buttons[i].setTextColor(Color.BLACK);
                     }
+                    buttons[i].setTextColor(Color.BLACK);
                 }
             }
         }
     }
+//    private void swapEnabledButtonsOnTurnChange() {
+//        if(controller.getState()){
+//            if (game.getPlayer1().getTurn()) {
+//                for (int i = 0; i < 7; i++) {
+//                    if (game.getBoardCups()[i].getMarbles() == 0) {
+//                        buttons[i].setEnabled(false);
+//                        buttons[i].setTextColor(Color.DKGRAY);
+//                    } else {
+//                        if(arePlayerOne) {
+//                            buttons[i].setEnabled(true);
+//                        }
+//                        buttons[i].setTextColor(Color.BLACK);
+//                    }
+//                }
+//                for (int i = 8; i < 15; i++) {
+//                    buttons[i].setEnabled(false);
+//                    buttons[i].setTextColor(Color.DKGRAY);
+//                }
+//            } else {
+//                for (int i = 0; i < 7; i++) {
+//                    buttons[i].setEnabled(false);
+//                    buttons[i].setTextColor(Color.DKGRAY);
+//                }
+//
+//                for (int i = 8; i < 15; i++) {
+//                    if (game.getBoardCups()[i].getMarbles() == 0) {
+//                        buttons[i].setEnabled(false);
+//                        buttons[i].setTextColor(Color.DKGRAY);
+//                    } else {
+//                        if(!arePlayerOne) {
+//                            buttons[i].setEnabled(true);
+//                        }
+//                        buttons[i].setTextColor(Color.BLACK);
+//                    }
+//                }
+//            }
+//        }else {
+//            if (game.getPlayer1().getTurn()) {
+//                for (int i = 0; i < 7; i++) {
+//                    if (game.getBoardCups()[i].getMarbles() == 0) {
+//                        buttons[i].setEnabled(false);
+//                        buttons[i].setTextColor(Color.DKGRAY);
+//                    } else {
+//                            buttons[i].setEnabled(true);
+//                            buttons[i].setTextColor(Color.BLACK);
+//                    }
+//                }
+//                for (int i = 8; i < 15; i++) {
+//                    buttons[i].setEnabled(false);
+//                    buttons[i].setTextColor(Color.DKGRAY);
+//                }
+//            } else {
+//                for (int i = 0; i < 7; i++) {
+//                    buttons[i].setEnabled(false);
+//                    buttons[i].setTextColor(Color.DKGRAY);
+//                }
+//
+//                for (int i = 8; i < 15; i++) {
+//                    if (game.getBoardCups()[i].getMarbles() == 0) {
+//                        buttons[i].setEnabled(false);
+//                        buttons[i].setTextColor(Color.DKGRAY);
+//                    } else {
+//                        buttons[i].setEnabled(true);
+//                        buttons[i].setTextColor(Color.BLACK);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
+    //updates the cups information when ever a cup is pressed
     public void updateView() {
         Cup[] cups = game.getBoardCups();
         int[] backgrounds = {R.drawable.pocketbackground, R.drawable.back1, R.drawable.back2, R.drawable.back3,

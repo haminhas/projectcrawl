@@ -27,7 +27,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ public class BluetoothController extends Fragment {
     private static final String TAG = "BluetoothController";
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
     private TextView text;
     // Layout Views
@@ -81,6 +79,9 @@ public class BluetoothController extends Fragment {
      */
     private BluetoothManager mChatService = null;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +109,7 @@ public class BluetoothController extends Fragment {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             // Otherwise, setup the chat session
         } else if (mChatService == null) {
-            setupWireless();
+            setupChat();
         }
     }
 
@@ -129,12 +130,22 @@ public class BluetoothController extends Fragment {
         }
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_bluetooth_chat, container, false);
     }
 
+    /**
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mConversationView = (ListView) view.findViewById(R.id.in);
@@ -142,9 +153,9 @@ public class BluetoothController extends Fragment {
     }
 
     /**
-     * Set up the UI and background operations for wireless.
+     * Set up the UI and background operations for chat.
      */
-    private void setupWireless() {
+    private void setupChat() {
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.message);
 
@@ -155,10 +166,10 @@ public class BluetoothController extends Fragment {
         mOutStringBuffer = new StringBuffer("");
     }
 
-    public String getConnected(){
-        return mConnectedDeviceName;
-    }
-
+    /**
+     * returns the Bluetooth Manager
+     * @return mChatService
+     */
     public BluetoothManager returnService(){
         return mChatService;
     }
@@ -177,12 +188,10 @@ public class BluetoothController extends Fragment {
 
     /**
      * Sends a message.
-     *
      * @param message A string of text to send.
      */
     public void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-        Log.i("tag",message);
         if (mChatService.getState() != BluetoothManager.STATE_CONNECTED) {
             Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
             return;
@@ -200,17 +209,50 @@ public class BluetoothController extends Fragment {
         }
     }
 
-    //returns the handler that handles all inputs and outputs to the bluetoothManager class
-    public Handler returnHandler() {
-        return mHandler;
+    /**
+     * Updates the status on the action bar.
+     * @param resId a string resource ID
+     */
+    private void setStatus(int resId) {
+        FragmentActivity activity = getActivity();
+        if (null == activity) {
+            return;
+        }
+        final ActionBar actionBar = activity.getActionBar();
+        if (null == actionBar) {
+            return;
+        }
+        actionBar.setSubtitle(resId);
     }
 
-    //sets connected to match whether or not you are connected to another device
+    /**
+     * Updates the status on the action bar.
+     * @param subTitle status
+     */
+    private void setStatus(CharSequence subTitle) {
+        FragmentActivity activity = getActivity();
+        if (null == activity) {
+            return;
+        }
+        final ActionBar actionBar = activity.getActionBar();
+        if (null == actionBar) {
+            return;
+        }
+        actionBar.setSubtitle(subTitle);
+    }
+
+    /**
+     * sets connected to match whether or not you are connected to another device
+     * @param x
+     */
     public void connect(boolean x){
         connected = x;
     }
 
-    //returns whether or not you are connected to another device
+    /**
+     * returns whether or not you are connected to another device
+     * @return connected
+     */
     public boolean getState(){
         return connected;
     }
@@ -226,16 +268,19 @@ public class BluetoothController extends Fragment {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothManager.STATE_CONNECTED:
+                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             mConversationArrayAdapter.clear();
                             ButtonPressed("start");
                             connect(true);
                             break;
                         case BluetoothManager.STATE_CONNECTING:
+                            setStatus(R.string.title_connecting);
                             connect(false);
                             break;
                         case BluetoothManager.STATE_LISTEN:
                             connect(false);
                         case BluetoothManager.STATE_NONE:
+                            setStatus(R.string.title_not_connected);
                             ButtonPressed("no");
                             connect(false);
                             break;
@@ -272,14 +317,26 @@ public class BluetoothController extends Fragment {
         }
     };
 
-    //takes the message that has been sent and puts it in a textfield that can then be read from the GameActivity class
+    /**
+     * takes the message that has been sent and puts it in a textfield that can then be read from the GameActivity class
+     * @param readMessage
+     */
     public void ButtonPressed(String readMessage) {
-        text.setText("");
-        text.setText(readMessage);
-        text.performClick();
+        try {
+            text.setText("");
+            text.setText(readMessage);
+            text.performClick();
+        }catch( Exception e){
+
+        }
     }
 
-    //detects when a bluetooth link is completed and acts accordingly
+    /**
+     * detects when a bluetooth link is completed and acts accordingly
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE_SECURE:
@@ -294,7 +351,7 @@ public class BluetoothController extends Fragment {
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
                     // Bluetooth is now enabled, so set up a chat session
-                    setupWireless();
+                    setupChat();
                 } else {
                     Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving,
                             Toast.LENGTH_SHORT).show();
@@ -304,7 +361,6 @@ public class BluetoothController extends Fragment {
     }
     /**
      * Establish connection with other device
-     *
      * @param data   An {@link Intent} with {@link DeviceListActivity#EXTRA_DEVICE_ADDRESS} extra.
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
@@ -329,8 +385,10 @@ public class BluetoothController extends Fragment {
         ensureDiscoverable();
     }
 
-
-    //adds Textview which records any inputs from the opponent
+    /**
+     * adds Textview which records any inputs from the opponent
+     * @param bluetoothPressed
+     */
     public void addText(TextView bluetoothPressed) {
         text = bluetoothPressed;
     }

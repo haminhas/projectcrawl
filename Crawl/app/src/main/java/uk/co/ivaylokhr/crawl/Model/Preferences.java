@@ -16,11 +16,8 @@ public class Preferences {
 
     //retrieves an integer "value" with a key "key" from pKey
     public static Integer fromPreferences(Context context,Integer defaultValue, String key, String pKey) {
-        Log.i("tag","2");
         SharedPreferences sharedPreferences = context.getSharedPreferences(pKey, Context.MODE_PRIVATE);
-        Log.i("tag","3");
         Integer temp = sharedPreferences.getInt(key, defaultValue);
-        Log.i("tag","4");
         return temp;
     }
 }

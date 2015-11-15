@@ -17,11 +17,15 @@ public class HighScores extends Activity {
     private TextView third;
     private TextView games;
     private TextView fastest;
+
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_high_scores);
-        Log.i("tag", "test");
 
         //retrieves the list of high scores and shows them on screen
         first = (TextView) findViewById(R.id.textView6);
@@ -35,39 +39,21 @@ public class HighScores extends Activity {
         third.setText(getString(R.string.thirdplace) + sp.getInt("third", -1));
         games.setText(getString(R.string.totalgames) + sp.getInt("games", -1));
         String temp = sp.getString("times", "");
-        Log.i("tag",temp + "d");
         if(temp.equals("")){
             temp = "00:00";
         }
         fastest.setText(getString(R.string.fastestgame) + temp);
     }
-    //Closes the window and returns to the start menu
+
+    /**
+     * Closes the window and returns to the start menu
+     * @param view
+     */
     public void back(View view) {
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_high_scores, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    //returns to Main Menu on back pressed
     @Override
     public void onBackPressed(){
         finish();

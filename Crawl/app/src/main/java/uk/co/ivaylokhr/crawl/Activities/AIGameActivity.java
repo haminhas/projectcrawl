@@ -41,6 +41,10 @@ public class AIGameActivity extends Activity {
     private TextView playerOneLabelName;
     private TextView playerTwoLabelName;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,7 @@ public class AIGameActivity extends Activity {
         return true;
     }
 
+    //initialises the game and creates the AIGame class
     public void initialiseGame() {
         aiGame = new AIGame();
         turn = (TextView) findViewById(R.id.turn);
@@ -72,6 +77,8 @@ public class AIGameActivity extends Activity {
         buttons = fillButtonsArray();
     }
 
+
+    //retrieves player names from the Shared Preferences and sets the player names
     public void addPlayerNames(){
         SharedPreferences sp = getSharedPreferences("your_prefs", Activity.MODE_PRIVATE);
         //Displays Player 1 and Player 2
@@ -112,10 +119,12 @@ public class AIGameActivity extends Activity {
                         popupView,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT,
                         AbsoluteLayout.LayoutParams.WRAP_CONTENT);
+                //Creates 4 buttons objects linked to the buttons on the settings menu
                 Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
                 Button btnMain = (Button) popupView.findViewById(R.id.main);
                 Button btnConnect = (Button) popupView.findViewById(R.id.connect);
                 Button btnHost = (Button) popupView.findViewById(R.id.host);
+                //Hides the Connect and Host button so the can't be pressed
                 btnConnect.setVisibility(View.GONE);
                 btnHost.setVisibility(View.GONE);
                 popupWindow.setFocusable(true);
@@ -156,7 +165,7 @@ public class AIGameActivity extends Activity {
             handler.postDelayed(this, 0);
         }};
 
-    //warn the player that going back will end his aiGame
+    //warn the player that going back will end his game
     @Override
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
@@ -179,18 +188,6 @@ public class AIGameActivity extends Activity {
         alertDialog.show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public void back() {
         finish();
@@ -222,7 +219,10 @@ public class AIGameActivity extends Activity {
         editor.commit();
     }
 
-    //fills the array with Player Cups and Pocket Cups and sets there ids
+    /**
+     *fills the array with Player Cups and Pocket Cups and sets there ids
+     * @return Button Array
+     */
     public Button[] fillButtonsArray(){
         buttons = new Button[16];
 
@@ -238,11 +238,15 @@ public class AIGameActivity extends Activity {
         return buttons;
     }
 
-    //returns cups
+    /**
+     * returns Buttons
+     * @return Button Array
+     */
     public Button[] getButtons(){
         return buttons;
     }
 
+    //enables all buttons on game start
     private void enableAllButtons() {
         for (int i = 0; i < 7; i++) {
             buttons[i].setEnabled(true);
@@ -275,6 +279,7 @@ public class AIGameActivity extends Activity {
                             updateScores();
                             popUpGameFinished();
                         }
+                        //if AIs turn it will call the aiMove method
                         if(aiGame.getAIPlayer().getTurn()){
                             aiMove(marbles);
                         }
@@ -284,6 +289,7 @@ public class AIGameActivity extends Activity {
         }
     }
 
+    //games end screen
     private void popUpGameFinished() {
         String[] finalResults = aiGame.getFinalResults();
         String message;
@@ -313,6 +319,7 @@ public class AIGameActivity extends Activity {
         alertDialog.show();
     }
 
+    //decides the AI's first move
     private void firstAIMove(){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -329,12 +336,16 @@ public class AIGameActivity extends Activity {
         }, 1500);
     }
 
+    /**
+     * AI logic which decides which move he should make
+     * @param marbles
+     */
     private void aiMove(int marbles) {
+        //forces the AI to wait until the previous animation is completed
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("tag", "AIMOVE");
                     aiGame.doMove();
                     activateAnimation(aiGame.returnFirstButton(), aiGame.returnMarbles());
                     aiGame.switchTurnsAfterAITurn(aiGame.returnFirstButton(), aiGame.returnMarbles());
@@ -353,6 +364,11 @@ public class AIGameActivity extends Activity {
 
         }
 
+    /**
+     *activate the animation so there is a visual feedback in the game
+     * @param idCurrentCup
+     * @param marbles
+     */
     public void activateAnimation(int idCurrentCup, int marbles) {
         int nextCup = idCurrentCup + 1;
         for (int i = 0; i < marbles; i++) {
@@ -381,11 +397,13 @@ public class AIGameActivity extends Activity {
         }
     }
 
+    //plays sound when ever a button is pressed
     private void playClickSound(){
         MediaPlayer media = MediaPlayer.create(this, R.raw.click);
         media.start();
     }
 
+    //enable or disable buttons on the board depending on whose turn it is
     public void swapEnabledButtonsOnTurnChange() {
         if(aiGame.getHumanPlayer().getTurn()){
             for (int i = 0; i < 7; i++) {
