@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,7 +21,7 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import uk.co.ivaylokhr.crawl.Bluetooth.BluetoothController;
+import uk.co.ivaylokhr.crawl.Controller.BluetoothController;
 import uk.co.ivaylokhr.crawl.Controller.AnimationRunnable;
 import uk.co.ivaylokhr.crawl.Controller.Game;
 import uk.co.ivaylokhr.crawl.Model.Cup;
@@ -68,6 +67,7 @@ public class GameActivity extends AppCompatActivity {
 
         //calls all the background methods that set up the game
         buttons = fillButtonsArray();
+        arePlayerOne = false;
         initialiseGame();
         initializeButtons();
         increaseGamesPlayed();
@@ -98,7 +98,6 @@ public class GameActivity extends AppCompatActivity {
         playerTwoLabelName = (TextView) findViewById(R.id.player2);
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateTimer, 0);
-        arePlayerOne = false;
     }
 
     /**
@@ -414,15 +413,15 @@ public class GameActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int marbles = game.getBoardCups()[b.getId()].getMarbles();
-                    game.pressCup(b.getId());
-                    sendMessage(String.valueOf(b.getId()));
                     //checks if a game is in its first turn and acts accordingly
                     if(!game.isFirstTurn()) {
                         activateAnimation(b.getId(), marbles);
                         playClickSound();
-                        swapEnabledButtonsOnTurnChange();
-                        updateBoardView();
                     }
+                    game.pressCup(b.getId());
+                    sendMessage(String.valueOf(b.getId()));
+                    swapEnabledButtonsOnTurnChange();
+                    updateBoardView();
                     //checks if a game is finished and acts accordingly
                     if(game.isGameFinished()){
                         popUpGameFinished();
@@ -556,75 +555,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-//    private void swapEnabledButtonsOnTurnChange() {
-//        if(controller.getState()){
-//            if (game.getPlayer1().getTurn()) {
-//                for (int i = 0; i < 7; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                        if(arePlayerOne) {
-//                            buttons[i].setEnabled(true);
-//                        }
-//                        buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//                for (int i = 8; i < 15; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//            } else {
-//                for (int i = 0; i < 7; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//
-//                for (int i = 8; i < 15; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                        if(!arePlayerOne) {
-//                            buttons[i].setEnabled(true);
-//                        }
-//                        buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//            }
-//        }else {
-//            if (game.getPlayer1().getTurn()) {
-//                for (int i = 0; i < 7; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                            buttons[i].setEnabled(true);
-//                            buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//                for (int i = 8; i < 15; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//            } else {
-//                for (int i = 0; i < 7; i++) {
-//                    buttons[i].setEnabled(false);
-//                    buttons[i].setTextColor(Color.DKGRAY);
-//                }
-//
-//                for (int i = 8; i < 15; i++) {
-//                    if (game.getBoardCups()[i].getMarbles() == 0) {
-//                        buttons[i].setEnabled(false);
-//                        buttons[i].setTextColor(Color.DKGRAY);
-//                    } else {
-//                        buttons[i].setEnabled(true);
-//                        buttons[i].setTextColor(Color.BLACK);
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     //updates the cups information when ever a cup is pressed
     public void updateView() {
@@ -634,6 +564,9 @@ public class GameActivity extends AppCompatActivity {
         for (int i = 0; i < cups.length; i++) {
             int marbles = cups[i].getMarbles();
             buttons[i].setText(String.valueOf(marbles));
+            if(i == 7 || i == 15){
+                continue;
+            }
             if (marbles <= 7) {
                 buttons[i].setBackgroundResource(backgrounds[marbles]);
             } else {

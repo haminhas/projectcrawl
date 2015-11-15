@@ -52,7 +52,7 @@ public class AIGame extends Game {
      */
     public int generateFirstAIMove(){
         Random rand = new Random();
-        int aiMoveID = rand.nextInt(6) + 8;
+        int aiMoveID = rand.nextInt(7) + 8;
         return aiMoveID;
     }
 
@@ -101,6 +101,7 @@ public class AIGame extends Game {
             switchTurn();
         }
     }
+
 
     /**
      * checks to see if there is an cup that can be stolen

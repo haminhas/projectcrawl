@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package uk.co.ivaylokhr.crawl.Bluetooth;
+package uk.co.ivaylokhr.crawl.Model;
+
+import uk.co.ivaylokhr.crawl.Controller.BluetoothManager;
 
 /**
  * Defines several constants used between {@link BluetoothManager} and the UI.

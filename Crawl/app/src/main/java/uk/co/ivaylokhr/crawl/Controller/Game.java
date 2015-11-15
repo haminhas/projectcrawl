@@ -6,6 +6,10 @@ import uk.co.ivaylokhr.crawl.Model.Cup;
 import uk.co.ivaylokhr.crawl.Model.Player;
 import uk.co.ivaylokhr.crawl.Model.PocketCup;
 
+/**
+ * This class holds all the logic for a two-player game.
+ */
+
 public class Game {
 
     protected Player player1, player2;
@@ -18,6 +22,9 @@ public class Game {
     private int secondID;
     private boolean secondHasPlayed;
 
+    /**
+     * Initiates a two player game.
+     */
     public Game() {
         player1 = new Player();
         player2 = new Player();
@@ -40,7 +47,7 @@ public class Game {
 
     /**
      * Action triggered when you press a Cup on the screen
-     * @param id
+     * @param id the ID of the pressed cup
      */
     public void pressCup(int id) {
         if(isFirstTurn){
@@ -80,8 +87,9 @@ public class Game {
     }
 
     /**
-     * the logic behind the first turn, where the players do the turn together
+     * PressCup method only for the first turn of the game.
      * after both players make their moves, the one that clicked first is first to go
+     * @param id the id of the pressed cup
      */
     public void firstTurnPlay(int id) {
         if (id < 7) {
@@ -204,13 +212,19 @@ public class Game {
     }
 
     /**
-     * checks if all the cups have been emptied
+     * Checks if the game has finished
      * @return boolean if the game is finished
      */
     public boolean isGameFinished() {
         return (!areThereValidMoves(player1) && !areThereValidMoves(player2));
     }
 
+    /**
+     * Checks which of the two players is the winner.
+     * If the game is a draw, the returned player is Player 1 (the one that plays on the botoom part of the screen).
+     * @see Player
+     * @return the winner of the game.
+    */
     public Player checkWinner() {
         if(board.getPlayerCup1Marbles() >= board.getPlayerCup2Marbles()) {
             return player1;
@@ -220,6 +234,8 @@ public class Game {
     }
 
     /**
+     * Returns the names of both of the players and their score as an array. The order of the elements is: The winner's name,
+     * his score, other player's name and finally the other player's name.
      * @return array with the 2 players and their respective scores
      */
     public String[] getFinalResults() {
@@ -244,34 +260,71 @@ public class Game {
         return results;
     }
 
+    /**
+     * Checks if the game ended as a draw
+     * @return boolean representing whether or not the ended game had no winner
+     */
     public boolean isDraw(){
         return isDraw;
     }
 
+    /**
+     * Gets the board object of the class, representing the current state of the game board
+     * @return board object of the game
+     * @see Board
+     */
     public Board getBoard(){
         return board;
     }
 
+    /**
+     * Get the player who is playing on the bottom half of the board
+     * @return the playing playing on the bottom side
+     * @see Player
+     */
     public Player getPlayer1(){
         return player1;
     }
 
+    /**
+     * Get the player who is playing on the top half of the board
+     * @return the playing playing on the top side
+     * @see Player
+     */
     public Player getPlayer2(){
         return player2;
     }
 
+    /**
+     * Get the Cups on the board
+     * @return array of the cups on the board
+     * @see Cup
+     * @see Board
+     */
     public Cup[] getBoardCups(){
         return board.getCups();
     }
 
+    /**
+     * sets the first turn to be true or false
+     * @param b that sets if it is a first turn or not
+     */
     public void setIsFirstTurn(boolean b) {
         this.isFirstTurn = b;
     }
 
+    /**
+     * Gets if the game is in its first turn or not
+     * @return whether or not it is the first turn of the game
+     */
     public boolean isFirstTurn(){
         return isFirstTurn;
     }
 
+    /**
+     * Gets the id of the first cup that got interacted on the board
+     * @return the id of the first cup that was played
+     */
     public int getFirstMoveID(){
         return firstID;
     }

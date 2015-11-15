@@ -166,7 +166,6 @@ public class AIGameActivity extends Activity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder optionpane = new AlertDialog.Builder(this);
-        Intent mainMenu = new Intent(this, MainActivity.class);
         optionpane.setTitle(R.string.goback);
         optionpane.setMessage(R.string.gobackmessage).setCancelable(true);
         optionpane.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -338,7 +337,8 @@ public class AIGameActivity extends Activity {
      * @param marbles
      */
     private void aiMove(int marbles) {
-        //forces the AI to wait until the previous animation is completed
+        if(!aiGame.isGameFinished()){
+            //forces the AI to wait until the previous animation is completed
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -358,7 +358,7 @@ public class AIGameActivity extends Activity {
                     }
                 }
             }, (marbles * 250)+1000);
-
+        }
         }
 
     /**
@@ -429,6 +429,9 @@ public class AIGameActivity extends Activity {
         for (int i = 0; i < cups.length; i++) {
             int marbles = cups[i].getMarbles();
             buttons[i].setText(String.valueOf(marbles));
+            if(i == 7 || i == 15){
+                continue;
+            }
             if (marbles <= 7) {
                 buttons[i].setBackgroundResource(backgrounds[marbles]);
             } else {

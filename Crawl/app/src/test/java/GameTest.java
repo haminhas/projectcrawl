@@ -384,19 +384,14 @@ public class GameTest {
 
     @Test
     public void player1PressCupOnStart(){
-        int firstTurnID = 2;
-        int secondTurnID = 11;
+        int firstTurnID = 3;
+        int secondTurnID = 14;
 
         int[] marblesArray = new int[16];
 
         for (int i = 0; i < 16; i++){
             int marbles;
-            if(i == firstTurnID || i == secondTurnID){
-                marbles = 0;
-            }
-            else{
-                marbles = game.getBoardCups()[i].getMarbles();
-            }
+            marbles = game.getBoardCups()[i].getMarbles();
             marblesArray[i] = marbles;
         }
 
@@ -405,6 +400,13 @@ public class GameTest {
 
         assertFalse(game.getPlayer1().getTurn());
         assertTrue(game.getPlayer2().getTurn());
+
+        for (int i = 0; i < 15; i++){
+            assertEquals(game.getBoardCups()[i].getMarbles(),marblesArray[i]);
+        }
+
+        marblesArray[firstTurnID] = 0;
+        marblesArray[secondTurnID] = 0;
 
         game.firstTurnPlay(secondTurnID);
         int marblesFromSecondCup = game.getBoardCups()[secondTurnID].getMarbles();
@@ -416,35 +418,38 @@ public class GameTest {
         for (int i = 1; i <= marblesFromFirstCup; i++){
             int nextID = firstTurnID + i;
             if(nextID > 15){
-                nextID -= 15;
+                nextID -= 16;
             }
-            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+            int change = 1;
+            if(nextID > secondTurnID || nextID + 9 <= secondTurnID){
+                change = 2;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
 
         for (int i = 1; i <= marblesFromSecondCup; i++){
-            int nextID = firstTurnID + i;
-            if(nextID > 15){
-                nextID -= 15;
+            int nextID = secondTurnID + i;
+            int change = 1;
+            if(nextID > secondTurnID + 16 || nextID - firstTurnID <= 7){
+                change = 2;
             }
-            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+            if(nextID > 15){
+                nextID -= 16;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
     }
 
     @Test
     public void player2PressCupOnStart(){
         int firstTurnID = 11;
-        int secondTurnID = 2;
+        int secondTurnID = 6;
 
         int[] marblesArray = new int[16];
 
         for (int i = 0; i < 16; i++){
             int marbles;
-            if(i == firstTurnID || i == secondTurnID){
-                marbles = 0;
-            }
-            else{
-                marbles = game.getBoardCups()[i].getMarbles();
-            }
+            marbles = game.getBoardCups()[i].getMarbles();
             marblesArray[i] = marbles;
         }
 
@@ -454,6 +459,13 @@ public class GameTest {
         assertTrue(game.getPlayer1().getTurn());
         assertFalse(game.getPlayer2().getTurn());
 
+        for (int i = 0; i < 15; i++){
+            assertEquals(game.getBoardCups()[i].getMarbles(),marblesArray[i]);
+        }
+
+        marblesArray[firstTurnID] = 0;
+        marblesArray[secondTurnID] = 0;
+
         game.firstTurnPlay(secondTurnID);
         int marblesFromSecondCup = game.getBoardCups()[secondTurnID].getMarbles();
 
@@ -462,18 +474,26 @@ public class GameTest {
 
         for (int i = 1; i <= marblesFromFirstCup; i++){
             int nextID = firstTurnID + i;
-            if(nextID > 15){
-                nextID -= 15;
+            int change = 1;
+            if(nextID > secondTurnID + 16 || nextID - secondTurnID <= 7){
+                change = 2;
             }
-            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+            if(nextID > 15){
+                nextID -= 16;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
 
         for (int i = 1; i <= marblesFromSecondCup; i++){
-            int nextID = firstTurnID + i;
+            int nextID = secondTurnID + i;
             if(nextID > 15){
                 nextID -= 15;
             }
-            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+            int change = 1;
+            if(nextID > firstTurnID || nextID + 9 <= firstTurnID){
+                change = 2;
+            }
+            assertEquals(game.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
     }
 
