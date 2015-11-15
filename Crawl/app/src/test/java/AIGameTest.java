@@ -35,7 +35,7 @@ public class AIGameTest {
 
     @Test
     public void assureItsNoOnesTurnAtStart(){
-        assertFalse(aiGame.getPlayer1().getTurn());
+        assertTrue(aiGame.getPlayer1().getTurn());
         assertFalse(aiGame.getPlayer2().getTurn());
     }
 
@@ -124,6 +124,7 @@ public class AIGameTest {
         aiGame.getBoardCups()[13].addMarbles(-7);
         aiGame.getBoardCups()[11].addMarbles(-5);
         aiGame.getBoardCups()[8].addMarbles(-7);
+        aiGame.doMove();
         int moveID = aiGame.returnFirstButton();
         assertEquals(moveID, 11);
     }
@@ -133,6 +134,7 @@ public class AIGameTest {
         setAITurn();
         aiGame.getBoardCups()[13].addMarbles(-7);
         aiGame.getBoardCups()[11].addMarbles(-5);
+        aiGame.doMove();
         int moveID = aiGame.returnFirstButton();
         assertEquals(moveID, 8);
     }
@@ -174,6 +176,14 @@ public class AIGameTest {
         int humanTurn = 2;
         int[] marblesArray = new int[16];
 
+
+        for (int i = 0; i < 16; i++){
+            int marbles;
+            marbles = aiGame.getBoardCups()[i].getMarbles();
+            marblesArray[i] = marbles;
+        }
+
+
         aiGame.setFirstHumanMove(humanTurn);
         int marblesFromFirstCup = aiGame.getBoardCups()[humanTurn].getMarbles();
         assertFalse(aiGame.getPlayer1().getTurn());
@@ -182,17 +192,12 @@ public class AIGameTest {
 
         int aiTurn = aiGame.generateFirstAIMove();
         int marblesFromSecondCup = aiGame.getBoardCups()[aiTurn].getMarbles();
-
-        for (int i = 0; i < 16; i++){
-            int marbles;
-            if(i == humanTurn || i == aiTurn){
-                marbles = 0;
-            }
-            else{
-                marbles = aiGame.getBoardCups()[i].getMarbles();
-            }
-            marblesArray[i] = marbles;
+        for (int i = 0; i < 15; i++){
+            assertEquals(aiGame.getBoardCups()[i].getMarbles(),marblesArray[i]);
         }
+
+        marblesArray[humanTurn] = 0;
+        marblesArray[aiTurn] = 0;
 
         aiGame.applyFirstTurnChanges(humanTurn, aiTurn);
 
@@ -202,17 +207,25 @@ public class AIGameTest {
         for (int i = 1; i <= marblesFromFirstCup; i++){
             int nextID = humanTurn + i;
             if(nextID > 15){
-                nextID -= 15;
+                nextID -= 16;
             }
-            assertEquals(aiGame.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+            int change = 1;
+            if(nextID > aiTurn || nextID + 9 <= aiTurn){
+                change = 2;
+            }
+            assertEquals(aiGame.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
 
         for (int i = 1; i <= marblesFromSecondCup; i++){
-            int nextID = humanTurn + i;
-            if(nextID > 15){
-                nextID -= 15;
+            int nextID = aiTurn + i;
+            int change = 1;
+            if(nextID > humanTurn + 16 || nextID - humanTurn <= 7){
+                change = 2;
             }
-            assertEquals(aiGame.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+1);
+            if(nextID > 15){
+                nextID -= 16;
+            }
+            assertEquals(aiGame.getBoardCups()[nextID].getMarbles(), marblesArray[nextID]+change);
         }
     }
 
