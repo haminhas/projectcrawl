@@ -57,46 +57,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @Test
-    public void testOnePlayerTextChange(){
-        assertEquals("1 player",onePlayer.getText());
-        TouchUtils.clickView(this, twoPlayer);
-        assertEquals("Host", onePlayer.getText());
-        Log.i("tag", "testOnePlayerTextChange");
-
-    }
-    @Test
-    public void testTwoPlayerTextChange() {
-        assertEquals("2 player",twoPlayer.getText());
-        TouchUtils.clickView(this, twoPlayer);
-        assertEquals("Connect", twoPlayer.getText());
-        Log.i("tag", "testTwoPlayerTextChange");
-
-    }
-    @Test
-    public void testStatisticsTextChange(){
-        assertEquals("Statistics",statistics.getText());
-        TouchUtils.clickView(this, twoPlayer);
-        assertEquals("Hotseat", statistics.getText());
-        Log.i("tag", "testStatisticsTextChange");
-
-    }
-
-    @Test
-    public void testSettingsAndBackTextChange(){
-        assertEquals("Settings",settings.getText());
-        TouchUtils.clickView(this, twoPlayer);
-        assertEquals("Back", settings.getText());
-
-        TouchUtils.clickView(this, settings);
-        assertEquals("1 player", onePlayer.getText());
-        assertEquals("2 player", twoPlayer.getText());
-        assertEquals("Statistics", statistics.getText());
-        assertEquals("Settings", settings.getText());
-        Log.i("tag", "testSettingsAndBackTextChange");
-
-    }
-
-    @Test
     public void testZOnePlayerClick() {
         // register next activity that need to be monitored.
         Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(AIGameActivity.class.getName(), null, false);
@@ -155,35 +115,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         assertNotNull(nextActivity);
         nextActivity.finish();
         Log.i("tag", "Done testSettingsClick");
-
-    }
-    @Test
-    public void testZSeatClick() throws InterruptedException{
-        final Button two = (Button) activity.findViewById(R.id.button9);
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                two.performClick();
-            }
-        });
-        Thread.sleep(1000L);
-
-        Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(GameActivity.class.getName(), null, false);
-        final Button twoGame = (Button) activity.findViewById(R.id.button2);
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                twoGame.performClick();
-            }
-        });
-        //TouchUtils.clickView(this, cancel);
-        //Watch for the timeout
-        //example values 5000 if in ms, or 5 if it's in seconds.
-        GameActivity nextActivity = (GameActivity) getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
-        // next activity is opened and captured.
-        assertNotNull(nextActivity);
-        nextActivity.finish();
-        Log.i("tag", "Done testSeatClick");
 
     }
 

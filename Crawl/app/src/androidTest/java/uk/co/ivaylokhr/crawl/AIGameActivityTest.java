@@ -30,11 +30,5 @@ public class AIGameActivityTest extends ActivityInstrumentationTestCase2<AIGameA
         AIGameActivity aiGameActivity = new AIGameActivity();
         assertNotNull(aiGameActivity);
     }
-    public void testEnabledOrDisabled(){
-        AIGameActivity aiGameActivity = new AIGameActivity();
-        button0= (Button)aiGameActivity.findViewById(R.id.b0);
-        boolean initEnabled;
-        initEnabled=button0.isEnabled();
-        assertEquals(true,initEnabled);
-    }
+
 }
